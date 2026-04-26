@@ -1,0 +1,38 @@
+# --- Laravel/Filament Essentials ---
+/vendor
+/node_modules
+.env
+.env.backup
+.env.production
+/public/storage
+/storage/*.key
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*.log
+/storage/pail
+
+# --- Vite/Assets (Crucial for cPanel) ---
+# We REMOVE /public/build from here because cPanel cannot run 'npm run build'
+# This ensures your CSS/JS is tracked by Git and uploaded.
+# /public/build 
+/public/hot
+
+# --- PHP/Tooling ---
+.phpunit.result.cache
+/.phpunit.cache
+.phpactor.json
+_ide_helper.php
+.php_cs.cache
+
+# --- IDE/OS Specific ---
+.DS_Store
+Thumbs.db
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed
+/auth.json
+Homestead.json
+Homestead.yaml
