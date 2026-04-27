@@ -11,7 +11,8 @@ class Project extends Model
 
     protected $fillable = [
         'name', 'slug', 'location', 'category', 'progress', 'image',
-        'address','featured_image', 'land_area', 'floors', 'size', 'beds_baths', 
+        'address', 'featured_image', 'cover_photo', 'amenities_image', 'floorplan_image',
+        'land_area', 'floors', 'size', 'beds_baths', 
         'launch_date', 'collection', 'brochure_pdf', 'gallery', 'map_link', 'construction_updates', 'features'
     ];
 

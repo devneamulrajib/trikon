@@ -9,7 +9,7 @@ use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use BackedEnum;
 
-// ✅ CORRECT FOR FILAMENT V4
+// ✅ CORRECT FOR YOUR FILAMENT SETUP
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\TextInput;
@@ -59,30 +59,58 @@ class ProjectResource extends Resource
                     TextInput::make('progress')
                         ->numeric()
                         ->default(0)
+                        ->required() // Prevents the "Column progress cannot be null" error
                         ->suffix('%'),
                 ])
                 ->columns(2),
 
-            Section::make('Project Media')
+            Section::make('Project Media (Layout Images)')
+                ->description('Upload specific images for different sections of the project page.')
                 ->schema([
+                    FileUpload::make('image')
+                        ->label('Cover Photo (Hero Section)') 
+                        ->image()
+                        ->directory('projects/covers')
+                        ->required(),
+
                     FileUpload::make('featured_image')
+                        ->label('At a Glance Photo')
                         ->image()
                         ->directory('projects/featured'),
 
-                    FileUpload::make('image')
+                    FileUpload::make('amenities_image')
+                        ->label('Features & Amenities Photo') 
                         ->image()
-                        ->directory('projects/thumbnails'),
+                        ->directory('projects/amenities'),
 
-                    FileUpload::make('gallery')
-                        ->multiple()
+                    FileUpload::make('floorplan_image')
+                        ->label('Floor Plan Photo (Optional)')
                         ->image()
-                        ->directory('project-galleries'),
+                        ->directory('projects/floorplans'),
+
+                    FileUpload::make('cover_photo')
+                        ->label('Secondary Cover Photo (Optional)')
+                        ->image()
+                        ->directory('projects/extra'),
 
                     FileUpload::make('brochure_pdf')
+                        ->label('Brochure (PDF)')
                         ->acceptedFileTypes(['application/pdf'])
                         ->directory('brochures'),
                 ])
                 ->columns(2),
+
+            Section::make('Gallery & Experience (Slideshow)')
+                ->description('These images will appear in the wide slideshow in the Experience section.')
+                ->schema([
+                    FileUpload::make('gallery')
+                        ->label('Experience Slideshow Images')
+                        ->multiple()
+                        ->reorderable()
+                        ->image()
+                        ->directory('project-galleries')
+                        ->columnSpanFull(),
+                ]),
 
             Section::make('At a Glance Details')
                 ->schema([
@@ -98,18 +126,28 @@ class ProjectResource extends Resource
                 ])
                 ->columns(2),
 
-            RichEditor::make('features')
-                ->columnSpanFull(),
-
-            Repeater::make('construction_updates')
+            Section::make('Description & Features')
                 ->schema([
-                    TextInput::make('task')->required(),
-                    TextInput::make('progress')->numeric()->default(100)->suffix('%'),
-                    TextInput::make('remarks'),
-                ])
-                ->columns(3)
-                ->reorderable()
-                ->columnSpanFull(),
+                    RichEditor::make('features')
+                        ->label('Features & Amenities Description')
+                        ->columnSpanFull(),
+                ]),
+
+            Section::make('Construction Progress')
+                ->schema([
+                    Repeater::make('construction_updates')
+                        ->schema([
+                            TextInput::make('task')->required(),
+                            TextInput::make('progress')
+                                ->numeric()
+                                ->default(100)
+                                ->suffix('%'),
+                            TextInput::make('remarks'),
+                        ])
+                        ->columns(3)
+                        ->reorderable()
+                        ->columnSpanFull(),
+                ]),
         ]);
     }
 
@@ -117,10 +155,19 @@ class ProjectResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('image')->disk('public'),
-                TextColumn::make('name')->searchable(),
-                TextColumn::make('category')->badge(),
-                TextColumn::make('progress')->suffix('%'),
+                ImageColumn::make('image')
+                    ->label('Cover')
+                    ->disk('public'),
+                
+                TextColumn::make('name')
+                    ->searchable(),
+                
+                TextColumn::make('category')
+                    ->badge(),
+                
+                TextColumn::make('progress')
+                    ->formatStateUsing(fn ($state) => ($state ?? 0) . '%') // Handles null safely in table
+                    ->sortable(),
             ])
             ->actions([
                 EditAction::make(),

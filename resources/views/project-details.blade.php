@@ -1,10 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
+<!-- Swiper.js CSS for the Experience Slider -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
 <div class="pt-24 bg-[#0a0a0a] text-white">
-    <!-- HERO / COVER PHOTO (Uses Main Featured Photo) -->
+    <!-- HERO / COVER PHOTO (Uses the main 'image' field labeled as Cover Photo in Admin) -->
     <div class="relative h-[70vh]">
-        <img src="{{ asset('storage/' . ($project->featured_image ?? $project->image)) }}" class="w-full h-full object-cover">
+        <img src="{{ asset('storage/' . $project->image) }}" class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-center px-4">
             <h1 class="serif text-5xl md:text-7xl uppercase tracking-[0.2em]">{{ $project->name }}</h1>
         </div>
@@ -21,35 +24,41 @@
         </div>
     </div>
 
-    <!-- NAV GRID (5 Boxes with Golden Hover) -->
-    <section class="max-w-7xl mx-auto py-16 px-6 grid grid-cols-2 md:grid-cols-5 gap-4">
-        <a href="#at-a-glance" class="group bg-[#111] border border-white/5 p-12 flex flex-col items-center hover:bg-[#C5A059] transition duration-500">
-            <i class="fa-solid fa-list-check text-3xl mb-4 group-hover:text-black transition duration-500"></i>
-            <span class="text-[10px] font-bold tracking-[0.3em] uppercase group-hover:text-black transition duration-500">At a Glance</span>
+    <!-- NAV GRID (Centered Flex Layout) -->
+    <section class="max-w-7xl mx-auto py-16 px-6 flex flex-wrap justify-center gap-4">
+        <a href="#at-a-glance" class="group bg-[#111] border border-white/5 w-[160px] md:w-[180px] p-8 flex flex-col items-center hover:bg-[#C5A059] transition duration-500">
+            <i class="fa-solid fa-list-check text-2xl mb-4 group-hover:text-black transition duration-500"></i>
+            <span class="text-[9px] font-bold tracking-[0.2em] uppercase group-hover:text-black transition duration-500 text-center">At a Glance</span>
         </a>
-        <a href="#features" class="group bg-[#111] border border-white/5 p-12 flex flex-col items-center hover:bg-[#C5A059] transition duration-500">
-            <i class="fa-solid fa-leaf text-3xl mb-4 group-hover:text-black transition duration-500"></i>
-            <span class="text-[10px] font-bold tracking-[0.3em] uppercase group-hover:text-black transition duration-500">Features</span>
+        <a href="#features" class="group bg-[#111] border border-white/5 w-[160px] md:w-[180px] p-8 flex flex-col items-center hover:bg-[#C5A059] transition duration-500">
+            <i class="fa-solid fa-leaf text-2xl mb-4 group-hover:text-black transition duration-500"></i>
+            <span class="text-[9px] font-bold tracking-[0.2em] uppercase group-hover:text-black transition duration-500 text-center">Features</span>
         </a>
-        <a href="#experience" class="group bg-[#111] border border-white/5 p-12 flex flex-col items-center hover:bg-[#C5A059] transition duration-500">
-            <i class="fa-solid fa-vr-cardboard text-3xl mb-4 group-hover:text-black transition duration-500"></i>
-            <span class="text-[10px] font-bold tracking-[0.3em] uppercase group-hover:text-black transition duration-500">Experience</span>
+        @if($project->floorplan_image)
+        <a href="#floorplan" class="group bg-[#111] border border-white/5 w-[160px] md:w-[180px] p-8 flex flex-col items-center hover:bg-[#C5A059] transition duration-500">
+            <i class="fa-solid fa-compass text-2xl mb-4 group-hover:text-black transition duration-500"></i>
+            <span class="text-[9px] font-bold tracking-[0.2em] uppercase group-hover:text-black transition duration-500 text-center">Floorplan</span>
         </a>
-        <a href="#map" class="group bg-[#111] border border-white/5 p-12 flex flex-col items-center hover:bg-[#C5A059] transition duration-500">
-            <i class="fa-solid fa-map-location-dot text-3xl mb-4 group-hover:text-black transition duration-500"></i>
-            <span class="text-[10px] font-bold tracking-[0.3em] uppercase group-hover:text-black transition duration-500">Maps</span>
+        @endif
+        <a href="#experience" class="group bg-[#111] border border-white/5 w-[160px] md:w-[180px] p-8 flex flex-col items-center hover:bg-[#C5A059] transition duration-500">
+            <i class="fa-solid fa-vr-cardboard text-2xl mb-4 group-hover:text-black transition duration-500"></i>
+            <span class="text-[9px] font-bold tracking-[0.2em] uppercase group-hover:text-black transition duration-500 text-center">Experience</span>
         </a>
-        <a href="{{ asset('storage/' . $project->brochure_pdf) }}" download class="group bg-[#111] border border-white/5 p-12 flex flex-col items-center hover:bg-[#C5A059] transition duration-500">
-            <i class="fa-solid fa-file-pdf text-3xl mb-4 group-hover:text-black transition duration-500"></i>
-            <span class="text-[10px] font-bold tracking-[0.3em] uppercase group-hover:text-black transition duration-500">Brochure</span>
+        <a href="#map" class="group bg-[#111] border border-white/5 w-[160px] md:w-[180px] p-8 flex flex-col items-center hover:bg-[#C5A059] transition duration-500">
+            <i class="fa-solid fa-map-location-dot text-2xl mb-4 group-hover:text-black transition duration-500"></i>
+            <span class="text-[9px] font-bold tracking-[0.2em] uppercase group-hover:text-black transition duration-500 text-center">Maps</span>
+        </a>
+        <a href="{{ asset('storage/' . $project->brochure_pdf) }}" download class="group bg-[#111] border border-white/5 w-[160px] md:w-[180px] p-8 flex flex-col items-center hover:bg-[#C5A059] transition duration-500">
+            <i class="fa-solid fa-file-pdf text-2xl mb-4 group-hover:text-black transition duration-500"></i>
+            <span class="text-[9px] font-bold tracking-[0.2em] uppercase group-hover:text-black transition duration-500 text-center">Brochure</span>
         </a>
     </section>
 
-    <!-- AT A GLANCE (Uses Body Photo / Thumbnail) -->
+    <!-- AT A GLANCE (Uses featured_image) -->
     <section id="at-a-glance" class="max-w-7xl mx-auto py-24 px-6 grid md:grid-cols-2 gap-20 items-center scroll-mt-32">
         <div class="relative">
             <div class="absolute -top-4 -left-4 w-32 h-32 border-t border-l border-gold"></div>
-            <img src="{{ asset('storage/' . $project->image) }}" class="rounded shadow-2xl relative z-10 w-full">
+            <img src="{{ asset('storage/' . $project->featured_image) }}" class="rounded shadow-2xl relative z-10 w-full h-[500px] object-cover">
             <div class="absolute -bottom-4 -right-4 w-32 h-32 border-b border-r border-gold"></div>
         </div>
         <div>
@@ -71,7 +80,7 @@
         </div>
     </section>
 
-    <!-- FEATURES & AMENITIES -->
+    <!-- FEATURES & AMENITIES (Uses amenities_image) -->
     <section id="features" class="max-w-7xl mx-auto py-24 px-6 border-t border-white/5 scroll-mt-32">
         <div class="grid md:grid-cols-2 gap-20 items-start">
             <div>
@@ -81,25 +90,42 @@
                 </div>
             </div>
             <div class="mt-10 md:mt-0">
-                <img src="{{ asset('storage/' . $project->image) }}" class="w-full h-auto rounded shadow-xl border border-white/5">
+                <img src="{{ asset('storage/' . ($project->amenities_image ?? $project->image)) }}" class="w-full h-auto rounded shadow-xl border border-white/5">
             </div>
         </div>
     </section>
 
-    <!-- EXPERIENCE / GALLERY -->
-    <section id="experience" class="py-24 bg-[#080808] scroll-mt-32">
-        <div class="max-w-7xl mx-auto px-6">
+    <!-- FLOORPLAN SECTION (Conditional) -->
+    @if($project->floorplan_image)
+    <section id="floorplan" class="max-w-7xl mx-auto py-24 px-6 border-t border-white/5 scroll-mt-32">
+        <h2 class="serif text-4xl mb-12 text-center gold-gradient uppercase tracking-widest">Floorplan</h2>
+        <div class="flex justify-center bg-[#0f0f0f] p-8 rounded-lg border border-white/5">
+            <img src="{{ asset('storage/' . $project->floorplan_image) }}" class="max-w-full h-auto rounded shadow-2xl">
+        </div>
+    </section>
+    @endif
+
+    <!-- EXPERIENCE / GALLERY (Wider Slideshow) -->
+    <section id="experience" class="py-24 bg-[#080808] scroll-mt-32 overflow-hidden">
+        <div class="w-full px-4 md:px-0">
             <h2 class="serif text-4xl mb-12 text-center gold-gradient uppercase tracking-widest">Experience</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                @if($project->gallery)
-                    @foreach($project->gallery as $gal_img)
-                    <div class="overflow-hidden group">
-                        <img src="{{ asset('storage/' . $gal_img) }}" class="w-full h-64 object-cover transition duration-700 group-hover:scale-110">
-                    </div>
-                    @endforeach
-                @else
-                    <div class="col-span-3 text-center text-gray-600 py-10">No Gallery Images Found</div>
-                @endif
+            
+            <div class="swiper experienceSlider">
+                <div class="swiper-wrapper">
+                    @if($project->gallery)
+                        @foreach($project->gallery as $gal_img)
+                        <div class="swiper-slide group">
+                            <img src="{{ asset('storage/' . $gal_img) }}" class="w-full h-[500px] md:h-[750px] object-cover transition duration-700">
+                        </div>
+                        @endforeach
+                    @else
+                        <div class="swiper-slide text-center text-gray-600 py-10">No Gallery Images Found</div>
+                    @endif
+                </div>
+                <!-- Swiper Navigation -->
+                <div class="swiper-button-next !text-gold"></div>
+                <div class="swiper-button-prev !text-gold"></div>
+                <div class="swiper-pagination"></div>
             </div>
         </div>
     </section>
@@ -109,7 +135,7 @@
         <iframe src="{{ $project->map_link }}" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
     </section>
 
-    <!-- BOOK A FREE CONSULTATION -->
+    <!-- BOOK A FREE CONSULTATION (Includes Phone Number) -->
     <section class="py-24 bg-black border-t border-white/5">
         <div class="max-w-3xl mx-auto px-6 text-center">
             <h2 class="serif text-4xl mb-4 gold-gradient uppercase tracking-widest">Book A Free Consultation</h2>
@@ -117,12 +143,13 @@
             <form action="#" class="grid grid-cols-1 gap-8">
                 <input type="text" placeholder="YOUR NAME" class="bg-transparent border-b border-white/20 py-4 focus:outline-none focus:border-gold uppercase text-[10px] tracking-widest">
                 <input type="email" placeholder="EMAIL ADDRESS" class="bg-transparent border-b border-white/20 py-4 focus:outline-none focus:border-gold uppercase text-[10px] tracking-widest">
+                <input type="tel" placeholder="PHONE NUMBER" class="bg-transparent border-b border-white/20 py-4 focus:outline-none focus:border-gold uppercase text-[10px] tracking-widest">
                 <button type="submit" class="mt-8 gold-button py-6 tracking-[0.4em] uppercase text-xs">Request a Call Back</button>
             </form>
         </div>
     </section>
 
-    <!-- YOU MAY ALSO LIKE (Uses Body Photo / Thumbnail) -->
+    <!-- YOU MAY ALSO LIKE -->
     <section class="py-24 bg-[#0a0a0a] border-t border-white/5">
         <div class="max-w-7xl mx-auto px-6">
             <h2 class="serif text-3xl mb-16 text-center uppercase tracking-[0.3em]">You May Also Like</h2>
@@ -183,7 +210,36 @@
     </div>
 </div>
 
+<!-- Swiper.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
 <script>
+    // Initialize Swiper Slider (Wide immersive feel)
+    var swiper = new Swiper(".experienceSlider", {
+        slidesPerView: 1,
+        spaceBetween: 0,
+        loop: true,
+        centeredSlides: true,
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+        breakpoints: {
+            1024: { 
+                slidesPerView: 1.8, 
+                spaceBetween: 40 
+            },
+        },
+    });
+
     function toggleModal() {
         const modal = document.getElementById('statusModal');
         modal.classList.toggle('hidden');
@@ -192,7 +248,6 @@
 </script>
 
 <style>
-    /* Fixed the scroll position so it doesn't get hidden under the header */
     .scroll-mt-32 {
         scroll-margin-top: 8rem;
     }
@@ -205,6 +260,14 @@
     .gold-button:hover {
         background: #C5A059;
         color: #000;
+    }
+    .swiper-pagination-bullet-active {
+        background: #C5A059 !important;
+    }
+    /* Experience Slider Navigation Styles */
+    .swiper-button-next:after, .swiper-button-prev:after {
+        font-size: 20px !important;
+        font-weight: bold;
     }
 </style>
 @endsection
