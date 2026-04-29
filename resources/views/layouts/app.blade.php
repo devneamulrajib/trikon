@@ -145,18 +145,8 @@
 
                 <a href="{{ route('news') }}" class="nav-link {{ Request::is('news-events*') ? 'active-nav' : '' }}">News</a>
                 
-                <!-- Projects Dropdown -->
-                <div class="relative group">
-                    <a href="javascript:void(0)" class="nav-link flex items-center gap-1 {{ Request::is('projects*') ? 'active-nav' : '' }}">Projects <i class="fa-solid fa-chevron-down text-[8px] ml-1"></i></a>
-                    <div class="absolute left-0 mt-0 w-64 bg-[#f4a41c] hidden group-hover:block shadow-2xl z-50">
-                        <a href="/projects/residential/all" class="block px-6 py-4 text-white font-black uppercase text-sm border-b border-white/20 hover:bg-[#e09418]">Residential</a>
-                        <div class="flex flex-col">
-                             <a href="/projects/residential/ongoing" class="block px-8 py-3 text-[10px] font-bold text-white hover:bg-[#e09418] border-b border-white/10 uppercase tracking-widest italic transition-colors">— Ongoing</a>
-                             <a href="/projects/residential/upcoming" class="block px-8 py-3 text-[10px] font-bold text-white hover:bg-[#e09418] border-b border-white/10 uppercase tracking-widest italic transition-colors">— Upcoming</a>
-                             <a href="/projects/residential/completed" class="block px-8 py-3 text-[10px] font-bold text-white hover:bg-[#e09418] uppercase tracking-widest italic transition-colors">— Completed</a>
-                        </div>
-                    </div>
-                </div>
+                <!-- Projects (Direct Link, No Dropdown) -->
+                <a href="/projects/residential/all" class="nav-link {{ Request::is('projects*') ? 'active-nav' : '' }}">Projects</a>
 
                 <!-- Services Dropdown (Dynamic) -->
                 <div class="relative group">
