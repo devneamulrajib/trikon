@@ -240,7 +240,7 @@
             <div>
                 <h4 class="text-black font-black uppercase text-sm mb-6 tracking-widest">CONTACT US</h4>
                 <div class="text-[10px] font-bold space-y-3 uppercase tracking-widest text-white leading-relaxed">
-                    <p class="flex items-center gap-3"><i class="fa-solid fa-phone"></i> {{ $settings->contact_phone ?? '+8809647600600' }}</p>
+                    <p class="flex items-center gap-3"><i class="fa-solid fa-phone"></i> {{ $settings->contact_phone ?? '+8801633530231' }}</p>
                     <p class="flex items-center gap-3"><i class="fa-solid fa-envelope"></i> {{ $settings->contact_email ?? 'info@trikonholdings.com' }}</p>
                 </div>
             </div>
@@ -249,7 +249,7 @@
 
     <!-- COPYRIGHT BAR -->
     <div class="bg-black py-4 px-6 text-center text-white text-[10px] font-bold uppercase tracking-[0.2em]">
-        © {{ date('Y') }}. All rights reserved by Trikon. Developed by Bullseye
+        © {{ date('Y') }}. All rights reserved by Trikon. Developed by Trikon it
     </div>
 
     <!-- GLOBAL SCRIPTS -->
