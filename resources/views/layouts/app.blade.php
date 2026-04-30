@@ -18,7 +18,7 @@
             --gold-light: #e2c28d; 
             --dark-bg: #0a0a0a; 
             --trikon-orange: #f4a41c;
-            --header-height: 90px; /* Fixed Height to prevent covering images */
+            --header-height: 90px;
         }
         body { font-family: 'Montserrat', sans-serif; background-color: var(--dark-bg); color: #fff; overflow-x: hidden; scroll-behavior: smooth; }
         .serif { font-family: 'Cinzel', serif; }
@@ -31,16 +31,16 @@
             width: 100%;
             height: var(--header-height);
             z-index: 1000;
-            background: #000000; /* Solid Black at top as requested */
+            background: #000000; /* Initial Solid Black */
             display: flex;
             align-items: center;
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.5s ease-in-out;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Scrolled State: Transitions to Transparent */
+        /* SCROLLED STATE: TRANSPARENT BACKGROUND */
         .glass-header.scrolled {
-            background: transparent !important;
+            background: transparent !important; /* Fully transparent on scroll */
             border-bottom: 1px solid transparent;
             backdrop-filter: blur(0px);
         }
@@ -50,13 +50,26 @@
             font-weight: 600; 
             text-transform: uppercase; 
             letter-spacing: 1px; 
-            color: #fff; 
-            transition: 0.3s ease-in-out; 
+            color: #ffffff; /* Initial white text */
+            transition: 0.4s ease; 
             position: relative;
             padding-bottom: 4px;
         }
 
-        /* Link Border Effect */
+        /* CHANGE TEXT COLOR TO DARK ON SCROLL (To be visible on white/light sections) */
+        .glass-header.scrolled .nav-link,
+        .glass-header.scrolled .fa-chevron-down,
+        .glass-header.scrolled .fa-bars-staggered,
+        .glass-header.scrolled .logo-subtext {
+            color: #000000 !important;
+            text-shadow: 0px 0px 1px rgba(255,255,255,0.5); /* Subtle shadow for extra readability */
+        }
+
+        /* Adjust logo image visibility on scroll */
+        .glass-header.scrolled img {
+            filter: brightness(0); /* Makes a white/colored logo black when background is transparent/white */
+        }
+
         .nav-link::after {
             content: '';
             position: absolute;
@@ -68,12 +81,9 @@
             transition: width 0.3s ease;
         }
         .nav-link:hover::after, .active-nav::after { width: 100%; }
-        .nav-link:hover, .active-nav { color: var(--trikon-orange); }
+        .nav-link:hover, .active-nav { color: var(--trikon-orange) !important; }
 
-        /* Dropdown Styling */
         .dropdown-link { font-size: 11.5px; font-weight: 600; letter-spacing: 1px; color: #fff; }
-
-        /* Prevents content from being hidden behind the fixed header */
         main { padding-top: var(--header-height); }
 
         /* FLOATING SOCIAL BUTTONS */
@@ -98,9 +108,7 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .social-btn:hover {
-            transform: scale(1.15) translateY(-5px);
-        }
+        .social-btn:hover { transform: scale(1.15) translateY(-5px); }
         .btn-whatsapp { background-color: #25d366; }
         .btn-messenger { background-color: #0084ff; }
     </style>
@@ -121,7 +129,7 @@
                 @else
                     <div class="flex flex-col leading-none">
                         <span class="serif text-[#f4a41c] font-black text-2xl md:text-3xl tracking-tighter uppercase">{{ $settings->site_name ?? 'TRIKON' }}</span>
-                        <span class="text-[8px] text-white tracking-[0.4em] uppercase font-bold">Holdings Ltd.</span>
+                        <span class="logo-subtext text-[8px] text-white tracking-[0.4em] uppercase font-bold transition-colors">Holdings Ltd.</span>
                     </div>
                 @endif
             </a>
@@ -143,12 +151,11 @@
                     </div>
                 </div>
 
-                <a href="{{ route('news') }}" class="nav-link {{ Request::is('news-events*') ? 'active-nav' : '' }}">News</a>
-                
-                <!-- Projects (Direct Link, No Dropdown) -->
                 <a href="/projects/residential/all" class="nav-link {{ Request::is('projects*') ? 'active-nav' : '' }}">Projects</a>
 
-                <!-- Services Dropdown (Dynamic) -->
+                <a href="{{ route('brokerage') }}" class="nav-link {{ Request::is('brokerage*') ? 'active-nav' : '' }}">Brokerage</a>
+
+                <!-- Services Dropdown -->
                 <div class="relative group">
                     <a href="javascript:void(0)" class="nav-link flex items-center gap-1 {{ Request::is('services*') ? 'active-nav' : '' }}">Services <i class="fa-solid fa-chevron-down text-[8px] ml-1"></i></a>
                     <div class="absolute left-0 mt-0 w-64 bg-[#f4a41c] hidden group-hover:block shadow-2xl z-50">
@@ -161,6 +168,7 @@
                     </div>
                 </div>
 
+                <a href="{{ route('news') }}" class="nav-link {{ Request::is('news-events*') ? 'active-nav' : '' }}">News</a>
                 <a href="{{ route('blog.index') }}" class="nav-link {{ Request::is('blog*') ? 'active-nav' : '' }}">Blog</a>
                 <a href="/career" class="nav-link {{ Request::is('career*') ? 'active-nav' : '' }}">Career</a>
                 <a href="{{ route('contact') }}" class="nav-link {{ Request::is('contact') ? 'active-nav' : '' }}">Contact</a>
@@ -175,9 +183,9 @@
         <button onclick="toggleMobileMenu()" class="absolute top-10 right-10 text-white text-5xl hover:text-[#f4a41c]">&times;</button>
         <a href="/" class="serif text-xl font-bold text-white hover:text-[#f4a41c]">HOME</a>
         <a href="/about-us/stories" class="serif text-xl font-bold text-white hover:text-[#f4a41c]">ABOUT US</a>
-        <a href="{{ route('news') }}" class="serif text-xl font-bold text-white hover:text-[#f4a41c]">NEWS</a>
         <a href="/projects/residential/all" class="serif text-xl font-bold text-white hover:text-[#f4a41c]">PROJECTS</a>
-        <a href="/blog" class="serif text-xl font-bold text-white hover:text-[#f4a41c]">SERVICES</a>
+        <a href="/brokerage" class="serif text-xl font-bold text-white hover:text-[#f4a41c]">BROKERAGE</a>
+        <a href="{{ route('news') }}" class="serif text-xl font-bold text-white hover:text-[#f4a41c]">NEWS</a>
         <a href="{{ route('blog.index') }}" class="serif text-xl font-bold text-white hover:text-[#f4a41c]">BLOG</a>
         <a href="/career" class="serif text-xl font-bold text-white hover:text-[#f4a41c]">CAREER</a>
         <a href="{{ route('contact') }}" class="serif text-xl font-bold text-white hover:text-[#f4a41c]">CONTACT</a>
@@ -248,7 +256,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() { if (typeof AOS !== 'undefined') { AOS.init({ duration: 1200, once: true }); } });
         
-        // SCROLL LOGIC: Starts Solid Black, blends to Transparent
+        // SCROLL LOGIC: Initially black, changes to fully transparent when scrolled
         window.addEventListener('scroll', function() { 
             const header = document.querySelector('.glass-header'); 
             if (window.scrollY > 80) {

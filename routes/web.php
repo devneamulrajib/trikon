@@ -129,8 +129,29 @@ Route::get('/projects/residential/{status?}', function ($status = 'all') {
     ]);
 })->name('projects.residential');
 
+
+// Brokerage List Page
+Route::get('/brokerage', function () {
+    return view('pages.brokerage-list', [
+        'listings' => \App\Models\Brokerage::latest()->get(),
+        'settings' => \App\Models\Setting::first()
+    ]);
+})->name('brokerage');
+
+// Brokerage Detailed Listing
+Route::get('/brokerage/{slug}', function ($slug) {
+    $listing = \App\Models\Brokerage::where('slug', $slug)->firstOrFail();
+    $related = \App\Models\Brokerage::where('id', '!=', $listing->id)->take(4)->get();
+    
+    return view('pages.brokerage-details', [
+        'listing' => $listing,
+        'related' => $related,
+        'settings' => \App\Models\Setting::first()
+    ]);
+})->name('brokerage.show');
+
 /**
- * 5. CONTACT PAGE
+ * 6. CONTACT PAGE
  */
 Route::get('/contact', function () {
     return view('contact', [
@@ -150,7 +171,7 @@ Route::post('/contact', function (Request $request) {
 })->name('contact.send');
 
 /**
- * 6. OTHER PLACEHOLDERS
+ * 7. OTHER PLACEHOLDERS
  */
 Route::get('/news-events', function () {
     return view('pages.news', [
