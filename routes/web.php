@@ -237,3 +237,13 @@ Route::get('/terms-conditions', function () {
 Route::get('/privacy-policy', function () {
     return view('pages.privacy', ['settings' => \App\Models\Setting::first()]);
 })->name('privacy');
+
+Route::get('/fix-storage', function () {
+    $target = storage_path('app/public');
+    $shortcut = public_path('storage');
+    if (file_exists($shortcut)) {
+        rename($shortcut, $shortcut . '_old_' . time());
+    }
+    symlink($target, $shortcut);
+    return "Storage Link Created Successfully!";
+});

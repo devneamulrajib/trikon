@@ -12,7 +12,7 @@ class Brokerage extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'images' => 'array',
+        'images' => 'array', // This tells Laravel to treat the images as a list
         'amenities' => 'array',
     ];
 }
