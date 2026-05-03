@@ -15,6 +15,7 @@ use App\Models\Service;
 use App\Models\Blog;
 use App\Models\Job;
 use App\Models\Application;
+use Illuminate\Support\Facades\Artisan;
 
 /**
  * 1. HOME PAGE
@@ -238,12 +239,28 @@ Route::get('/privacy-policy', function () {
     return view('pages.privacy', ['settings' => \App\Models\Setting::first()]);
 })->name('privacy');
 
+/**
+ * 8. CPANEL STORAGE FIX
+ * Visit yourdomain.com/fix-storage once after deployment
+ */
 Route::get('/fix-storage', function () {
+    // 1. Try standard Artisan link
+    Artisan::call('storage:link');
+
+    // 2. Try manual symlink (Commonly required on cPanel)
     $target = storage_path('app/public');
     $shortcut = public_path('storage');
+
     if (file_exists($shortcut)) {
-        rename($shortcut, $shortcut . '_old_' . time());
+        // Handle existing broken links or folders
+        if (is_link($shortcut) || is_dir($shortcut)) {
+            rename($shortcut, $shortcut . '_old_' . time());
+        }
     }
-    symlink($target, $shortcut);
-    return "Storage Link Created Successfully!";
+
+    if (symlink($target, $shortcut)) {
+        return "Storage Link Created Successfully!";
+    }
+
+    return "Artisan command executed, but manual symlink failed. Check folder permissions.";
 });
