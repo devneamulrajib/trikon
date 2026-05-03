@@ -31,6 +31,7 @@ class Brokerage extends Model
 
     /**
      * Get the URL of the first image.
+     * Works on both Local PC and Live Server.
      */
     public function getFirstImageUrlAttribute()
     {
@@ -39,11 +40,8 @@ class Brokerage extends Model
         }
 
         $path = $this->images[0];
-        
-        // Clean up the path just in case
         $cleanPath = str_replace('storage/', '', $path);
         
-        // Hardcode the URL path
-        return 'https://trikonltd.com/storage/' . $cleanPath;
+        return asset('storage/' . $cleanPath);
     }
 }
