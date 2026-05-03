@@ -99,9 +99,10 @@
             <h2 class="text-[#f4a41c] text-3xl md:text-4xl font-extrabold uppercase mb-8">Trikon Holdings</h2>
             
             <div class="space-y-6 text-white/90 text-sm leading-relaxed font-light">
-                <p>We are delighted to extend a warm welcome to you as you explore the world of Trikon Holdings Limited - a name synonymous with excellence in property development.</p>
-                <p>Our story is one of passion, commitment to quality, and a vision that reaches beyond the horizon. Trikon transforms luxury into a legacy.</p>
-                <p>Thank you for choosing Trikon Holdings Limited. We look forward to sharing our vision and helping you discover perfection.</p>
+                <p>Discover a new standard in real estate with Trikon Holdings, a trusted name in Bangladesh’s real estate sector, specializing in property development, luxury residential apartments, commercial spaces, and land projects.</p>
+                <p>We are dedicated to delivering developments that combine quality construction, modern design, and long-term investment value. Whether you are seeking your dream home, a functional office space, or a secure investment opportunity, Trikon Holdings offers reliable solutions tailored to your needs.</p>
+                <p>Experience premium living, exceptional opportunities, and smart investments with Trikon.</p>
+                <p>We look forward to partnering with you and helping you achieve your property goals.</p>
             </div>
         </div>
     </div>
