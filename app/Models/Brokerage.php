@@ -13,25 +13,21 @@ class Brokerage extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'images' => 'array', 
+        'images' => 'array',
         'amenities' => 'array',
     ];
 
-    /**
-     * Get the URL of the first image.
-     */
     public function getFirstImageUrlAttribute()
-{
-    if (!$this->images || !is_array($this->images) || count($this->images) === 0) {
-        return null;
-    }
+    {
+        if (!$this->images || !is_array($this->images) || count($this->images) === 0) {
+            return null;
+        }
 
-    $path = $this->images[0];
-    
-    // Clean up the path just in case
-    $cleanPath = str_replace('storage/', '', $path);
-    
-    // Hardcode the URL path
-    return 'https://trikonltd.com/storage/' . $cleanPath;
-}
+        $path = $this->images[0];
+        
+        // This makes it work on BOTH your PC and the Server
+        $cleanPath = str_replace('storage/', '', $path);
+        
+        return asset('storage/' . $cleanPath);
+    }
 }

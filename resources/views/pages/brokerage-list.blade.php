@@ -39,17 +39,21 @@
                         @if($item->images && is_array($item->images) && count($item->images) > 0)
                             @php
                                 $img = $item->images[0];
+                                // Handle absolute URLs (e.g. from a CDN or external source)
                                 if (Str::startsWith($img, ['http://', 'https://'])) {
                                     $imgUrl = $img;
-                                } elseif (Str::startsWith($img, '/storage')) {
-                                    $imgUrl = asset(ltrim($img, '/'));
-                                } elseif (Str::startsWith($img, 'storage/')) {
-                                    $imgUrl = asset($img);
-                                } else {
-                                    $imgUrl = asset('storage/' . $img);
+                                } 
+                                // Handle paths already containing /storage/
+                                elseif (Str::contains($img, 'storage/')) {
+                                    $imgUrl = asset(Str::after($img, 'storage/'));
+                                    $imgUrl = asset('storage/' . Str::after($img, 'storage/'));
+                                } 
+                                // Default Filament behavior: use Storage::url to handle the symlink correctly
+                                else {
+                                    $imgUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($img);
                                 }
                             @endphp
-                            <img src="{{ $imgUrl }}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="{{ $item->title }}">
+                            <img src="{{ $imgUrl }}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="{{ $item->title }}" onerror="this.onerror=null;this.src='https://placehold.co/600x400?text=Image+Not+Found';">
                         @else
                             <div class="w-full h-full bg-gray-200 flex items-center justify-center serif italic text-gray-400">
                                 No Image Available
