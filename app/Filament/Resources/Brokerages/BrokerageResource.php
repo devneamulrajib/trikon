@@ -15,14 +15,10 @@ class BrokerageResource extends Resource
 {
     protected static ?string $model = Brokerage::class;
 
-    // Type hints matched to your environment requirements
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-office-2';
 
     protected static string | \UnitEnum | null $navigationGroup = 'Content Management';
 
-    /**
-     * Signature matched to your specific parent class: form(Schema $schema): Schema
-     */
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -47,14 +43,21 @@ class BrokerageResource extends Resource
                     ->required()
                     ->unique(Brokerage::class, 'slug', ignoreRecord: true),
 
-                // 3. DYNAMIC LOCATION FIELD (Now editable from Admin)
+                // 3. DYNAMIC LOCATION FIELD
                 \Filament\Forms\Components\TextInput::make('location')
                     ->label('Location / Area')
                     ->placeholder('e.g. Bashundhara R/A, Dhaka')
                     ->required()
                     ->helperText('This will replace the hardcoded location on the website.'),
 
-                // 4. LAND SPECIFIC FIELDS (Visible only when Land is selected)
+                // NEW: GOOGLE MAP FIELD
+                \Filament\Forms\Components\Textarea::make('map_link')
+                    ->label('Google Maps Embed Link')
+                    ->placeholder('Paste the <iframe> code here')
+                    ->helperText('Go to Google Maps -> Share -> Embed a map -> Copy HTML')
+                    ->columnSpanFull(),
+
+                // 4. LAND SPECIFIC FIELDS
                 \Filament\Forms\Components\TextInput::make('block_name')
                     ->label('Block Name')
                     ->visible(fn ($get) => $get('category') === 'Land'),
@@ -71,7 +74,7 @@ class BrokerageResource extends Resource
                     ->label('Facing (e.g. South)')
                     ->visible(fn ($get) => $get('category') === 'Land'),
 
-                // 5. FLAT SPECIFIC FIELDS (Visible only when Flat is selected)
+                // 5. FLAT SPECIFIC FIELDS
                 \Filament\Forms\Components\TextInput::make('area_sqft')
                     ->label('Area (SFT)')
                     ->visible(fn ($get) => $get('category') === 'Flat'),
@@ -103,15 +106,19 @@ class BrokerageResource extends Resource
                     ->columns(3)
                     ->visible(fn ($get) => $get('category') === 'Flat'),
 
-                // 6. PRICING & MEDIA (Common to both)
+                // 6. PRICING & MEDIA
                 \Filament\Forms\Components\TextInput::make('price')
                     ->label('Asking Price (BDT)')
                     ->placeholder('e.g. 9,500,000')
                     ->required(),
 
+                // MODIFIED: AUTO-GENERATED PROPERTY ID
                 \Filament\Forms\Components\TextInput::make('property_id')
                     ->label('Property ID')
-                    ->required(),
+                    ->placeholder('Generated automatically on save')
+                    ->disabled()
+                    ->dehydrated(false)
+                    ->visibleOn('edit'),
 
                 \Filament\Forms\Components\Select::make('status')
                     ->options([
@@ -139,12 +146,12 @@ class BrokerageResource extends Resource
             ->columns([
                 \Filament\Tables\Columns\TextColumn::make('category')->badge(),
                 \Filament\Tables\Columns\TextColumn::make('title')->searchable(),
-                \Filament\Tables\Columns\TextColumn::make('location')->searchable(), // Added to table
+                \Filament\Tables\Columns\TextColumn::make('location')->searchable(),
                 \Filament\Tables\Columns\TextColumn::make('price')->label('Price'),
                 \Filament\Tables\Columns\TextColumn::make('status')->badge(),
             ])
             ->actions([
-                // Actions left empty to prevent namespace crashes based on your previous errors
+                // Actions
             ]);
     }
 

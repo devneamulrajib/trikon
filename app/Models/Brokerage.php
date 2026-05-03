@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Brokerage extends Model
 {
@@ -18,6 +19,17 @@ class Brokerage extends Model
     ];
 
     /**
+     * Automatic Property ID Generation
+     */
+    protected static function booted()
+    {
+        static::creating(function ($brokerage) {
+            // Generates a unique ID like TRK-7A2B9C
+            $brokerage->property_id = 'TRK-' . strtoupper(Str::random(6));
+        });
+    }
+
+    /**
      * Get the URL of the first image.
      */
     public function getFirstImageUrlAttribute()
@@ -26,8 +38,12 @@ class Brokerage extends Model
             return null;
         }
 
-        // Filament stores paths like 'brokerage-listings/image.jpg'
-        // Storage::url() converts that to '/storage/brokerage-listings/image.jpg'
-        return Storage::disk('public')->url($this->images[0]);
+        $path = $this->images[0];
+        
+        // Clean up the path just in case
+        $cleanPath = str_replace('storage/', '', $path);
+        
+        // Hardcode the URL path
+        return 'https://trikonltd.com/storage/' . $cleanPath;
     }
 }
