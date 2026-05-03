@@ -96,7 +96,7 @@
     <div class="max-w-6xl mx-auto px-6 relative z-10">
         <div class="max-w-2xl" data-aos="fade-right">
             <h4 class="text-white text-xl font-bold mb-2">Welcome to</h4>
-            <h2 class="text-[#f4a41c] text-3xl md:text-4xl font-extrabold uppercase mb-8">Trikon Holdings Ltd</h2>
+            <h2 class="text-[#f4a41c] text-3xl md:text-4xl font-extrabold uppercase mb-8">Trikon Holdings</h2>
             
             <div class="space-y-6 text-white/90 text-sm leading-relaxed font-light">
                 <p>We are delighted to extend a warm welcome to you as you explore the world of Trikon Holdings Limited - a name synonymous with excellence in property development.</p>
