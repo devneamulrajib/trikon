@@ -39,17 +39,15 @@
                         @if($item->images && is_array($item->images) && count($item->images) > 0)
                             @php
                                 $img = $item->images[0];
-                                // Handle absolute URLs (e.g. from a CDN or external source)
+                                // 1. Handle absolute URLs (e.g. from a CDN or external source)
                                 if (Str::startsWith($img, ['http://', 'https://'])) {
                                     $imgUrl = $img;
                                 } 
-                                // Handle paths already containing /storage/
-                                elseif (Str::contains($img, 'storage/')) {
-                                    $imgUrl = asset('storage/' . Str::after($img, 'storage/'));
-                                } 
-                                // Optimized fallback for cPanel: Construct URL manually to avoid Flysystem directory checks
+                                // 2. Robust URL generation for cPanel:
+                                // Since files were moved to public root, we strip 'storage/' and use asset()
                                 else {
-                                    $imgUrl = asset('storage/' . $img);
+                                    $cleanPath = ltrim(Str::replaceFirst('storage/', '', $img), '/');
+                                    $imgUrl = asset($cleanPath);
                                 }
                             @endphp
                             <img src="{{ $imgUrl }}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="{{ $item->title }}" onerror="this.onerror=null;this.src='https://placehold.co/600x400?text=Image+Not+Found';">
