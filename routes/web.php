@@ -16,6 +16,7 @@ use App\Models\Blog;
 use App\Models\Job;
 use App\Models\Application;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 
 /**
  * 1. HOME PAGE
@@ -29,7 +30,7 @@ Route::get('/', function () {
 });
 
 /**
- * 2. ABOUT US SECTION (Specific routes must come before the wildcard)
+ * 2. ABOUT US SECTION
  */
 
 // Management Team
@@ -65,7 +66,7 @@ Route::get('/about-us/csr', function () {
     ]);
 });
 
-// WHY US (Added here specifically)
+// WHY US
 Route::get('/about-us/why-us', function () {
     return view('pages.why-us', [
         'settings' => Setting::first()
@@ -79,7 +80,7 @@ Route::get('/about-us/stories', function () {
     ]);
 });
 
-// Wildcard for other about sections (Keep this at the bottom of the About section)
+// Wildcard for other about sections
 Route::get('/about-us/{slug}', function ($slug) {
     return view('pages.stories', ['settings' => Setting::first()]);
 });
@@ -104,8 +105,6 @@ Route::get('/project/{slug}', function ($slug) {
 /**
  * 4. PROJECTS LISTING PAGE
  */
-
-// All Projects Index (Rangs Model - 4 Column Grid)
 Route::get('/projects', function () {
     return view('projects-list', [
         'projects' => Project::paginate(12),
@@ -114,15 +113,11 @@ Route::get('/projects', function () {
     ]);
 })->name('projects.index');
 
-// Filtered Residential Projects
 Route::get('/projects/residential/{status?}', function ($status = 'all') {
     $query = Project::query();
-    
-    // Status can be: all, ongoing, upcoming, completed
     if ($status !== 'all') {
         $query->where('category', ucfirst($status));
     }
-
     return view('projects-list', [
         'projects' => $query->paginate(12),
         'currentStatus' => strtolower($status),
@@ -130,8 +125,9 @@ Route::get('/projects/residential/{status?}', function ($status = 'all') {
     ]);
 })->name('projects.residential');
 
-
-// Brokerage List Page
+/**
+ * 5. BROKERAGE
+ */
 Route::get('/brokerage', function () {
     return view('pages.brokerage-list', [
         'listings' => \App\Models\Brokerage::latest()->get(),
@@ -139,7 +135,6 @@ Route::get('/brokerage', function () {
     ]);
 })->name('brokerage');
 
-// Brokerage Detailed Listing
 Route::get('/brokerage/{slug}', function ($slug) {
     $listing = \App\Models\Brokerage::where('slug', $slug)->firstOrFail();
     $related = \App\Models\Brokerage::where('id', '!=', $listing->id)->take(4)->get();
@@ -172,7 +167,7 @@ Route::post('/contact', function (Request $request) {
 })->name('contact.send');
 
 /**
- * 7. OTHER PLACEHOLDERS
+ * 7. OTHER SECTIONS
  */
 Route::get('/news-events', function () {
     return view('pages.news', [
@@ -193,14 +188,12 @@ Route::get('/blog', function () {
     return view('pages.blog-list', compact('blogs', 'settings'));
 })->name('blog.index');
 
-// Blog Detail Page
 Route::get('/blog/{slug}', function ($slug) {
     $blog = Blog::where('slug', $slug)->firstOrFail();
     $settings = \App\Models\Setting::first();
     return view('pages.blog-detail', compact('blog', 'settings'));
 })->name('blog.show');
 
-// 1. Career List Page
 Route::get('/career', function () {
     return view('pages.career-list', [
         'jobs' => Job::where('is_active', true)->latest()->get(),
@@ -208,7 +201,6 @@ Route::get('/career', function () {
     ]);
 })->name('career.index');
 
-// 2. Career Detail Page
 Route::get('/career/{slug}', function ($slug) {
     $job = Job::where('slug', $slug)->firstOrFail();
     return view('pages.career-detail', [
@@ -217,7 +209,6 @@ Route::get('/career/{slug}', function ($slug) {
     ]);
 })->name('career.show');
 
-// 3. Handle Application Submission
 Route::post('/career/apply', function (Request $request) {
     $validated = $request->validate([
         'job_id' => 'required|exists:jobs,id',
@@ -226,7 +217,6 @@ Route::post('/career/apply', function (Request $request) {
         'email' => 'required|email|max:255',
         'resume_text' => 'required|string',
     ]);
-
     Application::create($validated);
     return back()->with('success', 'Your application has been submitted successfully!');
 })->name('career.apply');
@@ -240,27 +230,66 @@ Route::get('/privacy-policy', function () {
 })->name('privacy');
 
 /**
- * 8. CPANEL STORAGE FIX
- * Visit yourdomain.com/fix-storage once after deployment
+ * 8. CPANEL STORAGE FIX - ULTRA ROBUST VERSION
+ * Visit trikonltd.com/fix-storage once after deployment
  */
 Route::get('/fix-storage', function () {
-    // 1. Try standard Artisan link
-    Artisan::call('storage:link');
+    $storagePublicPath = storage_path('app/public');
+    $publicHtmlPath = base_path('../public_html');
 
-    // 2. Try manual symlink (Commonly required on cPanel)
-    $target = storage_path('app/public');
-    $shortcut = public_path('storage');
+    // List of folders to bridge from Admin Panel to Website
+    $folders = [
+        'brokerage-listings', 
+        'projects', 
+        'project-galleries', 
+        'team', 
+        'team-gallery', 
+        'csr', 
+        'site-settings', 
+        'sliders',
+        'services'
+    ];
 
-    if (file_exists($shortcut)) {
-        // Handle existing broken links or folders
-        if (is_link($shortcut) || is_dir($shortcut)) {
-            rename($shortcut, $shortcut . '_old_' . time());
+    $output = "<h2>Storage Fix Results:</h2>";
+
+    foreach ($folders as $folder) {
+        $target = $storagePublicPath . '/' . $folder;
+        $shortcut = $publicHtmlPath . '/' . $folder;
+
+        // 1. Ensure the source folder exists in storage (so link doesn't break)
+        if (!file_exists($target)) {
+            mkdir($target, 0775, true);
+        }
+
+        // 2. Remove existing empty folder or broken link in public_html to prevent "File exists" error
+        if (file_exists($shortcut)) {
+            if (is_link($shortcut)) {
+                unlink($shortcut);
+            } elseif (is_dir($shortcut)) {
+                // Only delete if folder is empty. If not empty, we rename it as a backup.
+                $files = scandir($shortcut);
+                if (count($files) <= 2) { // just . and ..
+                    rmdir($shortcut);
+                } else {
+                    rename($shortcut, $shortcut . '_backup_' . time());
+                }
+            }
+        }
+
+        // 3. Create the symbolic link
+        if (symlink($target, $shortcut)) {
+            $output .= "<p style='color:green;'>SUCCESS: Linked <b>$folder</b> folder.</p>";
+        } else {
+            $output .= "<p style='color:red;'>FAILED: Could not link <b>$folder</b>. Check permissions.</p>";
         }
     }
 
-    if (symlink($target, $shortcut)) {
-        return "Storage Link Created Successfully!";
+    // Also link the main storage folder for good measure
+    $mainTarget = storage_path('app/public');
+    $mainShortcut = $publicHtmlPath . '/storage';
+    if (!file_exists($mainShortcut)) {
+        symlink($mainTarget, $mainShortcut);
     }
 
-    return "Artisan command executed, but manual symlink failed. Check folder permissions.";
+    return $output . "<br><a href='/brokerage'>Click here to check Brokerage Page</a>";
 });
