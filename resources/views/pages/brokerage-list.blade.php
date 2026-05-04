@@ -45,12 +45,11 @@
                                 } 
                                 // Handle paths already containing /storage/
                                 elseif (Str::contains($img, 'storage/')) {
-                                    $imgUrl = asset(Str::after($img, 'storage/'));
                                     $imgUrl = asset('storage/' . Str::after($img, 'storage/'));
                                 } 
-                                // Default Filament behavior: use Storage::url to handle the symlink correctly
+                                // Optimized fallback for cPanel: Construct URL manually to avoid Flysystem directory checks
                                 else {
-                                    $imgUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($img);
+                                    $imgUrl = asset('storage/' . $img);
                                 }
                             @endphp
                             <img src="{{ $imgUrl }}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="{{ $item->title }}" onerror="this.onerror=null;this.src='https://placehold.co/600x400?text=Image+Not+Found';">
