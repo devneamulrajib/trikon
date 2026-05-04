@@ -62,7 +62,7 @@
         </div>
     </section>
 
-    <!-- SECTION 2: THE TRIKON HERITAGE (Redesigned: Beautiful & Text-Centric) -->
+    <!-- SECTION 2: THE TRIKON HERITAGE -->
     <section class="py-32 bg-white relative overflow-hidden">
         <!-- Subtle Background Pattern -->
         <div class="absolute inset-0 opacity-[0.03] pointer-events-none select-none flex items-center justify-center">
@@ -83,17 +83,23 @@
         </div>
     </section>
 
-    <!-- SECTION 3: LOGO STORY (Logo Fix included) -->
+    <!-- SECTION 3: LOGO STORY -->
     <section class="py-24 bg-gray-50 border-y border-gray-100">
         <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             <div class="lg:col-span-5 flex justify-center" data-aos="fade-right">
                 @php
                     $logoPath = $settings->logo ?? null;
-                    $logoUrl = $logoPath ? asset('storage/' . $logoPath) : null;
+                    if($logoPath) {
+                        $cleanLogo = ltrim(Str::replaceFirst('storage/', '', $logoPath), '/');
+                        $logoUrl = asset($cleanLogo);
+                    } else {
+                        $logoUrl = null;
+                    }
                 @endphp
 
                 @if($logoUrl)
-                    <img src="{{ $logoUrl }}" class="w-64 md:w-80 h-auto grayscale opacity-60" alt="Logo Story">
+                    <img src="{{ $logoUrl }}" class="w-64 md:w-80 h-auto grayscale opacity-60" alt="Logo Story" onerror="this.style.display='none'; document.getElementById('text-logo-story-fallback').style.display='block'">
+                    <div id="text-logo-story-fallback" style="display:none;" class="serif text-gray-200 font-black text-7xl uppercase select-none opacity-20">TRIKON</div>
                 @else
                     <div class="serif text-gray-200 font-black text-7xl uppercase select-none opacity-20">TRIKON</div>
                 @endif
@@ -231,10 +237,12 @@
     // Header Color Change Logic
     window.addEventListener('scroll', function() {
         const header = document.querySelector('.glass-header');
-        if (window.scrollY > 150) {
-            header.classList.add('scrolled-stories');
-        } else {
-            header.classList.remove('scrolled-stories');
+        if (header) {
+            if (window.scrollY > 150) {
+                header.classList.add('scrolled-stories');
+            } else {
+                header.classList.remove('scrolled-stories');
+            }
         }
     });
 
