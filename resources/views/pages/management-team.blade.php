@@ -75,9 +75,19 @@
                     <div class="relative inline-block mb-6">
                         <div class="w-48 h-48 rounded-full border-2 border-gray-100 p-2 transition-all duration-500 group-hover:border-[#f4a41c]">
                             <div class="w-full h-full rounded-full overflow-hidden border-2 border-[#f4a41c] shadow-lg">
-                                <img src="{{ asset('storage/' . $member->image) }}" 
+                                @php
+                                    $img = $member->image;
+                                    if (Str::startsWith($img, ['http://', 'https://'])) {
+                                        $imgUrl = $img;
+                                    } else {
+                                        $cleanPath = ltrim(Str::replaceFirst('storage/', '', $img), '/');
+                                        $imgUrl = asset($cleanPath);
+                                    }
+                                @endphp
+                                <img src="{{ $imgUrl }}" 
                                      alt="{{ $member->name }}" 
-                                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                     onerror="this.onerror=null;this.src='https://placehold.co/400x400?text=Member+Image';">
                             </div>
                         </div>
                     </div>
@@ -92,9 +102,19 @@
     <!-- SECTION 3: FULL-WIDTH TEAM PHOTO (Edge-to-Edge) -->
     <section class="w-full bg-white overflow-hidden leading-[0]">
         @if($gallery->count() > 0)
-            <img src="{{ asset('storage/' . $gallery->first()->image) }}" 
+            @php
+                $galleryImg = $gallery->first()->image;
+                if (Str::startsWith($galleryImg, ['http://', 'https://'])) {
+                    $galleryUrl = $galleryImg;
+                } else {
+                    $cleanGalleryPath = ltrim(Str::replaceFirst('storage/', '', $galleryImg), '/');
+                    $galleryUrl = asset($cleanGalleryPath);
+                }
+            @endphp
+            <img src="{{ $galleryUrl }}" 
                  class="w-full h-auto object-cover max-h-[90vh]" 
-                 alt="Full Width Team Photo">
+                 alt="Full Width Team Photo"
+                 onerror="this.onerror=null;this.src='https://placehold.co/1920x800?text=Team+Gallery+Image';">
         @endif
     </section>
 
