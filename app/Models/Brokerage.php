@@ -24,14 +24,13 @@ class Brokerage extends Model
     protected static function booted()
     {
         static::creating(function ($brokerage) {
-            // Generates a unique ID like TRK-7A2B9C
             $brokerage->property_id = 'TRK-' . strtoupper(Str::random(6));
         });
     }
 
     /**
      * Get the URL of the first image.
-     * Works on both Local PC and Live Server.
+     * Fixed for cPanel public_html deployment.
      */
     public function getFirstImageUrlAttribute()
     {
@@ -40,8 +39,16 @@ class Brokerage extends Model
         }
 
         $path = $this->images[0];
-        $cleanPath = str_replace('storage/', '', $path);
         
-        return asset('storage/' . $cleanPath);
+        // 1. If it's a full URL, return it
+        if (Str::startsWith($path, ['http://', 'https://'])) {
+            return $path;
+        }
+
+        // 2. Clean the path (remove 'storage/' prefix if it exists in DB)
+        $cleanPath = ltrim(Str::replaceFirst('storage/', '', $path), '/');
+        
+        // 3. Return asset directly (points to public_html root)
+        return asset($cleanPath);
     }
 }
