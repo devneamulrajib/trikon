@@ -78,14 +78,26 @@
         <!-- SECTION 4: UPLOADED CSR PROJECTS GRID -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             @forelse($csrs as $item)
+                @php
+                    $img = $item->image;
+                    // Robust URL generation for public_html root:
+                    if (Str::startsWith($img, ['http://', 'https://'])) {
+                        $imgUrl = $img;
+                    } else {
+                        // Strip 'storage/' prefix so it looks in the public_html root
+                        $cleanPath = ltrim(Str::replaceFirst('storage/', '', $img), '/');
+                        $imgUrl = asset($cleanPath);
+                    }
+                @endphp
                 <div class="relative group cursor-pointer overflow-hidden bg-[#111]" 
                      data-aos="fade-up"
-                     @click="activeTitle = '{{ e($item->title) }}'; activeDesc = '{{ e($item->description) }}'; activeImg = '{{ asset('storage/' . $item->image) }}'; open = true">
+                     @click="activeTitle = '{{ e($item->title) }}'; activeDesc = '{{ e($item->description) }}'; activeImg = '{{ $imgUrl }}'; open = true">
                     
                     <div class="relative aspect-[3/4] overflow-hidden border border-white/5 group-hover:border-[#f4a41c]/50 transition-colors duration-500 shadow-2xl">
-                        <img src="{{ asset('storage/' . $item->image) }}" 
+                        <img src="{{ $imgUrl }}" 
                              alt="{{ $item->title }}" 
-                             class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                             class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                             onerror="this.onerror=null;this.src='https://placehold.co/600x800?text=CSR+Image+Not+Found';">
                         
                         <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                             <div class="w-12 h-12 rounded-full bg-[#f4a41c]/90 border-2 border-white flex items-center justify-center text-white text-2xl font-bold shadow-xl transform scale-0 group-hover:scale-100 transition duration-500">
