@@ -44,13 +44,12 @@
                                     $imgUrl = $img;
                                 } 
                                 // 2. Robust URL generation for public_html root:
-                                // We strip 'storage/' if it exists and use asset() to point to public_html
+                                // We strip 'storage/' if it exists at the start and use asset()
                                 else {
-                                    $cleanPath = ltrim(Str::after($img, 'storage/'), '/');
-                                    // If 'storage/' wasn't in the path, ltrim/after might return empty or same string
-                                    // so we double check the variable
-                                    if(empty($cleanPath)) { $cleanPath = ltrim($img, '/'); }
+                                    // Remove 'storage/' prefix regardless of leading slashes
+                                    $cleanPath = ltrim(Str::replaceFirst('storage/', '', $img), '/');
                                     
+                                    // Construct the asset URL
                                     $imgUrl = asset($cleanPath);
                                 }
                             @endphp
