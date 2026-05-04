@@ -122,10 +122,23 @@
             <a href="/" class="flex items-center">
                 @php
                     $logoPath = $settings->logo ?? null;
-                    $logoUrl = $logoPath ? asset('storage/' . $logoPath) : null;
+                    if($logoPath) {
+                        // Correct logic for cPanel: Strip storage prefix to point to public_html root
+                        $cleanLogo = ltrim(Str::replaceFirst('storage/', '', $logoPath), '/');
+                        $logoUrl = asset($cleanLogo);
+                    } else {
+                        // Fallback to static logo.png if no DB entry
+                        $logoUrl = asset('logo.png');
+                    }
                 @endphp
                 @if($logoUrl)
-                    <img src="{{ $logoUrl }}" alt="{{ $settings->site_name ?? 'Logo' }}" class="h-14 md:h-16 w-auto object-contain transition-all duration-500">
+                    <img src="{{ $logoUrl }}" alt="{{ $settings->site_name ?? 'Logo' }}" class="h-14 md:h-16 w-auto object-contain transition-all duration-500" onerror="this.style.display='none'; document.getElementById('text-logo-fallback').style.display='flex'">
+                    
+                    <!-- Hidden Text Fallback (only shows if image fails) -->
+                    <div id="text-logo-fallback" style="display:none;" class="flex flex-col leading-none">
+                        <span class="serif text-[#f4a41c] font-black text-2xl md:text-3xl tracking-tighter uppercase">{{ $settings->site_name ?? 'TRIKON' }}</span>
+                        <span class="logo-subtext text-[8px] text-white tracking-[0.4em] uppercase font-bold transition-colors">Holdings Ltd.</span>
+                    </div>
                 @else
                     <div class="flex flex-col leading-none">
                         <span class="serif text-[#f4a41c] font-black text-2xl md:text-3xl tracking-tighter uppercase">{{ $settings->site_name ?? 'TRIKON' }}</span>
