@@ -43,10 +43,14 @@
                                 if (Str::startsWith($img, ['http://', 'https://'])) {
                                     $imgUrl = $img;
                                 } 
-                                // 2. Robust URL generation for cPanel:
-                                // Since files were moved to public root, we strip 'storage/' and use asset()
+                                // 2. Robust URL generation for public_html root:
+                                // We strip 'storage/' if it exists and use asset() to point to public_html
                                 else {
-                                    $cleanPath = ltrim(Str::replaceFirst('storage/', '', $img), '/');
+                                    $cleanPath = ltrim(Str::after($img, 'storage/'), '/');
+                                    // If 'storage/' wasn't in the path, ltrim/after might return empty or same string
+                                    // so we double check the variable
+                                    if(empty($cleanPath)) { $cleanPath = ltrim($img, '/'); }
+                                    
                                     $imgUrl = asset($cleanPath);
                                 }
                             @endphp
