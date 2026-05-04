@@ -5,9 +5,13 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
 <div class="pt-24 bg-[#0a0a0a] text-white">
-    <!-- HERO / COVER PHOTO (Uses the main 'image' field labeled as Cover Photo in Admin) -->
+    <!-- HERO / COVER PHOTO -->
     <div class="relative h-[70vh]">
-        <img src="{{ asset('storage/' . $project->image) }}" class="w-full h-full object-cover">
+        @php
+            $heroImg = $project->image;
+            $heroUrl = asset(ltrim(Str::replaceFirst('storage/', '', $heroImg), '/'));
+        @endphp
+        <img src="{{ $heroUrl }}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/1920x1080?text=Cover+Not+Found';">
         <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-center px-4">
             <h1 class="serif text-5xl md:text-7xl uppercase tracking-[0.2em]">{{ $project->name }}</h1>
         </div>
@@ -24,7 +28,7 @@
         </div>
     </div>
 
-    <!-- NAV GRID (Centered Flex Layout) -->
+    <!-- NAV GRID -->
     <section class="max-w-7xl mx-auto py-16 px-6 flex flex-wrap justify-center gap-4">
         <a href="#at-a-glance" class="group bg-[#111] border border-white/5 w-[160px] md:w-[180px] p-8 flex flex-col items-center hover:bg-[#C5A059] transition duration-500">
             <i class="fa-solid fa-list-check text-2xl mb-4 group-hover:text-black transition duration-500"></i>
@@ -48,17 +52,24 @@
             <i class="fa-solid fa-map-location-dot text-2xl mb-4 group-hover:text-black transition duration-500"></i>
             <span class="text-[9px] font-bold tracking-[0.2em] uppercase group-hover:text-black transition duration-500 text-center">Maps</span>
         </a>
-        <a href="{{ asset('storage/' . $project->brochure_pdf) }}" download class="group bg-[#111] border border-white/5 w-[160px] md:w-[180px] p-8 flex flex-col items-center hover:bg-[#C5A059] transition duration-500">
-            <i class="fa-solid fa-file-pdf text-2xl mb-4 group-hover:text-black transition duration-500"></i>
-            <span class="text-[9px] font-bold tracking-[0.2em] uppercase group-hover:text-black transition duration-500 text-center">Brochure</span>
-        </a>
+        @if($project->brochure_pdf)
+            @php $brochureUrl = asset(ltrim(Str::replaceFirst('storage/', '', $project->brochure_pdf), '/')); @endphp
+            <a href="{{ $brochureUrl }}" download class="group bg-[#111] border border-white/5 w-[160px] md:w-[180px] p-8 flex flex-col items-center hover:bg-[#C5A059] transition duration-500">
+                <i class="fa-solid fa-file-pdf text-2xl mb-4 group-hover:text-black transition duration-500"></i>
+                <span class="text-[9px] font-bold tracking-[0.2em] uppercase group-hover:text-black transition duration-500 text-center">Brochure</span>
+            </a>
+        @endif
     </section>
 
-    <!-- AT A GLANCE (Uses featured_image) -->
+    <!-- AT A GLANCE -->
     <section id="at-a-glance" class="max-w-7xl mx-auto py-24 px-6 grid md:grid-cols-2 gap-20 items-center scroll-mt-32">
         <div class="relative">
             <div class="absolute -top-4 -left-4 w-32 h-32 border-t border-l border-gold"></div>
-            <img src="{{ asset('storage/' . $project->featured_image) }}" class="rounded shadow-2xl relative z-10 w-full h-[500px] object-cover">
+            @php
+                $featImg = $project->featured_image;
+                $featUrl = asset(ltrim(Str::replaceFirst('storage/', '', $featImg), '/'));
+            @endphp
+            <img src="{{ $featUrl }}" class="rounded shadow-2xl relative z-10 w-full h-[500px] object-cover" onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Featured+Image';">
             <div class="absolute -bottom-4 -right-4 w-32 h-32 border-b border-r border-gold"></div>
         </div>
         <div>
@@ -80,7 +91,7 @@
         </div>
     </section>
 
-    <!-- FEATURES & AMENITIES (Uses amenities_image) -->
+    <!-- FEATURES & AMENITIES -->
     <section id="features" class="max-w-7xl mx-auto py-24 px-6 border-t border-white/5 scroll-mt-32">
         <div class="grid md:grid-cols-2 gap-20 items-start">
             <div>
@@ -90,32 +101,41 @@
                 </div>
             </div>
             <div class="mt-10 md:mt-0">
-                <img src="{{ asset('storage/' . ($project->amenities_image ?? $project->image)) }}" class="w-full h-auto rounded shadow-xl border border-white/5">
+                @php
+                    $amenitiesImg = $project->amenities_image ?? $project->image;
+                    $amenitiesUrl = asset(ltrim(Str::replaceFirst('storage/', '', $amenitiesImg), '/'));
+                @endphp
+                <img src="{{ $amenitiesUrl }}" class="w-full h-auto rounded shadow-xl border border-white/5" onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Amenities+Image';">
             </div>
         </div>
     </section>
 
-    <!-- FLOORPLAN SECTION (Conditional) -->
+    <!-- FLOORPLAN SECTION -->
     @if($project->floorplan_image)
     <section id="floorplan" class="max-w-7xl mx-auto py-24 px-6 border-t border-white/5 scroll-mt-32">
         <h2 class="serif text-4xl mb-12 text-center gold-gradient uppercase tracking-widest">Floorplan</h2>
         <div class="flex justify-center bg-[#0f0f0f] p-8 rounded-lg border border-white/5">
-            <img src="{{ asset('storage/' . $project->floorplan_image) }}" class="max-w-full h-auto rounded shadow-2xl">
+            @php
+                $floorImg = $project->floorplan_image;
+                $floorUrl = asset(ltrim(Str::replaceFirst('storage/', '', $floorImg), '/'));
+            @endphp
+            <img src="{{ $floorUrl }}" class="max-w-full h-auto rounded shadow-2xl" onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Floorplan+Image';">
         </div>
     </section>
     @endif
 
-    <!-- EXPERIENCE / GALLERY (Wider Slideshow) -->
+    <!-- EXPERIENCE / GALLERY -->
     <section id="experience" class="py-24 bg-[#080808] scroll-mt-32 overflow-hidden">
         <div class="w-full px-4 md:px-0">
             <h2 class="serif text-4xl mb-12 text-center gold-gradient uppercase tracking-widest">Experience</h2>
             
             <div class="swiper experienceSlider">
                 <div class="swiper-wrapper">
-                    @if($project->gallery)
+                    @if($project->gallery && is_array($project->gallery))
                         @foreach($project->gallery as $gal_img)
                         <div class="swiper-slide group">
-                            <img src="{{ asset('storage/' . $gal_img) }}" class="w-full h-[500px] md:h-[750px] object-cover transition duration-700">
+                            @php $galUrl = asset(ltrim(Str::replaceFirst('storage/', '', $gal_img), '/')); @endphp
+                            <img src="{{ $galUrl }}" class="w-full h-[500px] md:h-[750px] object-cover transition duration-700">
                         </div>
                         @endforeach
                     @else
@@ -135,7 +155,7 @@
         <iframe src="{{ $project->map_link }}" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
     </section>
 
-    <!-- BOOK A FREE CONSULTATION (Includes Phone Number) -->
+    <!-- CONSULTATION FORM -->
     <section class="py-24 bg-black border-t border-white/5">
         <div class="max-w-3xl mx-auto px-6 text-center">
             <h2 class="serif text-4xl mb-4 gold-gradient uppercase tracking-widest">Book A Free Consultation</h2>
@@ -160,7 +180,11 @@
                 @foreach($related as $rel)
                 <a href="{{ url('/project/' . $rel->slug) }}" class="group block text-center">
                     <div class="relative overflow-hidden aspect-[4/5] mb-8">
-                        <img src="{{ asset('storage/' . $rel->image) }}" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+                        @php
+                            $relImg = $rel->image;
+                            $relUrl = asset(ltrim(Str::replaceFirst('storage/', '', $relImg), '/'));
+                        @endphp
+                        <img src="{{ $relUrl }}" class="w-full h-full object-cover transition duration-700 group-hover:scale-105" onerror="this.onerror=null;this.src='https://placehold.co/600x800?text=Related+Project';">
                         <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition duration-500"></div>
                     </div>
                     <h3 class="serif text-2xl mb-2">{{ $rel->name }}</h3>
@@ -214,30 +238,15 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <script>
-    // Initialize Swiper Slider (Wide immersive feel)
     var swiper = new Swiper(".experienceSlider", {
         slidesPerView: 1,
         spaceBetween: 0,
         loop: true,
         centeredSlides: true,
-        autoplay: {
-            delay: 5000,
-            disableOnInteraction: false,
-        },
-        pagination: {
-            el: ".swiper-pagination",
-            clickable: true,
-        },
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-        },
-        breakpoints: {
-            1024: { 
-                slidesPerView: 1.8, 
-                spaceBetween: 40 
-            },
-        },
+        autoplay: { delay: 5000, disableOnInteraction: false },
+        pagination: { el: ".swiper-pagination", clickable: true },
+        navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+        breakpoints: { 1024: { slidesPerView: 1.8, spaceBetween: 40 } },
     });
 
     function toggleModal() {
@@ -248,26 +257,10 @@
 </script>
 
 <style>
-    .scroll-mt-32 {
-        scroll-margin-top: 8rem;
-    }
-    .gold-button {
-        background: transparent;
-        border: 1px solid #C5A059;
-        color: #C5A059;
-        transition: all 0.4s ease;
-    }
-    .gold-button:hover {
-        background: #C5A059;
-        color: #000;
-    }
-    .swiper-pagination-bullet-active {
-        background: #C5A059 !important;
-    }
-    /* Experience Slider Navigation Styles */
-    .swiper-button-next:after, .swiper-button-prev:after {
-        font-size: 20px !important;
-        font-weight: bold;
-    }
+    .scroll-mt-32 { scroll-margin-top: 8rem; }
+    .gold-button { background: transparent; border: 1px solid #C5A059; color: #C5A059; transition: all 0.4s ease; }
+    .gold-button:hover { background: #C5A059; color: #000; }
+    .swiper-pagination-bullet-active { background: #C5A059 !important; }
+    .swiper-button-next:after, .swiper-button-prev:after { font-size: 20px !important; font-weight: bold; }
 </style>
 @endsection
