@@ -68,7 +68,12 @@
             @foreach($sliders ?? [] as $slide)
             <div class="swiper-slide relative">
                 <div class="absolute inset-0 bg-black/20 z-10"></div>
-                <img src="{{ asset('storage/' . $slide->image) }}" class="w-full h-full object-cover" alt="Slider">
+                @php
+                    $slideImg = $slide->image;
+                    // Robust check: strip storage prefix to look in public_html
+                    $slideUrl = asset(ltrim(Str::replaceFirst('storage/', '', $slideImg), '/'));
+                @endphp
+                <img src="{{ $slideUrl }}" class="w-full h-full object-cover" alt="Slider" onerror="this.onerror=null;this.src='https://placehold.co/1920x1080?text=Slider+Image';">
                 
                 <div class="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-6">
                     <h2 class="serif text-white text-4xl md:text-6xl font-bold tracking-tight mb-4" data-aos="fade-up">
@@ -124,9 +129,14 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach($projects ?? [] as $project)
             <a href="{{ url('/project/' . $project->slug) }}" class="group relative block overflow-hidden shadow-2xl home-project-card bg-gray-800" data-aos="fade-up">
-                <img src="{{ asset('storage/' . $project->featured_image) }}" 
+                @php
+                    $projImg = $project->featured_image;
+                    $projUrl = asset(ltrim(Str::replaceFirst('storage/', '', $projImg), '/'));
+                @endphp
+                <img src="{{ $projUrl }}" 
                      class="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110" 
-                     alt="{{ $project->title }}">
+                     alt="{{ $project->title }}"
+                     onerror="this.onerror=null;this.src='https://placehold.co/600x800?text=Project+Image';">
                 
                 <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-8 opacity-0 group-hover:opacity-100 transition-all duration-500 bg-black/50 backdrop-blur-[2px]">
                     <h3 class="text-white font-black text-2xl uppercase tracking-tighter mb-2">{{ $project->title }}</h3>
@@ -147,26 +157,33 @@
     </div>
 </section>
 
-<!-- SECTION 4: OUR SERVICES (Edge-to-Edge Grid - Matching 2nd Screenshot) -->
-<section class="bg-white">
-    <div class="text-center py-24" data-aos="fade-up">
+<!-- SECTION 4: OUR SERVICES -->
+<section class="bg-white relative overflow-hidden">
+    <!-- Subtle Logo Watermark -->
+    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none select-none">
+        <img src="{{ asset('logo.png') }}" class="w-[800px] grayscale" alt="Watermark">
+    </div>
+
+    <div class="text-center py-24 relative z-10" data-aos="fade-up">
         <h2 class="serif text-gray-900 text-4xl md:text-5xl font-black uppercase tracking-widest">
             Our <span class="text-[#f4a41c]">Services</span>
         </h2>
     </div>
 
-    <!-- Container with NO GAPS and NO SIDE PADDING -->
-    <div class="service-container-row">
+    <div class="service-container-row relative z-10">
         @php $services = \App\Models\Service::limit(3)->get(); @endphp
         @foreach($services as $service)
         <a href="{{ route('services.show', $service->slug) }}" class="service-block group">
-            <img src="{{ asset('storage/' . $service->hero_image) }}" alt="{{ $service->name }}">
+            @php
+                $servImg = $service->hero_image;
+                $servUrl = asset(ltrim(Str::replaceFirst('storage/', '', $servImg), '/'));
+            @endphp
+            <img src="{{ $servUrl }}" alt="{{ $service->name }}" onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Service+Image';">
             
             <div class="service-block-overlay">
                 <h3 class="serif text-2xl text-white font-bold uppercase tracking-[0.3em] group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl">
                     {{ $service->name }}
                 </h3>
-                <!-- Animated line under title -->
                 <div class="w-0 group-hover:w-16 h-[2px] bg-[#f4a41c] mt-6 transition-all duration-500"></div>
             </div>
         </a>
@@ -208,7 +225,7 @@
     </div>
 </section>
 
-<!-- SECTION 6: GOOGLE MAP (FIXED FOR FULL WIDTH) -->
+<!-- SECTION 6: GOOGLE MAP -->
 <section class="w-full h-[500px] grayscale contrast-125 border-t border-white/5">
     <iframe 
         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.1819962222226!2d90.4222225759289!3d23.81212648640261!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c705aa134d71%3A0x1c8797d1479bcdb!2sTrikon%20Holdings%20Ltd.!5e0!3m2!1sen!2sbd!4v1777450989693!5m2!1sen!2sbd" 
