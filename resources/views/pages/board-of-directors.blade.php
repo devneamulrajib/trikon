@@ -56,7 +56,7 @@
         </div>
     </section>
 
-    <!-- SECTION 2: DIRECTORS LIST (Preserving current layout exactly) -->
+    <!-- SECTION 2: DIRECTORS LIST -->
     <section class="py-24 px-6 md:px-20 max-w-7xl mx-auto">
         @foreach($directors as $index => $director)
             <div class="flex flex-col {{ $index % 2 != 0 ? 'md:flex-row-reverse' : 'md:flex-row' }} items-center gap-12 md:gap-24 mb-32 last:mb-0">
@@ -66,9 +66,21 @@
                     <div class="relative inline-block">
                         <div class="w-64 h-64 md:w-80 md:h-80 rounded-full border-[10px] border-[#f4a41c]/20 p-2">
                             <div class="w-full h-full rounded-full border-4 border-[#f4a41c] overflow-hidden shadow-2xl">
-                                <img src="{{ asset('storage/' . $director->image) }}" 
+                                @php
+                                    $img = $director->image;
+                                    // Handle absolute URLs or relative paths in public_html
+                                    if (Str::startsWith($img, ['http://', 'https://'])) {
+                                        $imgUrl = $img;
+                                    } else {
+                                        // Remove 'storage/' prefix if it exists to point directly to public_html root
+                                        $cleanPath = ltrim(Str::replaceFirst('storage/', '', $img), '/');
+                                        $imgUrl = asset($cleanPath);
+                                    }
+                                @endphp
+                                <img src="{{ $imgUrl }}" 
                                      alt="{{ $director->name }}" 
-                                     class="w-full h-full object-cover">
+                                     class="w-full h-full object-cover"
+                                     onerror="this.onerror=null;this.src='https://placehold.co/400x400?text=Director+Image';">
                             </div>
                         </div>
                     </div>
@@ -88,7 +100,7 @@
         @endforeach
     </section>
 
-    <!-- SECTION 3: CONTACT FORM (Preserving current layout exactly) -->
+    <!-- SECTION 3: CONTACT FORM -->
     <section class="py-24 bg-gray-50 border-t border-gray-100">
         <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-20">
             <!-- Contact Details -->
