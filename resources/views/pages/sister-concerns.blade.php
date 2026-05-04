@@ -63,10 +63,22 @@
                         <div class="bg-white p-12 md:p-20 rounded-[40px] border border-gray-100 shadow-2xl flex items-center justify-center aspect-video group hover:border-[#f4a41c]/30 transition-all duration-500">
                             
                             @if($concern->logo)
-                                <!-- Pulling specifically from the logo field -->
-                                <img src="{{ asset('storage/' . $concern->logo) }}" 
+                                @php
+                                    $logo = $concern->logo;
+                                    // 1. Handle absolute URLs (e.g. from a CDN or external source)
+                                    if (Str::startsWith($logo, ['http://', 'https://'])) {
+                                        $logoUrl = $logo;
+                                    } 
+                                    // 2. Robust URL generation for public_html root:
+                                    else {
+                                        $cleanPath = ltrim(Str::replaceFirst('storage/', '', $logo), '/');
+                                        $logoUrl = asset($cleanPath);
+                                    }
+                                @endphp
+                                <img src="{{ $logoUrl }}" 
                                      class="max-w-full max-h-48 object-contain transform group-hover:scale-110 transition-transform duration-700" 
-                                     alt="{{ $concern->name }}">
+                                     alt="{{ $concern->name }}"
+                                     onerror="this.onerror=null;this.src='https://placehold.co/400x200?text=Logo+Not+Found';">
                             @else
                                 <div class="text-gray-200 font-black uppercase text-xl italic tracking-tighter">TRIKON GROUP</div>
                             @endif
