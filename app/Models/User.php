@@ -10,35 +10,24 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements FilamentUser
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    // Define Roles as Constants
+    const ROLE_ADMIN = 'admin';
+    const ROLE_EDITOR = 'editor';
+
     protected $fillable = [
         'name',
         'email',
         'password',
+        'role', // Added this
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -48,12 +37,21 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
-     * Required for Filament v3 access.
-     * This allows the users you create in the admin panel to actually log in.
+     * Role checking helpers
      */
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function isEditor(): bool
+    {
+        return $this->role === self::ROLE_EDITOR;
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
-        // For now, we allow all registered users to access the panel.
+        // Allow both Admins and Editors to log in
         return true;
     }
 }
