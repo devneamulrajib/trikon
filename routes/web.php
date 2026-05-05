@@ -231,7 +231,7 @@ Route::get('/privacy-policy', function () {
 
 /**
  * 8. CPANEL STORAGE FIX - ULTRA ROBUST VERSION
- * Visit trikonltd.com/fix-storage once after deployment
+ * Visit trikonltd.com/fix-storage once after deployment if images break.
  */
 Route::get('/fix-storage', function () {
     $storagePublicPath = storage_path('app/public');
@@ -256,19 +256,18 @@ Route::get('/fix-storage', function () {
         $target = $storagePublicPath . '/' . $folder;
         $shortcut = $publicHtmlPath . '/' . $folder;
 
-        // 1. Ensure the source folder exists in storage (so link doesn't break)
+        // 1. Ensure the source folder exists in storage
         if (!file_exists($target)) {
             mkdir($target, 0775, true);
         }
 
-        // 2. Remove existing empty folder or broken link in public_html to prevent "File exists" error
+        // 2. Remove existing empty folder or broken link
         if (file_exists($shortcut)) {
             if (is_link($shortcut)) {
                 unlink($shortcut);
             } elseif (is_dir($shortcut)) {
-                // Only delete if folder is empty. If not empty, we rename it as a backup.
                 $files = scandir($shortcut);
-                if (count($files) <= 2) { // just . and ..
+                if (count($files) <= 2) { 
                     rmdir($shortcut);
                 } else {
                     rename($shortcut, $shortcut . '_backup_' . time());
@@ -280,16 +279,16 @@ Route::get('/fix-storage', function () {
         if (symlink($target, $shortcut)) {
             $output .= "<p style='color:green;'>SUCCESS: Linked <b>$folder</b> folder.</p>";
         } else {
-            $output .= "<p style='color:red;'>FAILED: Could not link <b>$folder</b>. Check permissions.</p>";
+            $output .= "<p style='color:red;'>FAILED: Could not link <b>$folder</b>.</p>";
         }
     }
 
-    // Also link the main storage folder for good measure
+    // Also link the main storage folder
     $mainTarget = storage_path('app/public');
     $mainShortcut = $publicHtmlPath . '/storage';
     if (!file_exists($mainShortcut)) {
         symlink($mainTarget, $mainShortcut);
     }
 
-    return $output . "<br><a href='/brokerage'>Click here to check Brokerage Page</a>";
+    return $output . "<br><a href='/'>Back to Home</a>";
 });
