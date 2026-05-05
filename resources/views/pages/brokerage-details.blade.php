@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="bg-white min-h-screen">
-    <!-- Main Container - REDUCED pt-28 TO pt-12 AS REQUESTED -->
+    <!-- Main Container -->
     <div class="max-w-7xl mx-auto px-4 md:px-6 pt-12 pb-20">
         
         <!-- BREADCRUMBS & TITLE -->
@@ -51,12 +51,16 @@
                                 @foreach($listing->images as $img)
                                     <div class="swiper-slide">
                                         @php
-                                            $cleanPath = ltrim($img, '/');
-                                            $finalUrl = str_starts_with($cleanPath, 'storage/') 
-                                                ? asset($cleanPath) 
-                                                : asset('storage/' . $cleanPath);
+                                            // Handle absolute URLs or relative paths in public_html
+                                            if (Str::startsWith($img, ['http://', 'https://'])) {
+                                                $finalUrl = $img;
+                                            } else {
+                                                // Remove 'storage/' prefix to point directly to public_html root
+                                                $cleanPath = ltrim(Str::replaceFirst('storage/', '', $img), '/');
+                                                $finalUrl = asset($cleanPath);
+                                            }
                                         @endphp
-                                        <img src="{{ $finalUrl }}" class="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105" alt="Property Image" onerror="this.src='https://placehold.co/1200x800?text=Image+Not+Found'">
+                                        <img src="{{ $finalUrl }}" class="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105" alt="Property Image" onerror="this.onerror=null;this.src='https://placehold.co/1200x800?text=Image+Not+Found'">
                                     </div>
                                 @endforeach
                             @else
@@ -155,7 +159,7 @@
                     </div>
                 </div>
 
-                <!-- GOOGLE MAP SECTION - MOVED TO BOTTOM AS REQUESTED -->
+                <!-- GOOGLE MAP SECTION -->
                 @if($listing->map_link)
                 <div class="mt-16 border-t border-gray-100 pt-16" data-aos="fade-up">
                     <div class="flex items-center gap-4 mb-8">
@@ -184,7 +188,7 @@
                         <p class="text-[9px] font-bold text-gray-500 uppercase tracking-[0.2em]">Latest Listing • {{ $listing->updated_at->format('M d, Y') }}</p>
                     </div>
 
-                    <!-- INQUIRY FORM - COMPACT VERSION p-6 -->
+                    <!-- INQUIRY FORM -->
                     <div class="bg-white shadow-2xl border border-gray-100 rounded-sm overflow-hidden" data-aos="fade-left" data-aos-delay="100">
                         <div class="bg-gray-50 px-8 py-4 border-b border-gray-100">
                             <h3 class="text-gray-900 text-[10px] font-black uppercase tracking-[0.3em]">Schedule an Appointment</h3>
@@ -207,7 +211,6 @@
                                     <label class="absolute left-0 top-2 text-[9px] font-black text-gray-400 uppercase tracking-widest transition-all peer-focus:-top-4 peer-focus:text-[#f4a41c] peer-[:not(:placeholder-shown)]:-top-4">Phone Number</label>
                                 </div>
                                 <div class="relative">
-                                    <!-- FIXED TEXTAREA VISIBILITY -->
                                     <textarea name="message" rows="2" placeholder=" " class="peer w-full bg-transparent border-b border-gray-200 py-2 text-sm font-bold text-gray-900 focus:outline-none focus:border-[#f4a41c] resize-none transition-all"></textarea>
                                     <label class="absolute left-0 top-2 text-[9px] font-black text-gray-400 uppercase tracking-widest transition-all peer-focus:-top-4 peer-focus:text-[#f4a41c] peer-[:not(:placeholder-shown)]:-top-4">Message</label>
                                 </div>
@@ -219,7 +222,7 @@
                         </div>
                     </div>
 
-                    <!-- RELATED - FIXED TEXT COLORS -->
+                    <!-- RELATED OPTIONS -->
                     <div class="bg-gray-50 p-8 border border-gray-100 rounded-sm" data-aos="fade-left" data-aos-delay="200">
                         <h4 class="serif text-[10px] font-black uppercase mb-10 border-b border-gray-200 pb-5 flex justify-between items-center text-gray-900">Similar Options <span class="w-10 h-[2px] bg-[#f4a41c]"></span></h4>
                         <div class="space-y-8">
@@ -228,12 +231,16 @@
                                 <div class="w-24 h-20 bg-white overflow-hidden shrink-0 border border-gray-100 shadow-sm transition-transform group-hover:scale-95">
                                     @php
                                         $relImg = $rel->images[0] ?? null;
-                                        $relUrl = $relImg ? (str_starts_with($relImg, 'storage/') ? asset($relImg) : asset('storage/'.$relImg)) : 'https://placehold.co/200x200';
+                                        if($relImg) {
+                                            $cleanRel = ltrim(Str::replaceFirst('storage/', '', $relImg), '/');
+                                            $relUrl = asset($cleanRel);
+                                        } else {
+                                            $relUrl = 'https://placehold.co/200x200';
+                                        }
                                     @endphp
-                                    <img src="{{ $relUrl }}" class="w-full h-full object-cover">
+                                    <img src="{{ $relUrl }}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/200x200?text=No+Img'">
                                 </div>
                                 <div class="flex-1">
-                                    <!-- FIXED: Force Text Color to Gray 900 -->
                                     <h5 class="text-[10px] font-black uppercase leading-tight text-gray-900 group-hover:text-[#f4a41c] transition-colors line-clamp-2 tracking-tight">{{ $rel->title }}</h5>
                                     <p class="text-gray-500 text-[11px] font-bold mt-2 italic">৳ {{ $rel->price }}</p>
                                 </div>
@@ -250,20 +257,14 @@
 </div>
 
 <style>
-    /* Styling for the Map container specifically */
     .map-container iframe { width: 100% !important; height: 100% !important; border: 0 !important; filter: grayscale(1) contrast(1.2) opacity(0.8); transition: all 0.5s ease; }
     .map-container:hover iframe { filter: grayscale(0) opacity(1); }
-    
-    /* Elegant Content Styling */
     .listing-body p { margin-bottom: 2rem; line-height: 2.2; font-size: 17px; color: #4a4a4a; font-family: inherit; }
     .listing-body h1, .listing-body h2, .listing-body h3 { font-family: serif; color: #111; margin-bottom: 1.5rem; text-transform: uppercase; font-weight: 900; }
     .listing-body ul { list-style: none; padding-left: 1.5rem; margin-bottom: 2rem; }
     .listing-body li { margin-bottom: 1rem; position: relative; padding-left: 1.5rem; color: #555; }
     .listing-body li::before { content: ""; position: absolute; left: 0; top: 0.7rem; width: 8px; height: 8px; background: #f4a41c; transform: rotate(45deg); }
-    
-    /* Global visibility for inputs on cPanel */
     input, textarea { color: #111 !important; }
-    
     .swiper-pagination-bullet-active { background: #f4a41c !important; transform: scale(1.5); }
     .propertySwiper { border-radius: 2px; }
 </style>
