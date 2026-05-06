@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@push('styles')
-<!-- Modern Lightbox for Image Zooming -->
+@section('content')
+<!-- Load Libraries Directly to avoid Layout Stack issues -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
 <style>
-    /* FIX: Description Spacing */
+    /* FIX: Description Spacing & Tighter Look */
     .listing-content-wrapper p { 
         margin-bottom: 1rem !important; 
         line-height: 1.6 !important; 
@@ -12,47 +12,42 @@
         color: #444;
     }
     .listing-content-wrapper h1, .listing-content-wrapper h2, .listing-content-wrapper h3 { 
-        font-family: 'Cinzel', serif; color: #111; margin-top: 1.5rem; margin-bottom: 1rem; text-transform: uppercase; font-weight: 900; 
+        font-family: 'Cinzel', serif; color: #111; margin-top: 1.5rem; mb-4; text-transform: uppercase; font-weight: 900; 
     }
 
-    /* MODERN NAVIGATION ARROWS */
+    /* MODERN NAVIGATION ARROWS - Fixed Order & Design */
     .swiper-button-next, .swiper-button-prev {
-        background: rgba(255, 255, 255, 0.1) !important;
-        backdrop-filter: blur(10px);
-        width: 50px !important;
-        height: 50px !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        width: 45px !important;
+        height: 45px !important;
         border-radius: 50%;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         transition: all 0.3s ease;
     }
     .swiper-button-next:after, .swiper-button-prev:after {
-        font-size: 18px !important;
-        font-weight: bold;
-        color: #fff;
+        font-size: 16px !important;
+        font-weight: 900 !important;
+        color: #111;
     }
     .swiper-button-next:hover, .swiper-button-prev:hover {
         background: #f4a41c !important;
-        border-color: #f4a41c;
-        transform: scale(1.1);
     }
-    .swiper-pagination-bullet-active { background: #f4a41c !important; }
+    .swiper-button-next:hover:after, .swiper-button-prev:hover:after { color: #fff; }
+    
+    /* MAP RENDERING FIX */
+    .map-frame-container { position: relative; width: 100%; height: 450px; background: #f0f0f0; overflow: hidden; border-radius: 4px; }
+    .map-frame-container iframe { position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important; border: 0 !important; }
 
-    /* MAP FIX */
-    .map-container-wrapper { position: relative; width: 100%; height: 450px; background: #eee; }
-    .map-container-wrapper iframe { position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important; border: 0 !important; }
-
-    /* Zoom Cursor */
-    .cursor-zoom { cursor: zoom-in; }
+    /* Hide Fancybox elements until they are needed */
+    .fancybox__container { z-index: 9999 !important; }
 </style>
-@endpush
 
-@section('content')
 <div class="bg-white min-h-screen">
     <div class="max-w-7xl mx-auto px-4 md:px-6 pt-10 pb-20">
         
-        <!-- BREADCRUMBS & TITLE -->
+        <!-- HEADER SECTION -->
         <div class="mb-12" data-aos="fade-down">
-            <nav class="text-[9px] font-black uppercase tracking-[0.4em] text-gray-400 flex items-center gap-2 mb-6">
+            <nav class="text-[9px] font-black uppercase tracking-[0.4em] text-gray-400 flex items-center gap-2 mb-8">
                 <a href="/" class="hover:text-[#f4a41c]">Home</a> / <a href="/brokerage" class="hover:text-[#f4a41c]">Brokerage</a>
             </nav>
             
@@ -64,7 +59,7 @@
                             <span class="w-2 h-2 bg-[#f4a41c] rounded-full"></span>
                             <p class="text-gray-900 text-[10px] font-black uppercase tracking-widest">{{ $listing->location ?? 'Bashundhara R/A, Dhaka' }}</p>
                         </div>
-                        <span class="text-[10px] font-bold text-gray-400">ID: <span class="text-gray-900">{{ $listing->property_id }}</span></span>
+                        <span class="text-[10px] font-bold text-gray-400">ID: <span class="text-gray-900 font-bold uppercase">{{ $listing->property_id }}</span></span>
                     </div>
                 </div>
                 <div class="flex gap-2">
@@ -80,7 +75,7 @@
             <div class="w-full lg:w-2/3">
                 
                 <!-- GALLERY SECTION -->
-                <div class="bg-gray-100 mb-16 relative overflow-hidden rounded-sm shadow-2xl border border-gray-100" data-aos="zoom-in">
+                <div class="bg-gray-50 mb-16 relative overflow-hidden rounded-sm shadow-2xl border border-gray-100" data-aos="zoom-in">
                     <div class="swiper propertySwiper h-[400px] md:h-[650px]">
                         <div class="swiper-wrapper">
                             @if($listing->images && is_array($listing->images))
@@ -89,8 +84,8 @@
                                         $finalUrl = Str::startsWith($img, ['http://', 'https://']) ? $img : asset(ltrim(Str::replaceFirst('storage/', '', $img), '/'));
                                     @endphp
                                     <div class="swiper-slide">
-                                        <!-- Fancybox zoom trigger -->
-                                        <a href="{{ $finalUrl }}" data-fancybox="property-gallery" class="cursor-zoom w-full h-full block">
+                                        <!-- Link for Fancybox Zoom -->
+                                        <a href="{{ $finalUrl }}" data-fancybox="property-gallery" class="w-full h-full block cursor-zoom-in">
                                             <img src="{{ $finalUrl }}" class="w-full h-full object-cover transition-transform duration-[2000ms] hover:scale-105" alt="Property Image">
                                         </a>
                                     </div>
@@ -103,7 +98,7 @@
                     </div>
                 </div>
 
-                <!-- SPECIFICATIONS GRID (PREVIOUS VERSION) -->
+                <!-- QUICK SPECIFICATIONS GRID (PREVIOUS VERSION) -->
                 <div class="mb-16" data-aos="fade-up">
                     <div class="flex items-center gap-4 mb-8">
                         <div class="h-[2px] w-12 bg-[#f4a41c]"></div>
@@ -140,7 +135,7 @@
                             <div class="bg-[#f4a41c]/5 p-8 flex flex-col items-center text-center">
                                 <i class="fa-solid fa-barcode text-[#f4a41c] mb-3 text-lg"></i>
                                 <span class="text-[9px] font-black text-[#f4a41c] uppercase tracking-widest mb-1">Property ID</span>
-                                <span class="text-sm font-black text-[#f4a41c]">{{ $listing->property_id }}</span>
+                                <span class="text-sm font-black text-[#f4a41c] uppercase">{{ $listing->property_id }}</span>
                             </div>
                         @else
                             <div class="bg-gray-50/50 p-8 border-r border-b border-gray-100">
@@ -159,7 +154,7 @@
                     </div>
                 </div>
 
-                <!-- DESCRIPTION -->
+                <!-- DESCRIPTION SECTION -->
                 <div class="border-t border-gray-100 pt-16" data-aos="fade-up">
                     <h3 class="serif text-3xl font-black mb-8 uppercase tracking-widest text-gray-900">Description</h3>
                     <div class="listing-content-wrapper">
@@ -167,14 +162,14 @@
                     </div>
                 </div>
 
-                <!-- MAP SECTION WITH FIX -->
+                <!-- MAP SECTION - FIXED BLANK RENDER -->
                 @if($listing->map_link)
                 <div class="mt-20 border-t border-gray-100 pt-16" data-aos="fade-up">
                     <div class="flex items-center gap-4 mb-10">
                         <div class="h-[2px] w-12 bg-[#f4a41c]"></div>
                         <h3 class="serif text-xl font-black uppercase tracking-[0.3em] text-gray-900">Property <span class="text-[#f4a41c]">Map</span></h3>
                     </div>
-                    <div class="map-container-wrapper shadow-2xl rounded-sm border-4 border-white ring-1 ring-gray-100">
+                    <div class="map-frame-container shadow-2xl border-4 border-white ring-1 ring-gray-100">
                         {!! $listing->map_link !!}
                     </div>
                 </div>
@@ -202,7 +197,6 @@
                         </form>
                     </div>
 
-                    <!-- SIMILAR OPTIONS -->
                     <div class="bg-gray-50 p-8 border border-gray-100 rounded-sm">
                         <h4 class="serif text-[10px] font-black uppercase mb-10 pb-5 border-b border-gray-200">Similar Options</h4>
                         <div class="space-y-8">
@@ -229,24 +223,21 @@
         </div>
     </div>
 </div>
-@endsection
 
-@push('scripts')
-<!-- Modern Lightbox Script -->
+<!-- Scripts placed at the end for performance -->
 <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Initialize Swiper
+        // Initialize Swiper (Fixed Navigation Arrows)
         new Swiper(".propertySwiper", {
-            speed: 1200,
+            speed: 1000,
             loop: true,
             pagination: { el: ".swiper-pagination", clickable: true },
             navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
-            autoplay: { delay: 5000, disableOnInteraction: false },
-            effect: "slide",
+            autoplay: { delay: 6000, disableOnInteraction: false },
         });
 
-        // Initialize Lightbox Zoom
+        // Initialize Lightbox (Zoom Feature)
         Fancybox.bind("[data-fancybox]", {
             infinite: true,
             dragToClose: true,
@@ -254,4 +245,4 @@
         });
     });
 </script>
-@endpush
+@endsection
