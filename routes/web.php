@@ -228,3 +228,15 @@ Route::get('/terms-conditions', function () {
 Route::get('/privacy-policy', function () {
     return view('pages.privacy', ['settings' => \App\Models\Setting::first()]);
 })->name('privacy');
+
+Route::get('/final-sync', function () {
+    $adminFolder = storage_path('app/public/brokerage-listings');
+    $publicFolder = base_path('../public_html/brokerage-listings');
+
+    if (File::exists($adminFolder)) {
+        // Move any new files from Admin storage to the Public folder
+        File::copyDirectory($adminFolder, $publicFolder);
+        return "New images synchronized! You can now delete this route.";
+    }
+    return "Admin folder not found.";
+});

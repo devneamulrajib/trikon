@@ -40,11 +40,11 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
+            // Points to the real public root on cPanel
+            'root' => base_path('../public_html'), 
+            'url' => env('APP_URL'),
             'visibility' => 'public',
             'throw' => false,
-            'report' => false,
         ],
 
         's3' => [
