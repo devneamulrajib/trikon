@@ -10,21 +10,34 @@
 
     /* 2. Modern Services Styling - Zero Gap Edge-to-Edge */
     .service-container-row {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0; /* Removed Gaps */
-    }
-    
-    @media (max-width: 768px) {
-        .service-container-row {
-            grid-template-columns: 1fr;
-        }
+        display: flex;
+        flex-wrap: wrap; /* Allows items to wrap to the next line */
+        gap: 0;
     }
 
     .service-block {
         position: relative;
         height: 500px;
         overflow: hidden;
+        /* Default: 3 items per row. flex-grow: 1 makes the last 2 items fill the whole width */
+        flex: 1 0 33.333%; 
+        min-width: 33.333%;
+    }
+
+    /* Responsive adjustment for tablets (2 columns) */
+    @media (max-width: 1024px) {
+        .service-block {
+            flex: 1 0 50%;
+            min-width: 50%;
+        }
+    }
+
+    /* Responsive adjustment for mobile (1 column) */
+    @media (max-width: 640px) {
+        .service-block {
+            flex: 1 0 100%;
+            min-width: 100%;
+        }
     }
 
     .service-block img {
@@ -38,11 +51,11 @@
         transform: scale(1.1);
     }
 
-    /* Subtle overlay filter to match the 2nd screenshot */
+    /* Subtle overlay filter */
     .service-block-overlay {
         position: absolute;
         inset: 0;
-        background: rgba(0, 0, 0, 0.3);
+        background: rgba(0, 0, 0, 0.4); /* Slightly darker for better text readability */
         transition: background 0.5s ease;
         display: flex;
         flex-direction: column;
@@ -54,7 +67,7 @@
     }
 
     .service-block:hover .service-block-overlay {
-        background: rgba(244, 164, 28, 0.2); /* Subtle Orange Tint on hover */
+        background: rgba(244, 164, 28, 0.3); /* Subtle Orange Tint on hover */
     }
 </style>
 @endsection
@@ -70,7 +83,6 @@
                 <div class="absolute inset-0 bg-black/20 z-10"></div>
                 @php
                     $slideImg = $slide->image;
-                    // Robust check: strip storage prefix to look in public_html
                     $slideUrl = asset(ltrim(Str::replaceFirst('storage/', '', $slideImg), '/'));
                 @endphp
                 <img src="{{ $slideUrl }}" class="w-full h-full object-cover" alt="Slider" onerror="this.onerror=null;this.src='https://placehold.co/1920x1080?text=Slider+Image';">
@@ -113,7 +125,7 @@
     </div>
 </section>
 
-<!-- SECTION 3: OUR PROJECTS (4-Column Rangs Model) -->
+<!-- SECTION 3: OUR PROJECTS -->
 <section class="py-24 bg-[#f4a41c]">
     <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-16" data-aos="fade-up">
@@ -157,9 +169,8 @@
     </div>
 </section>
 
-<!-- SECTION 4: OUR SERVICES -->
+<!-- SECTION 4: OUR SERVICES (FIXED 5-ITEM LAYOUT) -->
 <section class="bg-white relative overflow-hidden">
-    <!-- Subtle Logo Watermark -->
     <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none select-none">
         <img src="{{ asset('logo.png') }}" class="w-[800px] grayscale" alt="Watermark">
     </div>
@@ -171,7 +182,9 @@
     </div>
 
     <div class="service-container-row relative z-10">
-        @php $services = \App\Models\Service::limit(3)->get(); @endphp
+        {{-- Fetching all services to show all 5 --}}
+        @php $services = \App\Models\Service::all(); @endphp
+        
         @foreach($services as $service)
         <a href="{{ route('services.show', $service->slug) }}" class="service-block group">
             @php
@@ -181,7 +194,7 @@
             <img src="{{ $servUrl }}" alt="{{ $service->name }}" onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Service+Image';">
             
             <div class="service-block-overlay">
-                <h3 class="serif text-2xl text-white font-bold uppercase tracking-[0.3em] group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl">
+                <h3 class="serif text-2xl text-white font-bold uppercase tracking-[0.3em] group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl px-4">
                     {{ $service->name }}
                 </h3>
                 <div class="w-0 group-hover:w-16 h-[2px] bg-[#f4a41c] mt-6 transition-all duration-500"></div>
@@ -191,7 +204,7 @@
     </div>
 </section>
 
-<!-- SECTION 5: MODERNIZED WRITE US YOUR QUERY -->
+<!-- SECTION 5: INQUIRY FORM -->
 <section class="py-32 bg-black border-t border-white/5 relative overflow-hidden">
     <div class="max-w-4xl mx-auto px-6 relative z-10">
         <div class="text-center mb-20" data-aos="fade-up">
