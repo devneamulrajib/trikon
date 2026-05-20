@@ -167,20 +167,45 @@ Route::post('/contact', function (Request $request) {
 })->name('contact.send');
 
 /**
- * 7. OTHER SECTIONS
+ * 7. NEW SERVICES PAGES (CUSTOM LAYOUTS)
+ * These are placed before the wildcard to ensure they load specific blade files
  */
+Route::get('/services/property-management', function () {
+    return view('pages.property-management', ['settings' => Setting::first()]);
+})->name('services.property-management');
+
+Route::get('/services/property-buy-sell', function () {
+    return view('pages.property-buy-sell', ['settings' => Setting::first()]);
+})->name('services.buy-sell');
+
+Route::get('/services/joint-venture', function () {
+    return view('pages.joint-venture', ['settings' => Setting::first()]);
+})->name('services.joint-venture');
+
+Route::get('/services/builders-construction', function () {
+    return view('pages.builders-construction', ['settings' => Setting::first()]);
+})->name('services.builders-construction');
+
+Route::get('/services/investment', function () {
+    return view('pages.investment', ['settings' => Setting::first()]);
+})->name('services.investment');
+
+
+/**
+ * 8. DYNAMIC SERVICES & BLOGS
+ */
+Route::get('/services/{slug}', function ($slug) {
+    $service = Service::where('slug', $slug)->firstOrFail();
+    $settings = \App\Models\Setting::first();
+    return view('pages.service-details', compact('service', 'settings'));
+})->name('services.show');
+
 Route::get('/news-events', function () {
     return view('pages.news', [
         'settings' => \App\Models\Setting::first(),
         'news' => \App\Models\News::orderBy('published_at', 'desc')->get()
     ]);
 })->name('news');
-
-Route::get('/services/{slug}', function ($slug) {
-    $service = Service::where('slug', $slug)->firstOrFail();
-    $settings = \App\Models\Setting::first();
-    return view('pages.service-details', compact('service', 'settings'));
-})->name('services.show');
 
 Route::get('/blog', function () {
     $blogs = Blog::latest()->whereNotNull('published_at')->get();
@@ -194,6 +219,9 @@ Route::get('/blog/{slug}', function ($slug) {
     return view('pages.blog-detail', compact('blog', 'settings'));
 })->name('blog.show');
 
+/**
+ * 9. CAREER SECTION
+ */
 Route::get('/career', function () {
     return view('pages.career-list', [
         'jobs' => Job::where('is_active', true)->latest()->get(),
@@ -221,6 +249,9 @@ Route::post('/career/apply', function (Request $request) {
     return back()->with('success', 'Your application has been submitted successfully!');
 })->name('career.apply');
 
+/**
+ * 10. LEGAL
+ */
 Route::get('/terms-conditions', function () {
     return view('pages.terms', ['settings' => \App\Models\Setting::first()]);
 })->name('terms');
