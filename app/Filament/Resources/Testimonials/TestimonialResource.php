@@ -16,10 +16,8 @@ class TestimonialResource extends Resource
 {
     protected static ?string $model = Testimonial::class;
 
-    // Fixed: Using \BackedEnum to match your version's requirement for icons
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
 
-    // Fixed: Using \UnitEnum to match your version's requirement for groups
     protected static string | \UnitEnum | null $navigationGroup = 'Site Settings';
 
     public static function form(Schema $schema): Schema

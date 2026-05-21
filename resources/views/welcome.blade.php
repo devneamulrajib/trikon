@@ -907,14 +907,20 @@
 
             if ($imagePath) {
 
-                // Remove duplicate storage/
-                $imagePath = ltrim(str_replace('storage/', '', $imagePath), '/');
+                // If image already contains storage/
+            if (str_contains($imagePath, 'storage/')) {
 
-                $imageUrl = asset('storage/' . $imagePath);
+                $imageUrl = asset($imagePath);
 
             } else {
 
-                $imageUrl = 'https://placehold.co/400x540/111/333?text=Review';
+                    $imageUrl = asset('storage/' . ltrim($imagePath, '/'));
+
+               }
+
+            } else {
+
+                   $imageUrl = 'https://placehold.co/400x540/111/333?text=Review';
 
             }
 
