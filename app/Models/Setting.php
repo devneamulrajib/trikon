@@ -12,6 +12,7 @@ class Setting extends Model
     protected $fillable = [
         'site_name',
         'logo',
+        'welcome_video_url',
         'welcome_title',
         'welcome_text',
         'hotline',

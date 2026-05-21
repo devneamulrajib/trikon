@@ -11,7 +11,7 @@
     /* 2. Modern Services Styling - Zero Gap Edge-to-Edge */
     .service-container-row {
         display: flex;
-        flex-wrap: wrap; /* Allows items to wrap to the next line */
+        flex-wrap: wrap; 
         gap: 0;
     }
 
@@ -19,12 +19,10 @@
         position: relative;
         height: 500px;
         overflow: hidden;
-        /* Default: 3 items per row. flex-grow: 1 makes the last 2 items fill the whole width */
         flex: 1 0 33.333%; 
         min-width: 33.333%;
     }
 
-    /* Responsive adjustment for tablets (2 columns) */
     @media (max-width: 1024px) {
         .service-block {
             flex: 1 0 50%;
@@ -32,7 +30,6 @@
         }
     }
 
-    /* Responsive adjustment for mobile (1 column) */
     @media (max-width: 640px) {
         .service-block {
             flex: 1 0 100%;
@@ -51,11 +48,10 @@
         transform: scale(1.1);
     }
 
-    /* Subtle overlay filter */
     .service-block-overlay {
         position: absolute;
         inset: 0;
-        background: rgba(0, 0, 0, 0.4); /* Slightly darker for better text readability */
+        background: rgba(0, 0, 0, 0.4); 
         transition: background 0.5s ease;
         display: flex;
         flex-direction: column;
@@ -67,7 +63,26 @@
     }
 
     .service-block:hover .service-block-overlay {
-        background: rgba(244, 164, 28, 0.3); /* Subtle Orange Tint on hover */
+        background: rgba(244, 164, 28, 0.3); 
+    }
+
+    /* NEW VIDEO CONTAINER STYLING */
+    .video-aspect-box {
+        position: relative;
+        width: 100%;
+        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        height: 0;
+        overflow: hidden;
+        background: #111;
+        border: 1px solid rgba(244, 164, 28, 0.2);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+    .video-aspect-box iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
     }
 </style>
 @endsection
@@ -102,25 +117,63 @@
     </div>
 </section>
 
-<!-- SECTION 2: WELCOME SECTION -->
+<!-- SECTION 2: WELCOME SECTION (WITH FUNCTIONAL VIDEO) -->
 <section class="relative py-24 bg-black overflow-hidden border-b border-white/5">
-    <div class="absolute right-0 top-0 h-full w-1/2 opacity-10 pointer-events-none">
+    <div class="absolute right-0 top-0 h-full w-1/3 opacity-5 pointer-events-none">
         <svg viewBox="0 0 100 100" class="h-full w-full fill-white">
-            <path d="M50 5 L95 95 L5 95 Z M50 25 L80 85 L20 85 Z" />
+            <path d="M50 5 L95 95 L5 95 Z" />
         </svg>
     </div>
 
-    <div class="max-w-6xl mx-auto px-6 relative z-10">
-        <div class="max-w-2xl" data-aos="fade-right">
-            <h4 class="text-white text-xl font-bold mb-2">Welcome to</h4>
-            <h2 class="text-[#f4a41c] text-3xl md:text-4xl font-extrabold uppercase mb-8">Trikon Holdings</h2>
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             
-            <div class="space-y-6 text-white/90 text-sm leading-relaxed font-light">
-                <p>Discover a new standard in real estate with Trikon Holdings, a trusted name in Bangladesh’s real estate sector, specializing in property development, luxury residential apartments, commercial spaces, and land projects.</p>
-                <p>We are dedicated to delivering developments that combine quality construction, modern design, and long-term investment value. Whether you are seeking your dream home, a functional office space, or a secure investment opportunity, Trikon Holdings offers reliable solutions tailored to your needs.</p>
-                <p>Experience premium living, exceptional opportunities, and smart investments with Trikon.</p>
-                <p>We look forward to partnering with you and helping you achieve your property goals.</p>
+            <!-- LEFT: Welcome Text -->
+            <div data-aos="fade-right">
+                <h4 class="text-white text-xl font-bold mb-2">Welcome to</h4>
+                <h2 class="text-[#f4a41c] text-3xl md:text-4xl font-extrabold uppercase mb-8">Trikon Holdings</h2>
+                
+                <div class="space-y-6 text-white/90 text-sm leading-relaxed font-light">
+                    <p>Discover a new standard in real estate with Trikon Holdings, a trusted name in Bangladesh’s real estate sector, specializing in property development, luxury residential apartments, commercial spaces, and land projects.</p>
+                    <p>We are dedicated to delivering developments that combine quality construction, modern design, and long-term investment value. Whether you are seeking your dream home, a functional office space, or a secure investment opportunity, Trikon Holdings offers reliable solutions tailored to your needs.</p>
+                    <p>Experience premium living, exceptional opportunities, and smart investments with Trikon.</p>
+                    <p>We look forward to partnering with you and helping you achieve your property goals.</p>
+                </div>
             </div>
+
+            <!-- RIGHT: Video Player -->
+            <div data-aos="fade-left">
+                <div class="video-aspect-box">
+                    @php
+                        $settings = \App\Models\Setting::first();
+                        $url = $settings->welcome_video_url ?? '';
+                        $videoId = null;
+
+                        // Enhanced Regex to catch all YouTube URL variations
+                        if ($url) {
+                            $pattern = '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i';
+                            if (preg_match($pattern, $url, $matches)) {
+                                $videoId = $matches[1];
+                            }
+                        }
+                    @endphp
+
+                    @if($videoId)
+                        <iframe 
+                            src="https://www.youtube.com/embed/{{ $videoId }}?rel=0&modestbranding=1" 
+                            title="Trikon Welcome Video" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    @else
+                        <div class="absolute inset-0 flex items-center justify-center bg-gray-900/50">
+                            <p class="text-white/30 text-xs uppercase tracking-widest">Video will appear here</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
         </div>
     </div>
 </section>
@@ -169,7 +222,7 @@
     </div>
 </section>
 
-<!-- SECTION 4: OUR SERVICES (FIXED 5-ITEM LAYOUT) -->
+<!-- SECTION 4: OUR SERVICES -->
 <section class="bg-white relative overflow-hidden">
     <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none select-none">
         <img src="{{ asset('logo.png') }}" class="w-[800px] grayscale" alt="Watermark">
@@ -182,7 +235,6 @@
     </div>
 
     <div class="service-container-row relative z-10">
-        {{-- Fetching all services to show all 5 --}}
         @php $services = \App\Models\Service::all(); @endphp
         
         @foreach($services as $service)

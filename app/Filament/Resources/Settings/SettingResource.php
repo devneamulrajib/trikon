@@ -40,6 +40,11 @@ class SettingResource extends Resource
                         ->directory('site-settings')
                         ->visibility('public')
                         ->helperText('Upload a high-quality transparent PNG logo.'),
+
+                    TextInput::make('welcome_video_url')
+                        ->label('Welcome Section Video URL')
+                        ->placeholder('https://www.youtube.com/watch?v=...')
+                        ->helperText('Paste the full YouTube link here to display it on the homepage welcome section.'),
                 ]),
 
             Section::make('Contact Details (Editable)')
