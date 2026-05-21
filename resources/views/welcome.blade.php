@@ -66,7 +66,7 @@
         background: rgba(244, 164, 28, 0.3); 
     }
 
-    /* NEW VIDEO CONTAINER STYLING */
+    /* VIDEO CONTAINER STYLING */
     .video-aspect-box {
         position: relative;
         width: 100%;
@@ -83,6 +83,582 @@
         left: 0;
         width: 100%;
         height: 100%;
+    }
+
+    /* =========================================
+       STUNNING CUSTOMER REVIEWS SECTION - NEW
+       ========================================= */
+
+    /* --- LEFT PANEL: Hero Text --- */
+    .reviews-section {
+        display: flex;
+        min-height: 100vh;
+        background: #050505;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .reviews-left-panel {
+        width: 38%;
+        min-width: 340px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 80px 60px;
+        position: relative;
+        z-index: 10;
+        background: #050505;
+        border-right: 1px solid rgba(244,164,28,0.12);
+    }
+
+    .reviews-left-panel::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 50%;
+        background: radial-gradient(ellipse at bottom left, rgba(244,164,28,0.07) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .reviews-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 28px;
+    }
+
+    .reviews-eyebrow-line {
+        width: 40px;
+        height: 2px;
+        background: #f4a41c;
+    }
+
+    .reviews-eyebrow span {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5em;
+        text-transform: uppercase;
+        color: #f4a41c;
+    }
+
+    .reviews-main-heading {
+        font-family: 'Cinzel', serif;
+        font-size: clamp(2.8rem, 5vw, 5rem);
+        font-weight: 900;
+        line-height: 1.0;
+        color: #ffffff;
+        margin-bottom: 32px;
+        letter-spacing: -0.02em;
+    }
+
+    .reviews-main-heading em {
+        font-style: normal;
+        color: #f4a41c;
+        display: block;
+    }
+
+    .reviews-subtext {
+        font-size: 13px;
+        color: rgba(255,255,255,0.45);
+        line-height: 1.8;
+        max-width: 280px;
+        font-weight: 300;
+        margin-bottom: 48px;
+    }
+
+    .reviews-counter {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+    }
+
+    .reviews-counter-num {
+        font-family: 'Cinzel', serif;
+        font-size: 4rem;
+        font-weight: 900;
+        color: #f4a41c;
+        line-height: 1;
+    }
+
+    .reviews-counter-label {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.3);
+    }
+
+    .reviews-stars {
+        display: flex;
+        gap: 4px;
+        margin-top: 16px;
+        margin-bottom: 40px;
+    }
+
+    .reviews-stars svg {
+        width: 18px;
+        height: 18px;
+        fill: #f4a41c;
+    }
+
+    .reviews-scroll-hint {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.2);
+        margin-top: auto;
+    }
+
+    .reviews-scroll-hint-arrow {
+        width: 32px;
+        height: 1px;
+        background: rgba(255,255,255,0.15);
+        position: relative;
+    }
+
+    /* --- RIGHT PANEL: Image Grid --- */
+    .reviews-right-panel {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+        background: #080808;
+    }
+
+    .reviews-grid-wrapper {
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 20px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        cursor: grab;
+        user-select: none;
+    }
+
+    .reviews-grid-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+
+    .reviews-grid-wrapper.is-dragging {
+        cursor: grabbing;
+    }
+
+    .reviews-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+    }
+
+    @media (max-width: 1200px) {
+        .reviews-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    .review-thumb {
+        position: relative;
+        aspect-ratio: 3/4;
+        overflow: hidden;
+        cursor: pointer;
+        background: #111;
+    }
+
+    .review-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease;
+        filter: grayscale(30%) brightness(0.85);
+    }
+
+    .review-thumb:hover img {
+        transform: scale(1.08);
+        filter: grayscale(0%) brightness(1);
+    }
+
+    .review-thumb-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 50%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 16px;
+    }
+
+    .review-thumb:hover .review-thumb-overlay {
+        opacity: 1;
+    }
+
+    .review-thumb-name {
+        font-size: 11px;
+        font-weight: 700;
+        color: #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        line-height: 1.2;
+    }
+
+    .review-thumb-role {
+        font-size: 9px;
+        color: #f4a41c;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        margin-top: 3px;
+    }
+
+    .review-thumb-icon {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 28px;
+        height: 28px;
+        background: rgba(244,164,28,0.9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transform: scale(0.7);
+        transition: all 0.3s ease;
+    }
+
+    .review-thumb:hover .review-thumb-icon {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .review-thumb-icon svg {
+        width: 12px;
+        height: 12px;
+        fill: #000;
+    }
+
+    /* Video badge */
+    .review-thumb-video-badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(0,0,0,0.7);
+        border: 1px solid rgba(244,164,28,0.5);
+        padding: 3px 8px;
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        color: #f4a41c;
+        text-transform: uppercase;
+    }
+
+    .review-thumb-video-badge svg {
+        width: 8px;
+        height: 8px;
+        fill: #f4a41c;
+    }
+
+    /* Top fade gradient on grid */
+    .reviews-right-panel::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: linear-gradient(to bottom, #080808, transparent);
+        z-index: 5;
+        pointer-events: none;
+    }
+
+    .reviews-right-panel::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 80px;
+        background: linear-gradient(to top, #080808, transparent);
+        z-index: 5;
+        pointer-events: none;
+    }
+
+    /* Decorative number */
+    .reviews-deco-num {
+        position: absolute;
+        bottom: 40px;
+        left: 60px;
+        font-family: 'Cinzel', serif;
+        font-size: 160px;
+        font-weight: 900;
+        color: rgba(255,255,255,0.02);
+        line-height: 1;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    /* --- FULLSCREEN MODAL --- */
+    .review-modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.97);
+        z-index: 9999;
+        display: flex;
+        align-items: stretch;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+    }
+
+    .review-modal-backdrop.is-open {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    /* Modal Left: Full Image/Video */
+    .review-modal-media {
+        width: 55%;
+        position: relative;
+        background: #000;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .review-modal-media img,
+    .review-modal-media video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .review-modal-media iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .review-modal-media-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to right, transparent 60%, rgba(0,0,0,0.3) 100%);
+        pointer-events: none;
+    }
+
+    /* Modal Right: Content */
+    .review-modal-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 80px 60px;
+        background: #0a0a0a;
+        border-left: 1px solid rgba(244,164,28,0.1);
+        overflow-y: auto;
+        position: relative;
+    }
+
+    .review-modal-content::before {
+        content: '"';
+        position: absolute;
+        top: 40px;
+        left: 40px;
+        font-size: 200px;
+        line-height: 1;
+        color: rgba(244,164,28,0.04);
+        font-family: 'Cinzel', serif;
+        pointer-events: none;
+    }
+
+    .review-modal-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 36px;
+    }
+
+    .review-modal-eyebrow-line {
+        width: 30px;
+        height: 2px;
+        background: #f4a41c;
+    }
+
+    .review-modal-eyebrow span {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.5em;
+        text-transform: uppercase;
+        color: #f4a41c;
+    }
+
+    .review-modal-quote {
+        font-size: clamp(1.1rem, 2vw, 1.5rem);
+        color: rgba(255,255,255,0.9);
+        font-weight: 300;
+        line-height: 1.75;
+        font-style: italic;
+        margin-bottom: 48px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .review-modal-author {
+        border-left: 3px solid #f4a41c;
+        padding-left: 24px;
+        margin-bottom: 48px;
+    }
+
+    .review-modal-author-name {
+        font-size: 20px;
+        font-weight: 800;
+        color: #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        font-family: 'Cinzel', serif;
+    }
+
+    .review-modal-author-role {
+        font-size: 10px;
+        color: #f4a41c;
+        font-weight: 600;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        margin-top: 6px;
+    }
+
+    .review-modal-stars {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 40px;
+    }
+
+    .review-modal-stars svg {
+        width: 20px;
+        height: 20px;
+        fill: #f4a41c;
+    }
+
+    /* Modal navigation */
+    .review-modal-nav {
+        display: flex;
+        gap: 12px;
+        margin-top: auto;
+        padding-top: 40px;
+        border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .review-modal-nav-btn {
+        width: 48px;
+        height: 48px;
+        border: 1px solid rgba(255,255,255,0.1);
+        background: transparent;
+        color: rgba(255,255,255,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 18px;
+    }
+
+    .review-modal-nav-btn:hover {
+        border-color: #f4a41c;
+        color: #f4a41c;
+        background: rgba(244,164,28,0.05);
+    }
+
+    .review-modal-close {
+        position: absolute;
+        top: 24px;
+        right: 24px;
+        width: 44px;
+        height: 44px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: rgba(255,255,255,0.5);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+
+    .review-modal-close:hover {
+        background: rgba(244,164,28,0.1);
+        border-color: #f4a41c;
+        color: #f4a41c;
+    }
+
+    .review-modal-counter {
+        position: absolute;
+        bottom: 24px;
+        left: 30px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.3em;
+        color: rgba(255,255,255,0.2);
+        z-index: 10;
+    }
+
+    /* Transition for modal content swap */
+    .review-modal-content-inner {
+        transition: opacity 0.3s ease;
+    }
+
+    .review-modal-content-inner.fading {
+        opacity: 0;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 900px) {
+        .reviews-section {
+            flex-direction: column;
+            min-height: auto;
+        }
+
+        .reviews-left-panel {
+            width: 100%;
+            min-width: unset;
+            padding: 60px 30px 40px;
+            border-right: none;
+            border-bottom: 1px solid rgba(244,164,28,0.12);
+        }
+
+        .reviews-right-panel {
+            height: 80vw;
+            min-height: 400px;
+        }
+
+        .reviews-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .review-modal-backdrop {
+            flex-direction: column;
+        }
+
+        .review-modal-media {
+            width: 100%;
+            height: 45vh;
+        }
+
+        .review-modal-content {
+            padding: 40px 30px;
+        }
+
+        .reviews-main-heading {
+            font-size: 2.2rem;
+        }
     }
 </style>
 @endsection
@@ -119,6 +695,7 @@
 
 <!-- SECTION 2: WELCOME SECTION (WITH FUNCTIONAL VIDEO) -->
 <section class="relative py-24 bg-black overflow-hidden border-b border-white/5">
+
     <div class="absolute right-0 top-0 h-full w-1/3 opacity-5 pointer-events-none">
         <svg viewBox="0 0 100 100" class="h-full w-full fill-white">
             <path d="M50 5 L95 95 L5 95 Z" />
@@ -126,56 +703,115 @@
     </div>
 
     <div class="max-w-7xl mx-auto px-6 relative z-10">
+
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            
-            <!-- LEFT: Welcome Text -->
+
+            <!-- LEFT CONTENT -->
             <div data-aos="fade-right">
-                <h4 class="text-white text-xl font-bold mb-2">Welcome to</h4>
-                <h2 class="text-[#f4a41c] text-3xl md:text-4xl font-extrabold uppercase mb-8">Trikon Holdings</h2>
-                
+
+                <h4 class="text-white text-xl font-bold mb-2">
+                    Welcome to
+                </h4>
+
+                <h2 class="text-[#f4a41c] text-3xl md:text-4xl font-extrabold uppercase mb-8">
+                    Trikon Holdings
+                </h2>
+
                 <div class="space-y-6 text-white/90 text-sm leading-relaxed font-light">
-                    <p>Discover a new standard in real estate with Trikon Holdings, a trusted name in Bangladesh’s real estate sector, specializing in property development, luxury residential apartments, commercial spaces, and land projects.</p>
-                    <p>We are dedicated to delivering developments that combine quality construction, modern design, and long-term investment value. Whether you are seeking your dream home, a functional office space, or a secure investment opportunity, Trikon Holdings offers reliable solutions tailored to your needs.</p>
-                    <p>Experience premium living, exceptional opportunities, and smart investments with Trikon.</p>
-                    <p>We look forward to partnering with you and helping you achieve your property goals.</p>
+
+                    <p>
+                        Discover a new standard in real estate with Trikon Holdings, a trusted name in Bangladesh's real estate sector, specializing in property development, luxury residential apartments, commercial spaces, and land projects.
+                    </p>
+
+                    <p>
+                        We are dedicated to delivering developments that combine quality construction, modern design, and long-term investment value.
+                    </p>
+
+                    <p>
+                        Whether you are seeking your dream home, a functional office space, or a secure investment opportunity, Trikon Holdings offers reliable solutions tailored to your needs.
+                    </p>
+
+                    <p>
+                        Experience premium living, exceptional opportunities, and smart investments with Trikon.
+                    </p>
+
                 </div>
+
             </div>
 
-            <!-- RIGHT: Video Player -->
+            <!-- RIGHT VIDEO -->
             <div data-aos="fade-left">
-                <div class="video-aspect-box">
+
+                <div class="relative w-full overflow-hidden bg-black shadow-2xl border border-[#f4a41c]/20"
+                     style="padding-bottom:56.25%;">
+
                     @php
+
                         $settings = \App\Models\Setting::first();
-                        $url = $settings->welcome_video_url ?? '';
+
+                        $videoUrl = trim($settings->welcome_video_url ?? '');
+
                         $videoId = null;
 
-                        // Enhanced Regex to catch all YouTube URL variations
-                        if ($url) {
-                            $pattern = '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i';
-                            if (preg_match($pattern, $url, $matches)) {
+                        if ($videoUrl) {
+
+                            // youtu.be/xxxxx
+                            if (preg_match('/youtu\.be\/([^\?\/]+)/', $videoUrl, $matches)) {
+                                $videoId = $matches[1];
+                            }
+
+                            // youtube.com/watch?v=xxxxx
+                            elseif (preg_match('/v=([^\&]+)/', $videoUrl, $matches)) {
+                                $videoId = $matches[1];
+                            }
+
+                            // youtube.com/embed/xxxxx
+                            elseif (preg_match('/embed\/([^\?\/]+)/', $videoUrl, $matches)) {
                                 $videoId = $matches[1];
                             }
                         }
+
                     @endphp
 
                     @if($videoId)
-                        <iframe 
-                            src="https://www.youtube.com/embed/{{ $videoId }}?rel=0&modestbranding=1" 
-                            title="Trikon Welcome Video" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+
+                        <iframe
+                            class="absolute top-0 left-0 w-full h-full"
+                            src="https://www.youtube.com/embed/{{ $videoId }}?rel=0&modestbranding=1"
+                            title="Welcome Video"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowfullscreen>
                         </iframe>
+
                     @else
-                        <div class="absolute inset-0 flex items-center justify-center bg-gray-900/50">
-                            <p class="text-white/30 text-xs uppercase tracking-widest">Video will appear here</p>
+
+                        <div class="absolute inset-0 flex items-center justify-center bg-gray-900">
+
+                            <div class="text-center">
+
+                                <p class="text-white/50 uppercase tracking-[0.3em] text-xs mb-3">
+                                    Video Not Found
+                                </p>
+
+                                <p class="text-white/30 text-[11px]">
+                                    Please add a valid YouTube URL from admin panel
+                                </p>
+
+                            </div>
+
                         </div>
+
                     @endif
+
                 </div>
+
             </div>
 
         </div>
+
     </div>
+
 </section>
 
 <!-- SECTION 3: OUR PROJECTS -->
@@ -236,7 +872,6 @@
 
     <div class="service-container-row relative z-10">
         @php $services = \App\Models\Service::all(); @endphp
-        
         @foreach($services as $service)
         <a href="{{ route('services.show', $service->slug) }}" class="service-block group">
             @php
@@ -244,7 +879,6 @@
                 $servUrl = asset(ltrim(Str::replaceFirst('storage/', '', $servImg), '/'));
             @endphp
             <img src="{{ $servUrl }}" alt="{{ $service->name }}" onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Service+Image';">
-            
             <div class="service-block-overlay">
                 <h3 class="serif text-2xl text-white font-bold uppercase tracking-[0.3em] group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl px-4">
                     {{ $service->name }}
@@ -256,7 +890,145 @@
     </div>
 </section>
 
-<!-- SECTION 5: INQUIRY FORM -->
+<!-- SECTION 5: STUNNING CUSTOMER REVIEWS -->
+@php 
+    $testimonialsData = \App\Models\Testimonial::where('is_active', true)->get()->map(function($t) {
+        $vId = '';
+        if($t->video_url && preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $t->video_url, $m)) { 
+            $vId = $m[1]; 
+        }
+        return [
+            'name' => $t->name,
+            'role' => $t->role,
+            'text' => $t->content,
+            'video_id' => $vId ?: null,
+            'image' => asset("storage/" . $t->image)
+        ];
+    })->values();
+@endphp
+
+@if($testimonialsData->count() > 0)
+<section class="reviews-section" id="customer-reviews-section">
+
+    <!-- LEFT PANEL -->
+    <div class="reviews-left-panel" data-aos="fade-right">
+        <div class="reviews-eyebrow">
+            <div class="reviews-eyebrow-line"></div>
+            <span>Client Stories</span>
+        </div>
+
+        <h2 class="reviews-main-heading">
+            What Our<br>
+            <em>Clients</em>
+            Say
+        </h2>
+
+        <p class="reviews-subtext">
+            Real words from real people who trusted Trikon Holdings to deliver their dream homes and investments.
+        </p>
+
+        <div class="reviews-stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+
+        <div class="reviews-counter">
+            <span class="reviews-counter-num">{{ $testimonialsData->count() }}+</span>
+            <span class="reviews-counter-label">Happy<br>Clients</span>
+        </div>
+
+        <div class="reviews-scroll-hint" style="margin-top: 48px;">
+            <div class="reviews-scroll-hint-arrow"></div>
+            <span>Click to read stories</span>
+        </div>
+
+        <div class="reviews-deco-num">{{ $testimonialsData->count() }}</div>
+    </div>
+
+    <!-- RIGHT PANEL: Draggable Image Grid -->
+    <div class="reviews-right-panel">
+        <div class="reviews-grid-wrapper" id="reviewsGridWrapper">
+            <div class="reviews-grid" id="reviewsGrid">
+                @foreach($testimonialsData as $idx => $t)
+                <div 
+                    class="review-thumb" 
+                    data-index="{{ $idx }}"
+                    onclick="openReviewModal({{ $idx }})"
+                >
+                    <img 
+                        src="{{ $t['image'] }}" 
+                        alt="{{ $t['name'] }}"
+                        onerror="this.onerror=null;this.src='https://placehold.co/400x540/111/333?text=Review';"
+                        loading="lazy"
+                    >
+                    @if($t['video_id'])
+                    <div class="review-thumb-video-badge">
+                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        Video
+                    </div>
+                    @endif
+                    <div class="review-thumb-overlay">
+                        <div class="review-thumb-name">{{ $t['name'] }}</div>
+                        <div class="review-thumb-role">{{ $t['role'] }}</div>
+                    </div>
+                    <div class="review-thumb-icon">
+                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FULLSCREEN REVIEW MODAL -->
+<div class="review-modal-backdrop" id="reviewModal" onclick="handleModalBackdropClick(event)">
+    
+    <!-- LEFT: Full Image or Video -->
+    <div class="review-modal-media" id="reviewModalMedia">
+        <!-- Filled by JS -->
+        <div class="review-modal-media-overlay"></div>
+        <div class="review-modal-counter" id="reviewModalCounter">01 / 01</div>
+    </div>
+
+    <!-- RIGHT: Review Content -->
+    <div class="review-modal-content">
+        <button class="review-modal-close" onclick="closeReviewModal()" title="Close">✕</button>
+
+        <div class="review-modal-content-inner" id="reviewModalContentInner">
+            <div class="review-modal-eyebrow">
+                <div class="review-modal-eyebrow-line"></div>
+                <span>Client Testimonial</span>
+            </div>
+
+            <p class="review-modal-quote" id="reviewModalQuote"></p>
+
+            <div class="review-modal-stars">
+                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+
+            <div class="review-modal-author">
+                <div class="review-modal-author-name" id="reviewModalName"></div>
+                <div class="review-modal-author-role" id="reviewModalRole"></div>
+            </div>
+
+            <div class="review-modal-nav">
+                <button class="review-modal-nav-btn" onclick="navigateModal(-1)" title="Previous">&#8592;</button>
+                <button class="review-modal-nav-btn" onclick="navigateModal(1)" title="Next">&#8594;</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
+<!-- SECTION 6: INQUIRY FORM -->
 <section class="py-32 bg-black border-t border-white/5 relative overflow-hidden">
     <div class="max-w-4xl mx-auto px-6 relative z-10">
         <div class="text-center mb-20" data-aos="fade-up">
@@ -290,7 +1062,7 @@
     </div>
 </section>
 
-<!-- SECTION 6: GOOGLE MAP -->
+<!-- SECTION 7: GOOGLE MAP -->
 <section class="w-full h-[500px] grayscale contrast-125 border-t border-white/5">
     <iframe 
         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.1819962222226!2d90.4222225759289!3d23.81212648640261!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c705aa134d71%3A0x1c8797d1479bcdb!2sTrikon%20Holdings%20Ltd.!5e0!3m2!1sen!2sbd!4v1777450989693!5m2!1sen!2sbd" 
@@ -306,11 +1078,164 @@
 @endsection
 
 @push('scripts')
+<script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <script>
+    // Hero Swiper
     new Swiper(".heroSwiper", {
         speed: 1500,
         autoplay: { delay: 6000, disableOnInteraction: false },
         pagination: { el: ".swiper-pagination", clickable: true },
     });
-</script> 
+
+    // =============================================
+    // CUSTOMER REVIEWS SECTION JAVASCRIPT
+    // =============================================
+
+    // Testimonials data from PHP
+    const reviewsData = @json($testimonialsData ?? []);
+    let currentReviewIndex = 0;
+
+    // --- Draggable Grid ---
+    (function() {
+        const wrapper = document.getElementById('reviewsGridWrapper');
+        if (!wrapper) return;
+
+        let isDragging = false;
+        let startY, scrollTop;
+        let hasDragged = false;
+        let dragThreshold = 6;
+
+        wrapper.addEventListener('mousedown', function(e) {
+            isDragging = true;
+            hasDragged = false;
+            startY = e.pageY - wrapper.offsetTop;
+            scrollTop = wrapper.scrollTop;
+            wrapper.classList.add('is-dragging');
+        });
+
+        wrapper.addEventListener('mousemove', function(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            const y = e.pageY - wrapper.offsetTop;
+            const walk = y - startY;
+            if (Math.abs(walk) > dragThreshold) hasDragged = true;
+            wrapper.scrollTop = scrollTop - walk;
+        });
+
+        wrapper.addEventListener('mouseup', function() {
+            isDragging = false;
+            wrapper.classList.remove('is-dragging');
+        });
+
+        wrapper.addEventListener('mouseleave', function() {
+            isDragging = false;
+            wrapper.classList.remove('is-dragging');
+        });
+
+        // Block click events on children if dragging happened
+        wrapper.addEventListener('click', function(e) {
+            if (hasDragged) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        }, true);
+    })();
+
+    // --- Modal Logic ---
+    function openReviewModal(index) {
+        currentReviewIndex = index;
+        renderModal(index);
+        document.getElementById('reviewModal').classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeReviewModal() {
+        document.getElementById('reviewModal').classList.remove('is-open');
+        document.body.style.overflow = '';
+        // Clear iframe to stop video
+        const mediaEl = document.getElementById('reviewModalMedia');
+        const iframe = mediaEl.querySelector('iframe');
+        if (iframe) iframe.src = '';
+    }
+
+    function navigateModal(dir) {
+        const total = reviewsData.length;
+        currentReviewIndex = (currentReviewIndex + dir + total) % total;
+        
+        const inner = document.getElementById('reviewModalContentInner');
+        inner.classList.add('fading');
+        
+        setTimeout(function() {
+            renderModal(currentReviewIndex);
+            inner.classList.remove('fading');
+        }, 200);
+    }
+
+    function renderModal(index) {
+        const data = reviewsData[index];
+        if (!data) return;
+
+        const total = reviewsData.length;
+        const counterEl = document.getElementById('reviewModalCounter');
+        const quoteEl = document.getElementById('reviewModalQuote');
+        const nameEl = document.getElementById('reviewModalName');
+        const roleEl = document.getElementById('reviewModalRole');
+        const mediaEl = document.getElementById('reviewModalMedia');
+
+        // Update counter
+        counterEl.textContent = String(index + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+
+        // Update text
+        quoteEl.textContent = data.text || '';
+        nameEl.textContent = data.name || '';
+        roleEl.textContent = data.role || '';
+
+        // Update media (keep overlay and counter in place)
+        // Remove old media content
+        const oldMedia = mediaEl.querySelector('.review-modal-media-content');
+        if (oldMedia) oldMedia.remove();
+
+        const mediaContent = document.createElement('div');
+        mediaContent.className = 'review-modal-media-content';
+        mediaContent.style.cssText = 'position:absolute;inset:0;';
+
+        if (data.video_id) {
+            // Show YouTube iframe
+            const iframe = document.createElement('iframe');
+            iframe.src = 'https://www.youtube.com/embed/' + data.video_id + '?autoplay=1&rel=0&modestbranding=1';
+            iframe.style.cssText = 'width:100%;height:100%;border:none;';
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            iframe.allowFullscreen = true;
+            mediaContent.appendChild(iframe);
+        } else {
+            // Show full image
+            const img = document.createElement('img');
+            img.src = data.image || '';
+            img.alt = data.name || '';
+            img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+            img.onerror = function() { this.src = 'https://placehold.co/800x1000/111/333?text=Review'; };
+            mediaContent.appendChild(img);
+        }
+
+        // Insert before the overlay
+        const overlay = mediaEl.querySelector('.review-modal-media-overlay');
+        mediaEl.insertBefore(mediaContent, overlay);
+    }
+
+    function handleModalBackdropClick(e) {
+        if (e.target === document.getElementById('reviewModal')) {
+            closeReviewModal();
+        }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        const modal = document.getElementById('reviewModal');
+        if (!modal || !modal.classList.contains('is-open')) return;
+
+        if (e.key === 'Escape') closeReviewModal();
+        if (e.key === 'ArrowLeft') navigateModal(-1);
+        if (e.key === 'ArrowRight') navigateModal(1);
+    });
+</script>
 @endpush
