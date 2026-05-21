@@ -892,19 +892,41 @@
 
 <!-- SECTION 5: STUNNING CUSTOMER REVIEWS -->
 @php 
-    $testimonialsData = \App\Models\Testimonial::where('is_active', true)->get()->map(function($t) {
-        $vId = '';
-        if($t->video_url && preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $t->video_url, $m)) { 
-            $vId = $m[1]; 
-        }
-        return [
-            'name' => $t->name,
-            'role' => $t->role,
-            'text' => $t->content,
-            'video_id' => $vId ?: null,
-            'image' => asset("storage/" . $t->image)
-        ];
-    })->values();
+    $testimonialsData = \App\Models\Testimonial::where('is_active', true)
+        ->get()
+        ->map(function($t) {
+
+            $vId = '';
+
+            if ($t->video_url && preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $t->video_url, $m)) { 
+                $vId = $m[1]; 
+            }
+
+            // FIX IMAGE URL
+            $imagePath = $t->image;
+
+            if ($imagePath) {
+
+                // Remove duplicate storage/
+                $imagePath = ltrim(str_replace('storage/', '', $imagePath), '/');
+
+                $imageUrl = asset('storage/' . $imagePath);
+
+            } else {
+
+                $imageUrl = 'https://placehold.co/400x540/111/333?text=Review';
+
+            }
+
+            return [
+                'name' => $t->name,
+                'role' => $t->role,
+                'text' => $t->content,
+                'video_id' => $vId ?: null,
+                'image' => $imageUrl,
+            ];
+        })
+        ->values();
 @endphp
 
 @if($testimonialsData->count() > 0)
@@ -1028,7 +1050,7 @@
 </div>
 @endif
 
-<!-- SECTION 6: INQUIRY FORM -->
+<!-- SECTION 6: INQUIRY FORM 2 -->
 <section class="py-32 bg-black border-t border-white/5 relative overflow-hidden">
     <div class="max-w-4xl mx-auto px-6 relative z-10">
         <div class="text-center mb-20" data-aos="fade-up">
