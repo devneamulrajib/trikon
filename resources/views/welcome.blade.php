@@ -564,53 +564,190 @@
 
 
 {{-- ============================================================
-     SECTION 4: OUR SERVICES — bg: #ffffff (white)
+     SECTION 4: OUR SERVICES — bg: warm white with art
      ============================================================ --}}
-<section class="bg-white relative overflow-hidden">
-    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none select-none">
-        <img src="{{ asset('logo.png') }}" class="w-[800px] grayscale" alt="Watermark">
-    </div>
-    <div class="text-center py-24 relative z-10" data-aos="fade-up">
-        <h2 class="serif text-gray-900 text-4xl md:text-5xl font-black uppercase tracking-widest">
-            Our <span class="text-[#f4a41c]">Services</span>
+<section class="relative overflow-hidden" style="background:#f5f1eb;">
+
+    {{-- Artistic SVG Background --}}
+    <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;"
+         viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+
+        {{-- Soft diagonal line grid --}}
+        <line x1="0" y1="200" x2="600" y2="900" stroke="#c8b89a" stroke-width="1" opacity="0.25"/>
+        <line x1="100" y1="0" x2="700" y2="900" stroke="#c8b89a" stroke-width="0.8" opacity="0.18"/>
+        <line x1="280" y1="0" x2="880" y2="900" stroke="#c8b89a" stroke-width="0.6" opacity="0.14"/>
+        <line x1="1440" y1="180" x2="840" y2="900" stroke="#c8b89a" stroke-width="1" opacity="0.25"/>
+        <line x1="1340" y1="0" x2="740" y2="900" stroke="#c8b89a" stroke-width="0.8" opacity="0.18"/>
+        <line x1="1160" y1="0" x2="560" y2="900" stroke="#c8b89a" stroke-width="0.6" opacity="0.14"/>
+
+        {{-- Concentric circles --}}
+        <circle cx="720" cy="480" r="500" fill="none" stroke="#c8a96e" stroke-width="1" opacity="0.1"/>
+        <circle cx="720" cy="480" r="360" fill="none" stroke="#c8a96e" stroke-width="0.8" opacity="0.08"/>
+        <circle cx="720" cy="480" r="220" fill="none" stroke="#c8a96e" stroke-width="0.6" opacity="0.06"/>
+
+        {{-- Watermark T --}}
+        <text x="720" y="820" font-size="700" font-weight="900"
+              fill="rgba(180,150,90,0.055)" font-family="serif" text-anchor="middle">T</text>
+
+        {{-- Triangle forms --}}
+        <polygon points="720,60 860,300 580,300" fill="none" stroke="rgba(200,165,100,0.12)" stroke-width="1.5"/>
+        <polygon points="720,900 880,640 560,640" fill="none" stroke="rgba(200,165,100,0.08)" stroke-width="1"/>
+
+        {{-- Corner brackets --}}
+        <line x1="36" y1="36" x2="36" y2="86" stroke="#f4a41c" stroke-width="2" opacity="0.45"/>
+        <line x1="36" y1="36" x2="86" y2="36" stroke="#f4a41c" stroke-width="2" opacity="0.45"/>
+        <line x1="1404" y1="864" x2="1404" y2="814" stroke="#f4a41c" stroke-width="1.5" opacity="0.3"/>
+        <line x1="1404" y1="864" x2="1354" y2="864" stroke="#f4a41c" stroke-width="1.5" opacity="0.3"/>
+
+        {{-- Dot grids --}}
+        @for($r=0;$r<4;$r++) @for($c=0;$c<4;$c++)
+        <circle cx="{{ 1130+$c*30 }}" cy="{{ 70+$r*30 }}" r="2" fill="#c8a96e" opacity="0.2"/>
+        @endfor @endfor
+        @for($r=0;$r<3;$r++) @for($c=0;$c<3;$c++)
+        <circle cx="{{ 200+$c*30 }}" cy="{{ 770+$r*30 }}" r="2" fill="#c8a96e" opacity="0.15"/>
+        @endfor @endfor
+
+        {{-- Horizontal accent lines --}}
+        <rect x="0" y="449" width="70" height="1.5" fill="#f4a41c" opacity="0.25"/>
+        <rect x="1370" y="449" width="70" height="1.5" fill="#f4a41c" opacity="0.25"/>
+    </svg>
+
+    {{-- Section Header --}}
+    <div class="relative text-center pt-20 pb-10" style="z-index:2;" data-aos="fade-up">
+        <div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:14px;">
+            <div style="width:50px;height:1.5px;background:#f4a41c;opacity:0.7;"></div>
+            <span style="font-size:10px;font-weight:700;letter-spacing:0.5em;text-transform:uppercase;color:#f4a41c;">What We Offer</span>
+            <div style="width:50px;height:1.5px;background:#f4a41c;opacity:0.7;"></div>
+        </div>
+        <h2 style="font-family:'Cinzel',serif;font-size:clamp(2rem,5vw,3.6rem);font-weight:900;
+                   color:#0a1628;text-transform:uppercase;letter-spacing:0.05em;line-height:1.1;">
+            Our <span style="color:#f4a41c;">Services</span>
         </h2>
+        <div style="width:44px;height:3px;background:#f4a41c;margin:16px auto 0;"></div>
     </div>
+
+    {{-- Service Cards with Alternating Heights --}}
     @php $services = \App\Models\Service::all(); @endphp
-    <div style="display:flex; flex-wrap:nowrap; gap:0; position:relative; z-index:10;">
-        @foreach($services as $service)
+    <div class="services-wave-row" style="position:relative;z-index:10;display:flex;flex-wrap:nowrap;
+               align-items:flex-start;gap:0;padding:0 40px 0 40px;">
+        @foreach($services as $index => $service)
+        @php
+            $isEven = $index % 2 === 1; // even-index cards drop DOWN
+            $servImg = $service->hero_image;
+            $servUrl = asset(ltrim(Str::replaceFirst('storage/', '', $servImg), '/'));
+        @endphp
         <a href="{{ route('services.show', $service->slug) }}"
-           style="position:relative; flex:1 1 0; min-width:0; height:520px; overflow:hidden; display:block;"
-           class="group">
-            @php
-                $servImg = $service->hero_image;
-                $servUrl = asset(ltrim(Str::replaceFirst('storage/', '', $servImg), '/'));
-            @endphp
+           class="svc-card group"
+           style="position:relative;flex:1 1 0;min-width:0;display:block;
+                  height:{{ $isEven ? '480px' : '380px' }};
+                  margin-top:{{ $isEven ? '60px' : '0px' }};
+                  overflow:hidden;text-decoration:none;">
+
+            {{-- Background Image --}}
             <img src="{{ $servUrl }}" alt="{{ $service->name }}"
-                 style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 1.5s ease;"
-                 class="group-hover:scale-110"
-                 onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Service+Image';">
+                 style="width:100%;height:100%;object-fit:cover;display:block;
+                        position:absolute;inset:0;transition:transform 1.5s ease;"
+                 class="svc-img"
+                 onerror="this.onerror=null;this.src='https://placehold.co/600x800/1a2235/f4a41c?text=Service';">
 
             {{-- Dark overlay --}}
-            <div style="position:absolute; inset:0; background:rgba(0,0,0,0.42); transition:background 0.5s ease; z-index:2;"
-                 class="group-hover:!bg-[rgba(244,164,28,0.32)]"></div>
+            <div class="svc-overlay"
+                 style="position:absolute;inset:0;z-index:2;
+                        background:rgba(5,12,25,0.48);
+                        transition:background 0.5s ease;"></div>
 
-            {{-- Gold bottom border on hover --}}
-            <div style="position:absolute; bottom:0; left:0; right:0; height:3px; background:#f4a41c; transform:scaleX(0); transition:transform 0.4s ease; z-index:4;"
-                 class="group-hover:!scale-x-100"></div>
+            {{-- FULL GOLD RECTANGLE BORDER (all 4 sides) --}}
+            <div class="svc-border"
+                 style="position:absolute;inset:12px;z-index:5;
+                        border:2px solid #f4a41c;
+                        transition:inset 0.4s ease, border-color 0.4s ease;
+                        pointer-events:none;"></div>
+
+            {{-- Service number top-left inside border --}}
+            <div style="position:absolute;top:22px;left:22px;z-index:8;">
+                <span style="font-family:'Cinzel',serif;font-size:11px;font-weight:900;
+                             color:rgba(244,164,28,0.7);letter-spacing:0.3em;">
+                    {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
+                </span>
+            </div>
 
             {{-- Text content --}}
-            <div style="position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; text-align:center; padding:28px 14px; z-index:3;">
-                <h3 class="serif group-hover:scale-110"
-                    style="font-size:clamp(13px, 1.4vw, 20px); color:#ffffff; font-weight:700; text-transform:uppercase; letter-spacing:0.18em; line-height:1.3; transition:transform 0.5s ease; drop-shadow:0 2px 8px rgba(0,0,0,0.5); margin-bottom:0;">
+            <div style="position:absolute;bottom:0;left:0;right:0;
+                        padding:0 24px 28px;z-index:8;text-align:center;">
+                <h3 class="svc-title"
+                    style="font-family:'Cinzel',serif;
+                           font-size:clamp(11px,1.2vw,15px);
+                           color:#ffffff;font-weight:800;
+                           text-transform:uppercase;letter-spacing:0.2em;
+                           line-height:1.35;margin:0 0 10px;
+                           transition:color 0.4s ease;">
                     {{ $service->name }}
                 </h3>
-                <div style="width:0; height:2px; background:#f4a41c; margin-top:14px; transition:width 0.5s ease;"
-                     class="group-hover:!w-10"></div>
+                <div class="svc-line"
+                     style="width:28px;height:2px;background:#f4a41c;
+                            margin:0 auto;transition:width 0.4s ease;"></div>
             </div>
+
+            {{-- Bottom gold bar sweep on hover --}}
+            <div class="svc-bar"
+                 style="position:absolute;bottom:0;left:0;right:0;height:3px;
+                        background:#f4a41c;transform:scaleX(0);transform-origin:left;
+                        transition:transform 0.4s ease;z-index:12;"></div>
         </a>
         @endforeach
     </div>
+
+    {{-- Bottom spacing + Explore button --}}
+    <div class="text-center relative" style="z-index:10;padding:60px 0 80px;" data-aos="fade-up">
+        <a href="{{ url('/services') }}"
+           style="display:inline-flex;align-items:center;gap:12px;
+                  padding:15px 46px;
+                  border:1.5px solid #0a1628;
+                  color:#0a1628;font-size:10px;font-weight:800;
+                  letter-spacing:0.45em;text-transform:uppercase;
+                  transition:all 0.3s ease;text-decoration:none;background:transparent;"
+           onmouseover="this.style.background='#f4a41c';this.style.borderColor='#f4a41c';this.style.color='#0a1628';"
+           onmouseout="this.style.background='transparent';this.style.borderColor='#0a1628';this.style.color='#0a1628';">
+            Explore All Services
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+        </a>
+    </div>
 </section>
+
+<style>
+.svc-card:hover .svc-img { transform: scale(1.08); }
+.svc-card:hover .svc-overlay { background: rgba(5,12,25,0.62) !important; }
+.svc-card:hover .svc-border { inset: 8px !important; border-color: #f4a41c !important; }
+.svc-card:hover .svc-title { color: #f4a41c !important; }
+.svc-card:hover .svc-line { width: 44px !important; }
+.svc-card:hover .svc-bar { transform: scaleX(1) !important; }
+
+@media (max-width: 1100px) {
+    .services-wave-row {
+        flex-wrap: wrap !important;
+        padding: 0 20px !important;
+        gap: 16px !important;
+    }
+    .svc-card {
+        flex: 1 0 calc(33.333% - 16px) !important;
+        min-width: calc(33.333% - 16px) !important;
+        height: 360px !important;
+        margin-top: 0 !important;
+    }
+}
+@media (max-width: 640px) {
+    .services-wave-row { flex-direction: column !important; }
+    .svc-card {
+        flex: none !important;
+        min-width: 100% !important;
+        height: 280px !important;
+        margin-top: 0 !important;
+    }
+}
+</style>
 
 {{-- ============================================================
      SECTION 5: CUSTOMER REVIEWS — bg: #1a2235 (dark navy)
