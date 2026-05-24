@@ -7,10 +7,10 @@
     .serif-title { font-family: 'Cinzel', serif; }
 
     /* 2. Services */
-    .service-container-row { display: flex; flex-wrap: wrap; gap: 0; }
-    .service-block { position: relative; height: 500px; overflow: hidden; flex: 1 0 33.333%; min-width: 33.333%; }
-    @media (max-width: 1024px) { .service-block { flex: 1 0 50%; min-width: 50%; } }
-    @media (max-width: 640px)  { .service-block { flex: 1 0 100%; min-width: 100%; } }
+    .service-container-row { display: flex; flex-wrap: nowrap; gap: 0; }
+    .service-block { position: relative; height: 520px; overflow: hidden; flex: 1 1 0; min-width: 0; }
+@media (max-width: 1100px) { .service-container-row { flex-wrap: wrap; } .service-block { flex: 1 0 33.333%; min-width: 33.333%; } }
+@media (max-width: 640px)  { .service-block { flex: 1 0 100%; min-width: 100%; } }
     .service-block img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.5s ease; }
     .service-block:hover img { transform: scale(1.1); }
     .service-block-overlay {
@@ -561,6 +561,8 @@
         </div>
     </div>
 </section>
+
+
 {{-- ============================================================
      SECTION 4: OUR SERVICES — bg: #ffffff (white)
      ============================================================ --}}
@@ -573,21 +575,37 @@
             Our <span class="text-[#f4a41c]">Services</span>
         </h2>
     </div>
-    <div class="service-container-row relative z-10">
-        @php $services = \App\Models\Service::all(); @endphp
+    @php $services = \App\Models\Service::all(); @endphp
+    <div style="display:flex; flex-wrap:nowrap; gap:0; position:relative; z-index:10;">
         @foreach($services as $service)
-        <a href="{{ route('services.show', $service->slug) }}" class="service-block group">
+        <a href="{{ route('services.show', $service->slug) }}"
+           style="position:relative; flex:1 1 0; min-width:0; height:520px; overflow:hidden; display:block;"
+           class="group">
             @php
                 $servImg = $service->hero_image;
                 $servUrl = asset(ltrim(Str::replaceFirst('storage/', '', $servImg), '/'));
             @endphp
             <img src="{{ $servUrl }}" alt="{{ $service->name }}"
+                 style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 1.5s ease;"
+                 class="group-hover:scale-110"
                  onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Service+Image';">
-            <div class="service-block-overlay">
-                <h3 class="serif text-2xl text-white font-bold uppercase tracking-[0.3em] group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl px-4">
+
+            {{-- Dark overlay --}}
+            <div style="position:absolute; inset:0; background:rgba(0,0,0,0.42); transition:background 0.5s ease; z-index:2;"
+                 class="group-hover:!bg-[rgba(244,164,28,0.32)]"></div>
+
+            {{-- Gold bottom border on hover --}}
+            <div style="position:absolute; bottom:0; left:0; right:0; height:3px; background:#f4a41c; transform:scaleX(0); transition:transform 0.4s ease; z-index:4;"
+                 class="group-hover:!scale-x-100"></div>
+
+            {{-- Text content --}}
+            <div style="position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; text-align:center; padding:28px 14px; z-index:3;">
+                <h3 class="serif group-hover:scale-110"
+                    style="font-size:clamp(13px, 1.4vw, 20px); color:#ffffff; font-weight:700; text-transform:uppercase; letter-spacing:0.18em; line-height:1.3; transition:transform 0.5s ease; drop-shadow:0 2px 8px rgba(0,0,0,0.5); margin-bottom:0;">
                     {{ $service->name }}
                 </h3>
-                <div class="w-0 group-hover:w-16 h-[2px] bg-[#f4a41c] mt-6 transition-all duration-500"></div>
+                <div style="width:0; height:2px; background:#f4a41c; margin-top:14px; transition:width 0.5s ease;"
+                     class="group-hover:!w-10"></div>
             </div>
         </a>
         @endforeach
