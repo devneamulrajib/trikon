@@ -11,6 +11,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Repeater;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Actions\EditAction;
@@ -25,6 +26,7 @@ class SettingResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
+
             Section::make('General Branding')
                 ->schema([
                     TextInput::make('site_name')
@@ -48,8 +50,56 @@ class SettingResource extends Resource
                         ->image()
                         ->directory('site-settings')
                         ->visibility('public')
-                        ->helperText('This image appears on the left side of the Schedule a Meeting section on the homepage.'),
+                        ->helperText('Left side image in the Schedule a Meeting section.'),
                 ]),
+
+            // ── NEW SECTION ──────────────────────────────────────
+            Section::make('Featured Showcase Section')
+                ->description('Appears between Services and Testimonials. Each slide = background image + corner video.')
+                ->schema([
+                    Repeater::make('featured_showcase')
+                        ->label('Showcase Slides')
+                        ->schema([
+                            TextInput::make('title')
+                                ->label('Project Title')
+                                ->required()
+                                ->placeholder('e.g. Trikon Tower — Bashundhara'),
+
+                            TextInput::make('subtitle')
+                                ->label('Subtitle / Tagline')
+                                ->placeholder('e.g. Luxury Living Redefined'),
+
+                            TextInput::make('location')
+                                ->label('Location')
+                                ->placeholder('e.g. Bashundhara R/A, Dhaka'),
+
+                            TextInput::make('badge')
+                                ->label('Badge Text')
+                                ->placeholder('e.g. ONGOING • RESIDENTIAL'),
+
+                            FileUpload::make('bg_image')
+                                ->label('Background Image')
+                                ->image()
+                                ->directory('showcase')
+                                ->visibility('public')
+                                ->helperText('Main full-width background image for this slide.'),
+
+                            TextInput::make('video_url')
+                                ->label('Corner Video (YouTube URL)')
+                                ->placeholder('https://www.youtube.com/watch?v=...')
+                                ->helperText('Plays in the small corner video box.'),
+
+                            TextInput::make('project_link')
+                                ->label('Project Page Link')
+                                ->placeholder('e.g. /project/trikon-tower'),
+                        ])
+                        ->itemLabel(fn (array $state): ?string => $state['title'] ?? 'New Slide')
+                        ->addActionLabel('+ Add Showcase Slide')
+                        ->collapsible()
+                        ->reorderable()
+                        ->columnSpanFull(),
+                ]),
+            // ── END NEW SECTION ──────────────────────────────────
 
             Section::make('Contact Details')
                 ->schema([
@@ -87,7 +137,7 @@ class SettingResource extends Resource
                     RichEditor::make('privacy_content')
                         ->label('Privacy Policy Content')
                         ->columnSpanFull(),
-                ])
+                ]),
         ]);
     }
 
@@ -98,11 +148,8 @@ class SettingResource extends Resource
                 ImageColumn::make('logo')
                     ->label('Logo')
                     ->circular(),
-
                 TextColumn::make('site_name'),
-
                 TextColumn::make('hotline'),
-
                 TextColumn::make('email'),
             ])
             ->actions([
@@ -114,9 +161,9 @@ class SettingResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSettings::route('/'),
+            'index'  => Pages\ListSettings::route('/'),
             'create' => Pages\CreateSetting::route('/create'),
-            'edit' => Pages\EditSetting::route('/{record}/edit'),
+            'edit'   => Pages\EditSetting::route('/{record}/edit'),
         ];
     }
 }

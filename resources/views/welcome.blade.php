@@ -1063,6 +1063,475 @@
 }
 </style>
 
+
+{{-- ============================================================
+     SECTION 4.5: FEATURED SHOWCASE — between Services & Testimonials
+     ============================================================ --}}
+@php
+    $showcaseSlides = collect($settings->featured_showcase ?? [])
+        ->filter(fn($s) => !empty($s['bg_image']))
+        ->values();
+@endphp
+
+@if($showcaseSlides->count() > 0)
+<section class="fsc-section" id="featured-showcase">
+
+    {{-- SLIDES WRAPPER --}}
+    <div class="fsc-slides-wrap" id="fscSlidesWrap">
+        @foreach($showcaseSlides as $i => $slide)
+        @php
+            $rawBg  = $slide['bg_image'] ?? '';
+            $bgUrl  = $rawBg
+                ? (str_starts_with($rawBg, 'http') ? $rawBg : asset(ltrim($rawBg, '/')))
+                : 'https://placehold.co/1920x1080/0a1628/f4a41c?text=Showcase';
+
+            $vidId  = null;
+            $vu     = $slide['video_url'] ?? '';
+            if ($vu) {
+                if (preg_match('/youtu\.be\/([^\?\/]+)/', $vu, $m))         $vidId = $m[1];
+                elseif (preg_match('/v=([^\&]+)/', $vu, $m))                $vidId = $m[1];
+                elseif (preg_match('/embed\/([^\?\/]+)/', $vu, $m))         $vidId = $m[1];
+            }
+            $thumb  = $vidId
+                ? "https://img.youtube.com/vi/{$vidId}/maxresdefault.jpg"
+                : null;
+        @endphp
+
+        <div class="fsc-slide {{ $i === 0 ? 'fsc-active' : '' }}"
+             data-index="{{ $i }}"
+             data-vid="{{ $vidId ?? '' }}">
+
+            {{-- BG IMAGE WITH KEN BURNS --}}
+            <div class="fsc-bg-wrap">
+                <div class="fsc-bg-img" style="background-image:url('{{ $bgUrl }}');"></div>
+            </div>
+
+            {{-- DARK OVERLAY --}}
+            <div class="fsc-overlay"></div>
+
+            {{-- CONTENT --}}
+            <div class="fsc-content-wrap">
+                <div class="fsc-content">
+                    @if(!empty($slide['badge']))
+                    <div class="fsc-badge">{{ $slide['badge'] }}</div>
+                    @endif
+
+                    <h2 class="fsc-title">{{ $slide['title'] ?? '' }}</h2>
+
+                    @if(!empty($slide['subtitle']))
+                    <p class="fsc-subtitle">{{ $slide['subtitle'] }}</p>
+                    @endif
+
+                    @if(!empty($slide['location']))
+                    <div class="fsc-location">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        <span>{{ $slide['location'] }}</span>
+                    </div>
+                    @endif
+
+                    @if(!empty($slide['project_link']))
+                    <a href="{{ $slide['project_link'] }}" class="fsc-cta">
+                        <span>View Project</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                    @endif
+                </div>
+            </div>
+
+            {{-- CORNER VIDEO BOX --}}
+            @if($vidId)
+            <div class="fsc-video-box" id="fscVideoBox{{ $i }}">
+                <div class="fsc-video-thumb" id="fscThumb{{ $i }}">
+                    <img src="{{ $thumb }}"
+                         alt="Interior Video"
+                         onerror="this.src='https://placehold.co/480x270/0a1628/f4a41c?text=Video';">
+                    <button class="fsc-play-btn" onclick="fscPlayVideo({{ $i }}, '{{ $vidId }}')" aria-label="Play video">
+                        <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+                    </button>
+                    <div class="fsc-video-label">
+                        <span>Interior Tour</span>
+                    </div>
+                </div>
+                <div class="fsc-video-frame" id="fscFrame{{ $i }}" style="display:none;">
+                    {{-- iframe injected by JS --}}
+                </div>
+            </div>
+            @endif
+
+        </div>
+        @endforeach
+    </div>
+
+    {{-- SLIDE COUNTER --}}
+    <div class="fsc-counter">
+        <span id="fscCurNum">01</span>
+        <span class="fsc-counter-sep"></span>
+        <span class="fsc-counter-total">{{ str_pad($showcaseSlides->count(), 2, '0', STR_PAD_LEFT) }}</span>
+    </div>
+
+    {{-- NAVIGATION --}}
+    <div class="fsc-nav">
+        <button class="fsc-nav-btn fsc-nav-prev" onclick="fscNav(-1)" aria-label="Previous slide">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <button class="fsc-nav-btn fsc-nav-next" onclick="fscNav(1)" aria-label="Next slide">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+    </div>
+
+    {{-- PROGRESS BAR --}}
+    <div class="fsc-progress-wrap">
+        <div class="fsc-progress-bar" id="fscProgressBar"></div>
+    </div>
+
+    {{-- DOTS --}}
+    <div class="fsc-dots" id="fscDots">
+        @foreach($showcaseSlides as $i => $slide)
+        <button class="fsc-dot {{ $i === 0 ? 'fsc-dot-active' : '' }}"
+                onclick="fscGoTo({{ $i }})"
+                aria-label="Go to slide {{ $i + 1 }}">
+        </button>
+        @endforeach
+    </div>
+
+</section>
+
+<style>
+/* ===== FEATURED SHOWCASE SECTION ===== */
+.fsc-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 600px;
+    max-height: 900px;
+    overflow: hidden;
+    background: #0a1628;
+}
+
+/* SLIDES */
+.fsc-slides-wrap { position: absolute; inset: 0; }
+.fsc-slide {
+    position: absolute; inset: 0;
+    opacity: 0; z-index: 1;
+    transition: opacity 0.9s ease;
+    pointer-events: none;
+}
+.fsc-slide.fsc-active { opacity: 1; z-index: 2; pointer-events: all; }
+
+/* KEN BURNS BACKGROUND */
+.fsc-bg-wrap {
+    position: absolute; inset: 0; overflow: hidden;
+}
+.fsc-bg-img {
+    position: absolute; inset: -5%;
+    width: 110%; height: 110%;
+    background-size: cover;
+    background-position: center;
+    animation: fscKenBurns 12s ease-in-out infinite alternate;
+}
+.fsc-slide.fsc-active .fsc-bg-img { animation-play-state: running; }
+.fsc-slide:not(.fsc-active) .fsc-bg-img { animation-play-state: paused; }
+
+@keyframes fscKenBurns {
+    0%   { transform: scale(1)    translateX(0)     translateY(0); }
+    33%  { transform: scale(1.06) translateX(-1%)   translateY(-1%); }
+    66%  { transform: scale(1.04) translateX(1%)    translateY(0.5%); }
+    100% { transform: scale(1.08) translateX(-0.5%) translateY(-0.5%); }
+}
+
+/* OVERLAY */
+.fsc-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(
+        105deg,
+        rgba(10,22,40,0.78) 0%,
+        rgba(10,22,40,0.45) 50%,
+        rgba(10,22,40,0.2)  100%
+    );
+    z-index: 2;
+}
+
+/* CONTENT */
+.fsc-content-wrap {
+    position: absolute; inset: 0; z-index: 3;
+    display: flex; align-items: flex-end;
+    padding: 0 80px 100px;
+}
+.fsc-content { max-width: 620px; }
+
+.fsc-badge {
+    display: inline-block;
+    background: #f4a41c; color: #0a1628;
+    font-size: 9px; font-weight: 800;
+    letter-spacing: 0.35em; text-transform: uppercase;
+    padding: 5px 14px; margin-bottom: 20px;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
+}
+.fsc-active .fsc-badge { opacity: 1; transform: translateY(0); }
+
+.fsc-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 900; color: #ffffff;
+    text-transform: uppercase;
+    line-height: 1.1; margin: 0 0 16px;
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.7s ease 0.35s, transform 0.7s ease 0.35s;
+}
+.fsc-active .fsc-title { opacity: 1; transform: translateY(0); }
+
+.fsc-subtitle {
+    font-size: 14px; color: rgba(255,255,255,0.75);
+    font-weight: 400; line-height: 1.7;
+    margin: 0 0 18px; max-width: 480px;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.6s ease 0.5s, transform 0.6s ease 0.5s;
+}
+.fsc-active .fsc-subtitle { opacity: 1; transform: translateY(0); }
+
+.fsc-location {
+    display: flex; align-items: center; gap: 8px;
+    color: #f4a41c; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 28px;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity 0.6s ease 0.6s, transform 0.6s ease 0.6s;
+}
+.fsc-active .fsc-location { opacity: 1; transform: translateY(0); }
+.fsc-location svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+.fsc-cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 32px;
+    background: transparent; color: #fff;
+    border: 2px solid rgba(255,255,255,0.5);
+    font-size: 10px; font-weight: 800;
+    letter-spacing: 0.4em; text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity 0.6s ease 0.75s, transform 0.6s ease 0.75s,
+                background 0.3s ease, border-color 0.3s ease;
+}
+.fsc-active .fsc-cta { opacity: 1; transform: translateY(0); }
+.fsc-cta:hover { background: #f4a41c; border-color: #f4a41c; color: #0a1628; }
+.fsc-cta svg { width: 16px; height: 16px; transition: transform 0.3s ease; }
+.fsc-cta:hover svg { transform: translateX(4px); }
+
+/* CORNER VIDEO BOX */
+.fsc-video-box {
+    position: absolute;
+    bottom: 80px; right: 80px;
+    width: 320px;
+    z-index: 10;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.55);
+    border: 2px solid rgba(244,164,28,0.4);
+    opacity: 0; transform: translateX(30px);
+    transition: opacity 0.7s ease 0.5s, transform 0.7s ease 0.5s;
+    overflow: hidden;
+}
+.fsc-active .fsc-video-box { opacity: 1; transform: translateX(0); }
+
+.fsc-video-thumb { position: relative; cursor: pointer; }
+.fsc-video-thumb img {
+    width: 100%; height: 180px;
+    object-fit: cover; display: block;
+    transition: transform 0.5s ease;
+}
+.fsc-video-thumb:hover img { transform: scale(1.05); }
+
+.fsc-play-btn {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 52px; height: 52px; border-radius: 50%;
+    background: rgba(244,164,28,0.85);
+    border: 2px solid rgba(255,255,255,0.6);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.3s ease;
+}
+.fsc-play-btn:hover { background: #f4a41c; transform: translate(-50%, -50%) scale(1.1); }
+.fsc-play-btn svg { width: 20px; height: 20px; margin-left: 3px; }
+
+.fsc-video-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(10,22,40,0.9) 0%, transparent 100%);
+    padding: 14px 14px 10px;
+}
+.fsc-video-label span {
+    font-size: 9px; font-weight: 800;
+    letter-spacing: 0.35em; text-transform: uppercase; color: #f4a41c;
+}
+
+.fsc-video-frame { width: 100%; }
+.fsc-video-frame iframe { width: 100%; height: 180px; display: block; border: none; }
+
+/* COUNTER */
+.fsc-counter {
+    position: absolute; top: 40px; right: 80px;
+    z-index: 10; display: flex; align-items: center; gap: 12px;
+}
+#fscCurNum {
+    font-family: 'Cinzel', serif;
+    font-size: 52px; font-weight: 900; color: #fff; line-height: 1;
+}
+.fsc-counter-sep {
+    width: 40px; height: 2px; background: #f4a41c;
+}
+.fsc-counter-total {
+    font-family: 'Cinzel', serif;
+    font-size: 18px; font-weight: 700;
+    color: rgba(255,255,255,0.35);
+}
+
+/* NAVIGATION */
+.fsc-nav {
+    position: absolute; bottom: 40px; left: 80px;
+    z-index: 10; display: flex; gap: 10px;
+}
+.fsc-nav-btn {
+    width: 50px; height: 50px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    background: transparent; color: #fff; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s ease;
+}
+.fsc-nav-btn svg { width: 20px; height: 20px; }
+.fsc-nav-btn:hover { background: #f4a41c; border-color: #f4a41c; color: #0a1628; }
+
+/* PROGRESS BAR */
+.fsc-progress-wrap {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 3px; background: rgba(255,255,255,0.1); z-index: 20;
+}
+.fsc-progress-bar {
+    height: 100%; width: 0%; background: #f4a41c;
+    transition: none;
+}
+
+/* DOTS */
+.fsc-dots {
+    position: absolute; bottom: 48px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 10; display: flex; gap: 8px; align-items: center;
+}
+.fsc-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: rgba(255,255,255,0.25); border: none; cursor: pointer;
+    transition: all 0.3s ease; padding: 0;
+}
+.fsc-dot-active { background: #f4a41c !important; width: 22px !important; border-radius: 4px !important; }
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+    .fsc-content-wrap { padding: 0 48px 120px; }
+    .fsc-video-box { width: 260px; right: 48px; bottom: 120px; }
+    .fsc-counter { right: 48px; top: 32px; }
+    .fsc-nav { left: 48px; bottom: 48px; }
+}
+@media (max-width: 768px) {
+    .fsc-section { max-height: 100vh; min-height: 560px; }
+    .fsc-content-wrap { padding: 0 24px 130px; }
+    .fsc-title { font-size: clamp(1.6rem, 6vw, 2.4rem); }
+    .fsc-video-box {
+        width: 180px; right: 20px; bottom: 120px;
+    }
+    .fsc-video-thumb img, .fsc-video-frame iframe { height: 110px; }
+    .fsc-counter { right: 24px; top: 24px; }
+    #fscCurNum { font-size: 36px; }
+    .fsc-counter-sep { width: 24px; }
+    .fsc-nav { left: 24px; bottom: 44px; }
+    .fsc-nav-btn { width: 42px; height: 42px; }
+}
+@media (max-width: 480px) {
+    .fsc-video-box { display: none; }
+}
+</style>
+
+<script>
+(function () {
+    var total    = {{ $showcaseSlides->count() }};
+    var cur      = 0;
+    var autoMs   = 7000;
+    var timer    = null;
+    var progTimer = null;
+    var progStart = null;
+
+    var slides   = document.querySelectorAll('.fsc-slide');
+    var dotsEl   = document.querySelectorAll('.fsc-dot');
+    var curNumEl = document.getElementById('fscCurNum');
+    var progBar  = document.getElementById('fscProgressBar');
+
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+    function goTo(idx) {
+        if (idx === cur) return;
+        // Stop any playing video on current slide before switching
+        var oldFrame = document.getElementById('fscFrame' + cur);
+        var oldThumb = document.getElementById('fscThumb' + cur);
+        if (oldFrame) { oldFrame.innerHTML = ''; oldFrame.style.display = 'none'; }
+        if (oldThumb) oldThumb.style.display = '';
+
+        slides[cur].classList.remove('fsc-active');
+        dotsEl[cur].classList.remove('fsc-dot-active');
+        cur = idx;
+        slides[cur].classList.add('fsc-active');
+        dotsEl[cur].classList.add('fsc-dot-active');
+        curNumEl.textContent = pad(cur + 1);
+        resetProgress();
+        resetAuto();
+    }
+
+    window.fscGoTo = goTo;
+
+    window.fscNav = function (dir) {
+        goTo((cur + dir + total) % total);
+    };
+
+    window.fscPlayVideo = function (idx, vidId) {
+        var thumb = document.getElementById('fscThumb' + idx);
+        var frame = document.getElementById('fscFrame' + idx);
+        if (!frame) return;
+        frame.innerHTML = '<iframe src="https://www.youtube.com/embed/' + vidId + '?autoplay=1&rel=0&modestbranding=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+        frame.style.display = '';
+        if (thumb) thumb.style.display = 'none';
+    };
+
+    /* PROGRESS BAR */
+    function resetProgress() {
+        progBar.style.transition = 'none';
+        progBar.style.width = '0%';
+        if (progTimer) cancelAnimationFrame(progTimer);
+        setTimeout(function () {
+            progBar.style.transition = 'width ' + autoMs + 'ms linear';
+            progBar.style.width = '100%';
+        }, 30);
+    }
+
+    /* AUTO ADVANCE */
+    function resetAuto() {
+        clearInterval(timer);
+        timer = setInterval(function () {
+            window.fscNav(1);
+        }, autoMs);
+    }
+
+    if (total > 0) {
+        resetProgress();
+        resetAuto();
+    }
+
+    /* KEYBOARD */
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowLeft')  window.fscNav(-1);
+        if (e.key === 'ArrowRight') window.fscNav(1);
+    });
+})();
+</script>
+@endif
+
+
+
 {{-- ============================================================
      SECTION 5: CUSTOMER REVIEWS — bg: #1a2235 (dark navy)
      ============================================================ --}}

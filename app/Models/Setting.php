@@ -23,6 +23,11 @@ class Setting extends Model
         'terms_content',
         'privacy_content',
         'whatsapp_number',
-        'messenger_id'
+        'messenger_id',
+        'featured_showcase',    // ADD THIS
+    ];
+
+    protected $casts = [
+        'featured_showcase' => 'array',   // ADD THIS
     ];
 }
