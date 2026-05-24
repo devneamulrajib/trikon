@@ -834,18 +834,26 @@
         {{-- LEFT: meeting section image from admin --}}
         <div class="sam-image-col" data-aos="fade-right">
             @php
-                $settings = $settings ?? \App\Models\Setting::first();
-                $samImg = null;
-                if (!empty($settings->meeting_section_image)) {
-                    $samImg = asset('storage/' . ltrim($settings->meeting_section_image, '/'));
-                }
-                if (!$samImg) {
-                    $featuredProject = $projects->first() ?? null;
-                    $samImg = $featuredProject
-                        ? asset(ltrim(Str::replaceFirst('storage/', '', $featuredProject->featured_image), '/'))
-                        : 'https://placehold.co/800x900/1a1a2e/f4a41c?text=Trikon+Holdings';
-                }
-            @endphp
+    $settings = $settings ?? \App\Models\Setting::first();
+    $samImg = null;
+
+    if (!empty($settings->meeting_section_image)) {
+        $rawPath = ltrim($settings->meeting_section_image, '/');
+
+        if (str_starts_with($rawPath, 'http')) {
+            $samImg = $rawPath;
+        } else {
+            $samImg = asset($rawPath);
+        }
+    }
+
+    if (!$samImg) {
+        $featuredProject = $projects->first() ?? null;
+        $samImg = $featuredProject
+            ? asset(ltrim(Str::replaceFirst('storage/', '', $featuredProject->featured_image), '/'))
+            : 'https://placehold.co/800x900/1a1a2e/f4a41c?text=Trikon+Holdings';
+    }
+@endphp
             <div class="sam-image-wrap">
                 <img src="{{ $samImg }}" alt="Schedule a Meeting"
                      onerror="this.src='https://placehold.co/800x900/1a1a2e/f4a41c?text=Trikon+Holdings';">
