@@ -25,26 +25,21 @@
 
     /* ===== TESTIMONIALS SECTION ===== */
     .ts-section {
-        background: #f8f5f0;
+        background: #1a2235;
         padding: 100px 0;
         position: relative;
         overflow: hidden;
     }
     .ts-geo-bg {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        z-index: 0;
-        width: 100%;
-        height: 100%;
+        position: absolute; inset: 0;
+        pointer-events: none; z-index: 0;
+        width: 100%; height: 100%;
     }
     .ts-header {
-        display: flex;
-        align-items: flex-end;
+        display: flex; align-items: flex-end;
         justify-content: space-between;
         margin-bottom: 56px;
-        position: relative;
-        z-index: 2;
+        position: relative; z-index: 2;
     }
     .ts-eyebrow { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
     .ts-eyebrow-line { width: 38px; height: 2px; background: #f4a41c; flex-shrink: 0; }
@@ -55,24 +50,23 @@
     .ts-main-heading {
         font-family: 'Cinzel', serif;
         font-size: clamp(1.9rem, 4vw, 3.2rem);
-        font-weight: 900; color: #0a1628;
+        font-weight: 900; color: #ffffff;
         text-transform: uppercase; line-height: 1.1; letter-spacing: -0.01em;
     }
     .ts-main-heading em { color: #f4a41c; font-style: normal; }
     .ts-counter-block { text-align: right; padding-bottom: 4px; }
     .ts-counter-num {
         font-family: 'Cinzel', serif;
-        font-size: 54px; font-weight: 900; color: #0a1628; line-height: 1;
+        font-size: 54px; font-weight: 900; color: #ffffff; line-height: 1;
     }
     .ts-counter-label {
         font-size: 9px; font-weight: 700;
-        letter-spacing: 0.4em; text-transform: uppercase; color: #aaa; margin-top: 5px;
+        letter-spacing: 0.4em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-top: 5px;
     }
     .ts-card {
-        display: grid;
-        grid-template-columns: 1.15fr 1fr;
+        display: grid; grid-template-columns: 1.15fr 1fr;
         position: relative; z-index: 2;
-        box-shadow: 0 24px 64px rgba(10,22,40,0.12);
+        box-shadow: 0 24px 64px rgba(0,0,0,0.4);
     }
     .ts-media-side {
         position: relative; overflow: hidden;
@@ -120,16 +114,16 @@
         line-height: 1.45; max-width: 300px;
     }
     .ts-content-side {
-        background: #ffffff; padding: 48px 52px;
+        background: #0a1628; padding: 48px 52px;
         display: flex; flex-direction: column; justify-content: space-between;
         border-top: 3px solid #f4a41c;
     }
     .ts-quote-icon {
         font-family: 'Cinzel', serif; font-size: 80px; line-height: 0.75;
-        color: #f4a41c; opacity: 0.2; margin-bottom: 10px; display: block;
+        color: #f4a41c; opacity: 0.3; margin-bottom: 10px; display: block;
     }
     .ts-quote-text {
-        color: #3d4a5c; font-size: 14.5px; line-height: 1.85;
+        color: rgba(255,255,255,0.8); font-size: 14.5px; line-height: 1.85;
         font-weight: 400; font-style: italic; margin-bottom: 28px;
         transition: opacity 0.25s ease;
     }
@@ -145,7 +139,7 @@
     }
     .ts-author-name {
         font-family: 'Cinzel', serif; font-size: 15px; font-weight: 800;
-        color: #0a1628; text-transform: uppercase; letter-spacing: 0.06em;
+        color: #ffffff; text-transform: uppercase; letter-spacing: 0.06em;
     }
     .ts-author-role {
         font-size: 9px; font-weight: 700;
@@ -153,23 +147,23 @@
     }
     .ts-card-footer {
         display: flex; align-items: center; justify-content: space-between;
-        padding-top: 24px; border-top: 1px solid #ede8e0;
+        padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08);
     }
     .ts-progress-dots { display: flex; gap: 7px; align-items: center; }
     .ts-dot {
         width: 7px; height: 7px; border-radius: 50%;
-        background: #d4cbbf; border: none; cursor: pointer;
+        background: rgba(255,255,255,0.2); border: none; cursor: pointer;
         transition: all 0.3s ease; padding: 0;
     }
     .ts-dot.active { background: #f4a41c; width: 22px; border-radius: 4px; }
     .ts-navs { display: flex; gap: 10px; }
     .ts-nav-btn {
-        width: 46px; height: 46px; border: 1.5px solid #d4cbbf;
-        background: #fff; color: #0a1628; font-size: 20px;
+        width: 46px; height: 46px; border: 1.5px solid rgba(255,255,255,0.15);
+        background: transparent; color: #ffffff; font-size: 20px;
         cursor: pointer; display: flex; align-items: center;
         justify-content: center; transition: all 0.25s ease;
     }
-    .ts-nav-btn:hover { background: #0a1628; border-color: #0a1628; color: #f4a41c; }
+    .ts-nav-btn:hover { background: #f4a41c; border-color: #f4a41c; color: #0a1628; }
     .ts-iframe-wrap { position: absolute; inset: 0; }
     .ts-iframe-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
 
@@ -185,12 +179,204 @@
         .ts-content-side { padding: 28px 20px; }
         .ts-main-heading { font-size: 1.8rem; }
     }
+
+    /* ===== MAP SECTION ===== */
+    .map-section {
+        position: relative;
+        background: #e8e4de;
+        overflow: hidden;
+        min-height: 700px;
+    }
+    .map-arch-bg {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        pointer-events: none; z-index: 0;
+    }
+    .map-watermark {
+        position: absolute; top: 50%; right: -2%;
+        transform: translateY(-50%);
+        font-family: 'Cinzel', serif;
+        font-size: clamp(80px, 12vw, 160px);
+        font-weight: 900;
+        color: rgba(10, 22, 40, 0.055);
+        text-transform: uppercase; letter-spacing: 0.08em;
+        pointer-events: none; z-index: 1; line-height: 1; white-space: nowrap;
+    }
+    .map-filter-bar {
+        position: absolute; bottom: 0; left: 50%;
+        transform: translateX(-50%);
+        z-index: 20; display: flex; gap: 0;
+        background: rgba(10,22,40,0.88);
+        backdrop-filter: blur(8px);
+        border-top: 2px solid #f4a41c;
+        width: 100%; max-width: 820px;
+        box-shadow: 0 -8px 40px rgba(10,22,40,0.18);
+    }
+    .map-filter-item { flex: 1; position: relative; }
+    .map-filter-item + .map-filter-item { border-left: 1px solid rgba(255,255,255,0.08); }
+    .map-filter-select {
+        width: 100%; background: transparent; border: none;
+        color: #fff; font-family: inherit; font-size: 10px; font-weight: 700;
+        letter-spacing: 0.35em; text-transform: uppercase;
+        padding: 22px 44px 22px 24px;
+        appearance: none; cursor: pointer; outline: none; transition: background 0.2s;
+    }
+    .map-filter-select:hover { background: rgba(244,164,28,0.12); }
+    .map-filter-select option { background: #0a1628; color: #fff; font-size: 12px; }
+    .map-filter-chevron {
+        position: absolute; right: 18px; top: 50%;
+        transform: translateY(-50%); pointer-events: none; color: #f4a41c;
+    }
+    .map-filter-chevron svg { width: 14px; height: 14px; }
+    .map-embed-wrapper {
+        position: relative; z-index: 5; height: 520px;
+        filter: grayscale(0.55) contrast(1.08) sepia(0.18);
+        transition: filter 0.4s;
+    }
+    .map-embed-wrapper:hover { filter: grayscale(0.25) contrast(1.1) sepia(0.1); }
+    .map-embed-wrapper iframe { width: 100%; height: 100%; border: none; display: block; }
+    .map-outer { position: relative; z-index: 4; }
+    .map-frame-border {
+        position: relative;
+        border: 1.5px solid rgba(244,164,28,0.3);
+        box-shadow: 0 32px 80px rgba(10,22,40,0.18), inset 0 0 0 1px rgba(255,255,255,0.04);
+    }
+    .map-corner { position: absolute; width: 28px; height: 28px; z-index: 10; pointer-events: none; }
+    .map-corner-tl { top: -1px; left: -1px; border-top: 3px solid #f4a41c; border-left: 3px solid #f4a41c; }
+    .map-corner-tr { top: -1px; right: -1px; border-top: 3px solid #f4a41c; border-right: 3px solid #f4a41c; }
+    .map-corner-bl { bottom: -1px; left: -1px; border-bottom: 3px solid #f4a41c; border-left: 3px solid #f4a41c; }
+    .map-corner-br { bottom: -1px; right: -1px; border-bottom: 3px solid #f4a41c; border-right: 3px solid #f4a41c; }
+
+    @media (max-width: 768px) {
+        .map-embed-wrapper { height: 360px; }
+        .map-filter-bar { max-width: 100%; flex-direction: column; }
+        .map-filter-item + .map-filter-item { border-left: none; border-top: 1px solid rgba(255,255,255,0.08); }
+        .map-watermark { font-size: 52px; }
+    }
+
+    /* ===== SCHEDULE A MEETING SECTION ===== */
+    .sam-section {
+        position: relative;
+        background: #f5f1eb;
+        overflow: hidden;
+        padding: 0;
+    }
+    .sam-bg-svg {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        pointer-events: none; z-index: 0;
+    }
+    .sam-inner {
+        position: relative; z-index: 2;
+        display: grid; grid-template-columns: 1fr 1fr;
+        min-height: 680px; max-width: 1400px; margin: 0 auto;
+    }
+    .sam-image-col { position: relative; overflow: hidden; }
+    .sam-image-wrap {
+        position: relative; width: 100%; height: 100%; min-height: 600px;
+    }
+    .sam-image-wrap img {
+        width: 100%; height: 100%; object-fit: cover;
+        display: block; transition: transform 1.4s ease;
+    }
+    .sam-image-col:hover .sam-image-wrap img { transform: scale(1.05); }
+    .sam-image-wrap::after {
+        content: ''; position: absolute; inset: 0;
+        background: linear-gradient(to right, rgba(10,22,40,0.18) 0%, transparent 60%),
+                    linear-gradient(to top, rgba(10,22,40,0.45) 0%, transparent 50%);
+        pointer-events: none;
+    }
+    .sam-image-tag {
+        position: absolute; bottom: 32px; left: 32px;
+        display: flex; align-items: center; gap: 10px;
+        background: #f4a41c; padding: 10px 20px; z-index: 5;
+    }
+    .sam-image-tag svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .sam-image-tag span {
+        font-size: 9px; font-weight: 800;
+        letter-spacing: 0.35em; text-transform: uppercase; color: #0a1628;
+    }
+    .sam-form-col {
+        padding: 72px 64px;
+        display: flex; flex-direction: column; justify-content: center;
+        background: rgba(255,255,255,0.72);
+        backdrop-filter: blur(4px);
+        border-left: 1px solid rgba(244,164,28,0.15);
+    }
+    .sam-eyebrow { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .sam-eyebrow-line { width: 38px; height: 2px; background: #f4a41c; flex-shrink: 0; }
+    .sam-eyebrow span {
+        font-size: 10px; font-weight: 700;
+        letter-spacing: 0.5em; text-transform: uppercase; color: #f4a41c;
+    }
+    .sam-heading {
+        font-family: 'Cinzel', serif;
+        font-size: clamp(1.8rem, 3vw, 2.8rem);
+        font-weight: 900; color: #0a1628;
+        text-transform: uppercase; line-height: 1.1; margin-bottom: 14px;
+    }
+    .sam-heading em { color: #f4a41c; font-style: normal; }
+    .sam-subtext {
+        font-size: 13px; color: #6b7a8d;
+        line-height: 1.7; margin-bottom: 36px; max-width: 400px;
+    }
+    .sam-form { display: flex; flex-direction: column; gap: 18px; }
+    .sam-field { position: relative; }
+    .sam-input {
+        width: 100%; background: #ffffff;
+        border: 1.5px solid #e2dbd0; color: #0a1628;
+        font-family: inherit; font-size: 13px; font-weight: 500;
+        padding: 14px 18px; outline: none;
+        transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        border-radius: 0; appearance: none;
+    }
+    .sam-input::placeholder {
+        color: #9ca3a8; font-size: 12px;
+        font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .sam-input:focus {
+        border-color: #f4a41c;
+        box-shadow: 0 0 0 3px rgba(244,164,28,0.1);
+    }
+    .sam-select-wrap { position: relative; }
+    .sam-select { cursor: pointer; padding-right: 44px; color: #9ca3a8; }
+    .sam-select:focus, .sam-select:valid { color: #0a1628; }
+    .sam-select-chevron {
+        position: absolute; right: 16px; top: 50%;
+        transform: translateY(-50%); pointer-events: none; color: #f4a41c;
+    }
+    .sam-select-chevron svg { width: 16px; height: 16px; }
+    .sam-btn {
+        display: flex; align-items: center; justify-content: center;
+        gap: 10px; padding: 16px 36px;
+        background: #0a1628; color: #ffffff;
+        border: 2px solid #0a1628;
+        font-family: inherit; font-size: 10px; font-weight: 800;
+        letter-spacing: 0.4em; text-transform: uppercase;
+        cursor: pointer; transition: all 0.3s ease;
+        margin-top: 8px; width: 100%;
+    }
+    .sam-btn svg { width: 16px; height: 16px; transition: transform 0.3s ease; }
+    .sam-btn:hover { background: #f4a41c; border-color: #f4a41c; color: #0a1628; }
+    .sam-btn:hover svg { transform: translateX(4px); }
+
+    @media (max-width: 1024px) {
+        .sam-inner { grid-template-columns: 1fr; }
+        .sam-image-col { display: none; }
+        .sam-form-col { padding: 60px 40px; }
+    }
+    @media (max-width: 640px) {
+        .sam-form-col { padding: 48px 24px; }
+        .sam-heading { font-size: 1.8rem; }
+    }
 </style>
 @endsection
 
 @section('content')
 
-<!-- SECTION 1: HERO SLIDER -->
+{{-- ============================================================
+     SECTION 1: HERO SLIDER — bg: pure black
+     ============================================================ --}}
 <section class="relative h-screen w-full overflow-hidden bg-black">
     <div class="swiper heroSwiper h-full w-full">
         <div class="swiper-wrapper">
@@ -218,8 +404,10 @@
     </div>
 </section>
 
-<!-- SECTION 2: WELCOME -->
-<section class="relative py-24 bg-black overflow-hidden border-b border-white/5">
+{{-- ============================================================
+     SECTION 2: WELCOME — bg: #0d1b2e (slightly lighter navy)
+     ============================================================ --}}
+<section class="relative py-24 overflow-hidden" style="background:#0d1b2e;">
     <div class="absolute right-0 top-0 h-full w-1/3 opacity-5 pointer-events-none">
         <svg viewBox="0 0 100 100" class="h-full w-full fill-white"><path d="M50 5 L95 95 L5 95 Z"/></svg>
     </div>
@@ -267,7 +455,9 @@
     </div>
 </section>
 
-<!-- SECTION 3: OUR PROJECTS -->
+{{-- ============================================================
+     SECTION 3: OUR PROJECTS — bg: #f4a41c (gold)
+     ============================================================ --}}
 <section class="py-24 bg-[#f4a41c]">
     <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-16" data-aos="fade-up">
@@ -308,7 +498,9 @@
     </div>
 </section>
 
-<!-- SECTION 4: OUR SERVICES -->
+{{-- ============================================================
+     SECTION 4: OUR SERVICES — bg: #ffffff (white)
+     ============================================================ --}}
 <section class="bg-white relative overflow-hidden">
     <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none select-none">
         <img src="{{ asset('logo.png') }}" class="w-[800px] grayscale" alt="Watermark">
@@ -339,7 +531,9 @@
     </div>
 </section>
 
-<!-- SECTION 5: CUSTOMER REVIEWS -->
+{{-- ============================================================
+     SECTION 5: CUSTOMER REVIEWS — bg: #1a2235 (dark navy)
+     ============================================================ --}}
 @php
     $testimonialsData = \App\Models\Testimonial::where('is_active', true)
         ->get()
@@ -365,44 +559,22 @@
 
 @if($testimonialsData->count() > 0)
 <section class="ts-section" id="testimonials">
-
-    {{-- Artistic geometric SVG background --}}
     <svg class="ts-geo-bg" viewBox="0 0 1440 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        {{-- Large open triangle top-right --}}
-        <polygon points="1050,0 1440,0 1440,380" fill="none" stroke="#f4a41c" stroke-width="1.5" opacity="0.2"/>
-        <polygon points="1140,0 1440,0 1440,280" fill="#f4a41c" opacity="0.05"/>
-        {{-- Small filled triangle bottom-left --}}
-        <polygon points="0,500 160,700 0,700" fill="none" stroke="#0a1628" stroke-width="1.5" opacity="0.08"/>
-        <polygon points="0,580 90,700 0,700" fill="#0a1628" opacity="0.04"/>
-        {{-- Gold dot grid top-left --}}
+        <polygon points="1050,0 1440,0 1440,380" fill="none" stroke="#f4a41c" stroke-width="1.5" opacity="0.1"/>
+        <polygon points="1140,0 1440,0 1440,280" fill="#f4a41c" opacity="0.03"/>
+        <polygon points="0,500 160,700 0,700" fill="none" stroke="#f4a41c" stroke-width="1.5" opacity="0.06"/>
         @for($row = 0; $row < 4; $row++)
             @for($col = 0; $col < 5; $col++)
-                <circle cx="{{ 48 + $col * 44 }}" cy="{{ 48 + $row * 44 }}" r="2" fill="#f4a41c" opacity="0.15"/>
+                <circle cx="{{ 48 + $col * 44 }}" cy="{{ 48 + $row * 44 }}" r="2" fill="#f4a41c" opacity="0.1"/>
             @endfor
         @endfor
-        {{-- Architectural corner bracket top-left --}}
-        <path d="M28,28 L28,80 M28,28 L80,28" stroke="#f4a41c" stroke-width="2.5" fill="none" opacity="0.45"/>
-        {{-- Architectural corner bracket bottom-right --}}
-        <path d="M1412,672 L1412,620 M1412,672 L1360,672" stroke="#0a1628" stroke-width="2" fill="none" opacity="0.12"/>
-        {{-- Horizontal gold accent line bottom --}}
-        <line x1="0" y1="694" x2="420" y2="694" stroke="#f4a41c" stroke-width="2.5" opacity="0.2"/>
-        {{-- Concentric circles top-right --}}
-        <circle cx="1380" cy="110" r="90"  fill="none" stroke="#f4a41c" stroke-width="1" opacity="0.1"/>
-        <circle cx="1380" cy="110" r="58"  fill="none" stroke="#f4a41c" stroke-width="1" opacity="0.07"/>
-        <circle cx="1380" cy="110" r="26"  fill="#f4a41c" opacity="0.04"/>
-        {{-- Diagonal gold lines mid-right --}}
-        <line x1="1160" y1="400" x2="1440" y2="510" stroke="#f4a41c" stroke-width="1" opacity="0.09"/>
-        <line x1="1160" y1="440" x2="1440" y2="550" stroke="#f4a41c" stroke-width="1" opacity="0.06"/>
-        <line x1="1160" y1="480" x2="1440" y2="590" stroke="#f4a41c" stroke-width="1" opacity="0.04"/>
-        {{-- Large T watermark --}}
-        <text x="860" y="640" font-size="520" font-weight="900" fill="#0a1628" opacity="0.022" font-family="serif">T</text>
-        {{-- Thin horizontal rule mid-section --}}
-        <line x1="0" y1="350" x2="200" y2="350" stroke="#f4a41c" stroke-width="1" opacity="0.1"/>
+        <path d="M28,28 L28,80 M28,28 L80,28" stroke="#f4a41c" stroke-width="2.5" fill="none" opacity="0.3"/>
+        <circle cx="1380" cy="110" r="90" fill="none" stroke="#f4a41c" stroke-width="1" opacity="0.07"/>
+        <circle cx="1380" cy="110" r="58" fill="none" stroke="#f4a41c" stroke-width="1" opacity="0.05"/>
+        <text x="860" y="640" font-size="520" font-weight="900" fill="#ffffff" opacity="0.015" font-family="serif">T</text>
     </svg>
 
     <div class="max-w-7xl mx-auto px-6" style="position:relative;z-index:2;">
-
-        {{-- Header --}}
         <div class="ts-header" data-aos="fade-up">
             <div>
                 <div class="ts-eyebrow">
@@ -419,29 +591,21 @@
             </div>
         </div>
 
-        {{-- Main testimonial card --}}
         <div class="ts-card" data-aos="fade-up" data-aos-delay="100">
-
-            {{-- LEFT: Media --}}
             <div class="ts-media-side" id="tsMediaSide">
                 <div id="tsMediaContent" style="position:absolute;inset:0;">
                     <img id="tsImg" src="" alt="Testimonial"
                          onerror="this.src='https://placehold.co/800x600/ddd4c5/999?text=Review';">
                 </div>
                 <div class="ts-media-overlay" id="tsMediaOverlay"></div>
-
-                <button class="ts-play-btn" id="tsPlayBtn" onclick="tsPlayVideo()"
-                        style="display:none;" aria-label="Play video">
+                <button class="ts-play-btn" id="tsPlayBtn" onclick="tsPlayVideo()" style="display:none;" aria-label="Play video">
                     <svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>
                 </button>
-
                 <div class="ts-media-caption">
                     <div class="ts-caption-badge" id="tsCaptionBadge"></div>
                     <div class="ts-caption-text" id="tsCaptionText"></div>
                 </div>
             </div>
-
-            {{-- RIGHT: Content --}}
             <div class="ts-content-side">
                 <div id="tsContentInner" style="transition:opacity 0.25s ease;">
                     <span class="ts-quote-icon">"</span>
@@ -463,11 +627,10 @@
                     <div class="ts-progress-dots" id="tsDots"></div>
                     <div class="ts-navs">
                         <button class="ts-nav-btn" onclick="tsNav(-1)" aria-label="Previous">&#8592;</button>
-                        <button class="ts-nav-btn" onclick="tsNav(1)"  aria-label="Next">&#8594;</button>
+                        <button class="ts-nav-btn" onclick="tsNav(1)" aria-label="Next">&#8594;</button>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </section>
@@ -476,7 +639,6 @@
 (function(){
     var data = @json($testimonialsData);
     var cur = 0, videoOn = false, autoTimer = null;
-
     var imgEl        = document.getElementById('tsImg');
     var mediaContent = document.getElementById('tsMediaContent');
     var playBtn      = document.getElementById('tsPlayBtn');
@@ -497,7 +659,6 @@
             ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
             : name.substring(0, 2).toUpperCase();
     }
-
     function buildDots() {
         dotsEl.innerHTML = '';
         data.forEach(function(_, i) {
@@ -508,12 +669,10 @@
             dotsEl.appendChild(b);
         });
     }
-
     function render(idx) {
         var r = data[idx];
         if (!r) return;
         videoOn = false;
-
         mediaContent.innerHTML = '';
         imgEl.src = r.image || 'https://placehold.co/800x600/ddd4c5/999?text=Review';
         imgEl.alt = r.name || '';
@@ -521,10 +680,8 @@
         mediaContent.appendChild(imgEl);
         overlay.style.display = '';
         playBtn.style.display = r.video_id ? 'flex' : 'none';
-
         captBadge.textContent = r.role || '';
         captText.textContent  = r.text ? r.text.substring(0, 80) + (r.text.length > 80 ? '\u2026' : '') : '';
-
         contentInner.style.opacity = '0';
         setTimeout(function() {
             quoteText.textContent  = r.text || '';
@@ -533,16 +690,14 @@
             avatarEl.textContent   = getInitials(r.name);
             contentInner.style.opacity = '1';
         }, 210);
-
         buildDots();
     }
-
     window.tsPlayVideo = function() {
         var r = data[cur];
         if (!r || !r.video_id) return;
         clearAuto();
         mediaContent.innerHTML = '';
-        var wrap   = document.createElement('div');
+        var wrap = document.createElement('div');
         wrap.className = 'ts-iframe-wrap';
         var iframe = document.createElement('iframe');
         iframe.src = 'https://www.youtube.com/embed/' + r.video_id + '?autoplay=1&rel=0&modestbranding=1';
@@ -554,7 +709,6 @@
         playBtn.style.display = 'none';
         videoOn = true;
     };
-
     function goTo(idx) {
         if (videoOn) {
             mediaContent.innerHTML = '';
@@ -566,78 +720,220 @@
         render(cur);
         resetAuto();
     }
-
-    window.tsNav = function(dir) {
-        goTo((cur + dir + data.length) % data.length);
-    };
-
+    window.tsNav = function(dir) { goTo((cur + dir + data.length) % data.length); };
     function clearAuto() { if (autoTimer) clearInterval(autoTimer); }
     function resetAuto() {
         clearAuto();
         autoTimer = setInterval(function() { if (!videoOn) window.tsNav(1); }, 6000);
     }
-
     document.addEventListener('keydown', function(e) {
         if (e.key === 'ArrowLeft')  window.tsNav(-1);
         if (e.key === 'ArrowRight') window.tsNav(1);
     });
-
     if (data.length > 0) { render(0); resetAuto(); }
 })();
 </script>
 @endif
 
-<!-- SECTION 6: INQUIRY FORM -->
-<section class="py-32 bg-black border-t border-white/5 relative overflow-hidden">
-    <div class="max-w-4xl mx-auto px-6 relative z-10">
-        <div class="text-center mb-20" data-aos="fade-up">
-            <h2 class="text-gray-500 text-xs font-bold uppercase tracking-[0.6em] mb-4">Inquiry</h2>
-            <h3 class="serif text-white text-4xl md:text-5xl font-black uppercase tracking-widest">
-                Write Us <span class="text-[#f4a41c]">Your Query</span>
-            </h3>
-            <div class="w-16 h-[2px] bg-[#f4a41c] mx-auto mt-8"></div>
+{{-- ============================================================
+     SECTION 6: SCHEDULE A MEETING — bg: #f5f1eb (warm cream)
+     ============================================================ --}}
+<section class="sam-section" id="schedule-meeting">
+    <svg class="sam-bg-svg" viewBox="0 0 1440 780" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M-80,200 Q200,80 480,220 Q760,360 1040,180 Q1200,100 1520,240" fill="none" stroke="#c8b89a" stroke-width="1.2" opacity="0.35"/>
+        <path d="M-80,240 Q200,120 480,260 Q760,400 1040,220 Q1200,140 1520,280" fill="none" stroke="#c8b89a" stroke-width="1" opacity="0.28"/>
+        <path d="M-80,420 Q300,320 560,460 Q820,580 1100,400 Q1280,300 1520,460" fill="none" stroke="#b8a480" stroke-width="1.2" opacity="0.3"/>
+        <path d="M-80,600 Q360,500 640,640 Q900,760 1160,580 Q1340,480 1520,640" fill="none" stroke="#a89060" stroke-width="1" opacity="0.2"/>
+        <path d="M580,0 Q720,60 860,20 Q960,-10 1020,60" fill="none" stroke="#f4a41c" stroke-width="1.5" opacity="0.15"/>
+        <path d="M32,32 L32,72 M32,32 L72,32" stroke="#f4a41c" stroke-width="2.5" fill="none" opacity="0.5"/>
+        <path d="M1408,748 L1408,708 M1408,748 L1368,748" stroke="#f4a41c" stroke-width="2" fill="none" opacity="0.3"/>
+    </svg>
+
+    <div class="sam-inner">
+        {{-- LEFT: meeting section image from admin --}}
+        <div class="sam-image-col" data-aos="fade-right">
+            @php
+                $settings = $settings ?? \App\Models\Setting::first();
+                $samImg = null;
+                if (!empty($settings->meeting_section_image)) {
+                    $samImg = asset('storage/' . ltrim($settings->meeting_section_image, '/'));
+                }
+                if (!$samImg) {
+                    $featuredProject = $projects->first() ?? null;
+                    $samImg = $featuredProject
+                        ? asset(ltrim(Str::replaceFirst('storage/', '', $featuredProject->featured_image), '/'))
+                        : 'https://placehold.co/800x900/1a1a2e/f4a41c?text=Trikon+Holdings';
+                }
+            @endphp
+            <div class="sam-image-wrap">
+                <img src="{{ $samImg }}" alt="Schedule a Meeting"
+                     onerror="this.src='https://placehold.co/800x900/1a1a2e/f4a41c?text=Trikon+Holdings';">
+                <div class="sam-image-tag">
+                    <svg viewBox="0 0 24 24" fill="#f4a41c"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+                    <span>Book an Appointment</span>
+                </div>
+            </div>
         </div>
-        <form action="{{ route('contact.send') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12">
-            @csrf
-            <div class="relative group">
-                <input type="text" name="name" required placeholder=" "
-                    class="peer w-full bg-transparent border-b-2 border-white/10 py-3 text-white focus:outline-none focus:border-[#f4a41c] transition-all duration-300">
-                <label class="absolute left-0 top-3 text-gray-500 text-xs font-bold uppercase tracking-widest transition-all duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:-top-6 peer-focus:text-[10px] peer-focus:text-[#f4a41c] pointer-events-none">Full Name *</label>
+
+        {{-- RIGHT: form --}}
+        <div class="sam-form-col" data-aos="fade-left">
+            <div class="sam-eyebrow">
+                <div class="sam-eyebrow-line"></div>
+                <span>Let's Connect</span>
             </div>
-            <div class="relative group">
-                <input type="email" name="email" required placeholder=" "
-                    class="peer w-full bg-transparent border-b-2 border-white/10 py-3 text-white focus:outline-none focus:border-[#f4a41c] transition-all duration-300">
-                <label class="absolute left-0 top-3 text-gray-500 text-xs font-bold uppercase tracking-widest transition-all duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:-top-6 peer-focus:text-[10px] peer-focus:text-[#f4a41c] pointer-events-none">Email Address *</label>
-            </div>
-            <div class="relative group md:col-span-2">
-                <input type="text" name="phone" required placeholder=" "
-                    class="peer w-full bg-transparent border-b-2 border-white/10 py-3 text-white focus:outline-none focus:border-[#f4a41c] transition-all duration-300">
-                <label class="absolute left-0 top-3 text-gray-400 text-xs font-bold uppercase tracking-widest transition-all duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:-top-6 peer-focus:text-[10px] peer-focus:text-[#f4a41c] pointer-events-none">Phone Number *</label>
-            </div>
-            <div class="relative group md:col-span-2">
-                <textarea name="message" required placeholder=" " rows="3"
-                    class="peer w-full bg-transparent border-b-2 border-white/10 py-3 text-white focus:outline-none focus:border-[#f4a41c] transition-all duration-300 resize-none"></textarea>
-                <label class="absolute left-0 top-3 text-gray-500 text-xs font-bold uppercase tracking-widest transition-all duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:-top-6 peer-focus:text-[10px] peer-focus:text-[#f4a41c] pointer-events-none">Your Detailed Query *</label>
-            </div>
-            <div class="md:col-span-2 text-center mt-12">
-                <button type="submit" class="inline-block px-20 py-5 bg-[#f4a41c] text-white font-black uppercase text-[10px] tracking-[0.4em] hover:bg-white hover:text-black transition-all shadow-2xl rounded-sm">
-                    Submit Inquiry
+            <h2 class="sam-heading">Schedule a <em>Meeting</em></h2>
+            <p class="sam-subtext">Fill in your details and our team will get back to you to confirm your appointment.</p>
+            <form action="{{ route('contact.send') }}" method="POST" class="sam-form" id="samForm">
+                @csrf
+                <div class="sam-field">
+                    <input type="text" name="name" required placeholder="Full Name *" class="sam-input">
+                </div>
+                <div class="sam-field">
+                    <input type="tel" name="phone" required placeholder="Phone Number *" class="sam-input">
+                </div>
+                <div class="sam-field">
+                    <input type="email" name="email" placeholder="Email Address" class="sam-input">
+                </div>
+                <div class="sam-field sam-select-wrap">
+                    <select name="meeting_time" class="sam-input sam-select">
+                        <option value="" disabled selected>Select a Time</option>
+                        <option value="9:00 AM - 10:00 AM">9:00 AM – 10:00 AM</option>
+                        <option value="10:00 AM - 11:00 AM">10:00 AM – 11:00 AM</option>
+                        <option value="11:00 AM - 12:00 PM">11:00 AM – 12:00 PM</option>
+                        <option value="12:00 PM - 1:00 PM">12:00 PM – 1:00 PM</option>
+                        <option value="2:00 PM - 3:00 PM">2:00 PM – 3:00 PM</option>
+                        <option value="3:00 PM - 4:00 PM">3:00 PM – 4:00 PM</option>
+                        <option value="4:00 PM - 5:00 PM">4:00 PM – 5:00 PM</option>
+                    </select>
+                    <span class="sam-select-chevron">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </span>
+                </div>
+                <button type="submit" class="sam-btn">
+                    <span>Confirm Meeting</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </section>
 
-<!-- SECTION 7: GOOGLE MAP -->
-<section class="w-full h-[500px] grayscale contrast-125 border-t border-white/5">
-    <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.1819962222226!2d90.4222225759289!3d23.81212648640261!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c705aa134d71%3A0x1c8797d1479bcdb!2sTrikon%20Holdings%20Ltd.!5e0!3m2!1sen!2sbd!4v1777450989693!5m2!1sen!2sbd"
-        width="100%" height="100%"
-        style="border:0;display:block;"
-        allowfullscreen="" loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade">
-    </iframe>
+{{-- ============================================================
+     SECTION 7: MAP — bg: #e8e4de (stone grey)
+     ============================================================ --}}
+<section class="map-section" id="project-locations">
+    <svg class="map-arch-bg" viewBox="0 0 1440 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="30" y="120" width="34" height="580" fill="none" stroke="#0a1628" stroke-width="1" opacity="0.12"/>
+        <rect x="38" y="80" width="18" height="40" fill="none" stroke="#0a1628" stroke-width="1" opacity="0.12"/>
+        <rect x="72" y="200" width="28" height="500" fill="none" stroke="#0a1628" stroke-width="1" opacity="0.1"/>
+        <polygon points="72,200 86,175 100,200" fill="none" stroke="#0a1628" stroke-width="1" opacity="0.1"/>
+        <rect x="108" y="260" width="52" height="440" fill="none" stroke="#0a1628" stroke-width="1" opacity="0.09"/>
+        <rect x="1300" y="60" width="50" height="640" fill="none" stroke="#0a1628" stroke-width="1" opacity="0.12"/>
+        <line x1="1325" y1="40" x2="1325" y2="18" stroke="#0a1628" stroke-width="1.5" opacity="0.15"/>
+        <circle cx="1325" cy="16" r="3" fill="#f4a41c" opacity="0.25"/>
+        <rect x="1358" y="150" width="44" height="550" fill="none" stroke="#0a1628" stroke-width="1" opacity="0.1"/>
+        <polygon points="1358,150 1380,120 1402,150" fill="none" stroke="#0a1628" stroke-width="1" opacity="0.1"/>
+        <path d="M24,24 L24,74 M24,24 L74,24" stroke="#f4a41c" stroke-width="2.5" fill="none" opacity="0.4"/>
+        <path d="M1416,676 L1416,626 M1416,676 L1366,676" stroke="#f4a41c" stroke-width="2" fill="none" opacity="0.25"/>
+        <line x1="170" y1="695" x2="440" y2="695" stroke="#f4a41c" stroke-width="2" opacity="0.18"/>
+        <line x1="1000" y1="695" x2="1270" y2="695" stroke="#f4a41c" stroke-width="2" opacity="0.18"/>
+    </svg>
+
+    <div class="map-watermark" aria-hidden="true">PROJECTS</div>
+
+    <div class="max-w-7xl mx-auto px-6 pt-12 pb-6" style="position:relative;z-index:5;" data-aos="fade-up">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+            <div style="width:38px;height:2px;background:#f4a41c;flex-shrink:0;"></div>
+            <span style="font-size:10px;font-weight:700;letter-spacing:0.5em;text-transform:uppercase;color:#f4a41c;">Head Office</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+            <h2 style="font-family:'Cinzel',serif;font-size:clamp(1.6rem,3vw,2.6rem);font-weight:900;color:#0a1628;text-transform:uppercase;line-height:1.1;margin:0;">
+                Find Us On <span style="color:#f4a41c;">The Map</span>
+            </h2>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 20px;background:#0a1628;border-left:3px solid #f4a41c;">
+                <svg style="width:16px;height:16px;fill:#f4a41c;flex-shrink:0;" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.85);">Rahman Trade Center, Bashundhara R/A, Dhaka</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 pb-16">
+        <div class="map-outer" data-aos="fade-up" data-aos-delay="100">
+            <div class="map-frame-border" style="position:relative;">
+                <span class="map-corner map-corner-tl"></span>
+                <span class="map-corner map-corner-tr"></span>
+                <span class="map-corner map-corner-bl"></span>
+                <span class="map-corner map-corner-br"></span>
+                <div class="map-embed-wrapper">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.1819962222226!2d90.4222225759289!3d23.81212648640261!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c705aa134d71%3A0x1c8797d1479bcdb!2sTrikon%20Holdings%20Ltd.!5e0!3m2!1sen!2sbd!4v1777450989693!5m2!1sen!2sbd"
+                        width="100%" height="100%"
+                        style="border:0;display:block;"
+                        allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Trikon Holdings Project Locations">
+                    </iframe>
+                </div>
+                <div class="map-filter-bar" id="mapFilterBar">
+                    <div class="map-filter-item">
+                        <select class="map-filter-select" id="filterLocation" onchange="applyMapFilter()" aria-label="Filter by location">
+                            <option value="">All Locations</option>
+                            @php
+                                try {
+                                    $allLocations = \App\Models\Project::select('location')->distinct()->whereNotNull('location')->get();
+                                } catch (\Exception $e) {
+                                    $allLocations = collect();
+                                }
+                            @endphp
+                            @foreach($allLocations as $loc)
+                                <option value="{{ $loc->location }}">{{ $loc->location }}</option>
+                            @endforeach
+                        </select>
+                        <span class="map-filter-chevron">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </div>
+                    <div class="map-filter-item">
+                        <select class="map-filter-select" id="filterStatus" onchange="applyMapFilter()" aria-label="Filter by project status">
+                            <option value="">Project Status</option>
+                            <option value="ongoing">Ongoing</option>
+                            <option value="completed">Completed</option>
+                            <option value="upcoming">Upcoming</option>
+                        </select>
+                        <span class="map-filter-chevron">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </div>
+                    <div class="map-filter-item">
+                        <select class="map-filter-select" id="filterType" onchange="applyMapFilter()" aria-label="Filter by project type">
+                            <option value="">Project Type</option>
+                            <option value="residential">Residential</option>
+                            <option value="commercial">Commercial</option>
+                            <option value="land">Land</option>
+                        </select>
+                        <span class="map-filter-chevron">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
+
+<script>
+function applyMapFilter() {
+    var location = document.getElementById('filterLocation').value;
+    var iframeSrc;
+    if (location) {
+        iframeSrc = 'https://maps.google.com/maps?q=' + encodeURIComponent(location + ' Dhaka Bangladesh') + '&t=&z=13&ie=UTF8&iwloc=&output=embed';
+    } else {
+        iframeSrc = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.1819962222226!2d90.4222225759289!3d23.81212648640261!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c705aa134d71%3A0x1c8797d1479bcdb!2sTrikon%20Holdings%20Ltd.!5e0!3m2!1sen!2sbd!4v1777450989693!5m2!1sen!2sbd';
+    }
+    var iframe = document.querySelector('.map-embed-wrapper iframe');
+    if (iframe) iframe.src = iframeSrc;
+}
+</script>
 
 @endsection
 

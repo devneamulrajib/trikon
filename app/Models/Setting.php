@@ -13,6 +13,7 @@ class Setting extends Model
         'site_name',
         'logo',
         'welcome_video_url',
+        'meeting_section_image',
         'welcome_title',
         'welcome_text',
         'hotline',

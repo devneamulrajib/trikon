@@ -5,26 +5,23 @@ namespace App\Filament\Resources\Settings;
 use App\Filament\Resources\Settings\Pages;
 use App\Models\Setting;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema; // This is the correct import for your version
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\FileUpload; // Added for logo
-use Filament\Forms\Components\RichEditor; // Added for Legal Content
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ImageColumn; // Added for logo preview
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 
 class SettingResource extends Resource
 {
     protected static ?string $model = Setting::class;
-    
+
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-cog-6-tooth';
 
-    /**
-     * Updated to match the Schema signature your version requires
-     */
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
@@ -44,23 +41,30 @@ class SettingResource extends Resource
                     TextInput::make('welcome_video_url')
                         ->label('Welcome Section Video URL')
                         ->placeholder('https://www.youtube.com/watch?v=...')
-                        ->helperText('Paste the full YouTube link here to display it on the homepage welcome section.'),
+                        ->helperText('Paste the full YouTube link here.'),
+
+                    FileUpload::make('meeting_section_image')
+                        ->label('Schedule a Meeting — Section Image')
+                        ->image()
+                        ->directory('site-settings')
+                        ->visibility('public')
+                        ->helperText('This image appears on the left side of the Schedule a Meeting section on the homepage.'),
                 ]),
 
-            Section::make('Contact Details (Editable)')
+            Section::make('Contact Details')
                 ->schema([
                     TextInput::make('hotline')
                         ->label('Hotline Number')
                         ->placeholder('e.g. 16634'),
-                        
+
                     TextInput::make('sales_phone')
                         ->label('Sales Number')
                         ->placeholder('e.g. +880 1700 000000'),
-                        
+
                     TextInput::make('email')
                         ->label('Email Address')
                         ->email(),
-                        
+
                     TextInput::make('address')
                         ->label('Office Address'),
 
@@ -71,12 +75,10 @@ class SettingResource extends Resource
 
                     TextInput::make('messenger_id')
                         ->label('Messenger ID/Username')
-                        ->placeholder('e.g. trikonholdings')
-                        ->helperText('The unique ID or Username of your Facebook Page.'),
+                        ->placeholder('e.g. trikonholdings'),
                 ]),
 
             Section::make('Legal Pages & Policies')
-                ->description('Edit the content for Terms & Conditions and Privacy Policy pages')
                 ->schema([
                     RichEditor::make('terms_content')
                         ->label('Terms & Conditions Content')
@@ -98,9 +100,9 @@ class SettingResource extends Resource
                     ->circular(),
 
                 TextColumn::make('site_name'),
-                
+
                 TextColumn::make('hotline'),
-                
+
                 TextColumn::make('email'),
             ])
             ->actions([
