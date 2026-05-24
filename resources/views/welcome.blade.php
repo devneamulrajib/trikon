@@ -456,10 +456,74 @@
 </section>
 
 {{-- ============================================================
-     SECTION 3: OUR PROJECTS — bg: #f4a41c (gold)
+     SECTION 3: OUR PROJECTS — bg: #e8920a with artistic overlay
      ============================================================ --}}
-<section class="py-24 bg-[#f4a41c]">
-    <div class="max-w-7xl mx-auto px-6">
+<section class="py-24 bg-[#e8920a] relative overflow-hidden">
+
+    {{-- Artistic SVG Background --}}
+    <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;" viewBox="0 0 1440 780" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+
+        {{-- Dark corner wedges --}}
+        <polygon points="0,0 440,0 0,340" fill="#d4820a" opacity="0.55"/>
+        <polygon points="1440,440 1440,780 1000,780" fill="#d4820a" opacity="0.5"/>
+        <polygon points="0,0 240,0 0,170" fill="#c47208" opacity="0.65"/>
+        <polygon points="1440,610 1440,780 1180,780" fill="#c47208" opacity="0.6"/>
+
+        {{-- Diagonal ruled lines left side --}}
+        <line x1="0" y1="0" x2="540" y2="780" stroke="#bf6c06" stroke-width="1.5" opacity="0.45"/>
+        <line x1="80" y1="0" x2="620" y2="780" stroke="#bf6c06" stroke-width="1" opacity="0.3"/>
+        <line x1="160" y1="0" x2="700" y2="780" stroke="#bf6c06" stroke-width="0.8" opacity="0.2"/>
+
+        {{-- Diagonal ruled lines right side --}}
+        <line x1="1440" y1="0" x2="900" y2="780" stroke="#bf6c06" stroke-width="1.5" opacity="0.45"/>
+        <line x1="1360" y1="0" x2="820" y2="780" stroke="#bf6c06" stroke-width="1" opacity="0.3"/>
+        <line x1="1280" y1="0" x2="740" y2="780" stroke="#bf6c06" stroke-width="0.8" opacity="0.2"/>
+
+        {{-- Concentric circles --}}
+        <circle cx="720" cy="390" r="440" fill="none" stroke="#f4a41c" stroke-width="1.5" opacity="0.16"/>
+        <circle cx="720" cy="390" r="330" fill="none" stroke="#f4a41c" stroke-width="1" opacity="0.11"/>
+        <circle cx="720" cy="390" r="220" fill="none" stroke="#f4a41c" stroke-width="0.8" opacity="0.08"/>
+
+        {{-- Triangle forms --}}
+        <polygon points="720,28 900,320 540,320" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+        <polygon points="720,752 900,460 540,460" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+        {{-- Light beam polygons --}}
+        <polygon points="360,0 440,0 0,480 0,400" fill="rgba(255,255,255,0.04)"/>
+        <polygon points="1080,780 1000,780 1440,300 1440,380" fill="rgba(255,255,255,0.04)"/>
+
+        {{-- Giant watermark T --}}
+        <text x="720" y="680" font-size="680" font-weight="900" fill="rgba(26,15,0,0.055)" font-family="serif" text-anchor="middle" letter-spacing="-30">T</text>
+
+        {{-- Corner bracket top-left --}}
+        <line x1="36" y1="36" x2="36" y2="105" stroke="rgba(26,15,0,0.12)" stroke-width="3"/>
+        <line x1="36" y1="36" x2="105" y2="36" stroke="rgba(26,15,0,0.12)" stroke-width="3"/>
+
+        {{-- Corner bracket bottom-right --}}
+        <line x1="1404" y1="744" x2="1404" y2="675" stroke="rgba(26,15,0,0.08)" stroke-width="2.5"/>
+        <line x1="1404" y1="744" x2="1335" y2="744" stroke="rgba(26,15,0,0.08)" stroke-width="2.5"/>
+
+        {{-- Dot grid top-right --}}
+        <g fill="rgba(26,15,0,0.09)">
+            @for($r=0;$r<3;$r++) @for($c=0;$c<3;$c++)
+            <circle cx="{{ 1130+$c*34 }}" cy="{{ 68+$r*34 }}" r="3"/>
+            @endfor @endfor
+        </g>
+
+        {{-- Dot grid bottom-left --}}
+        <g fill="rgba(26,15,0,0.06)">
+            @for($r=0;$r<3;$r++) @for($c=0;$c<3;$c++)
+            <circle cx="{{ 210+$c*34 }}" cy="{{ 648+$r*34 }}" r="3"/>
+            @endfor @endfor
+        </g>
+
+        {{-- Horizontal accent lines --}}
+        <rect x="0" y="386" width="100" height="2" fill="rgba(255,255,255,0.12)"/>
+        <rect x="1340" y="386" width="100" height="2" fill="rgba(255,255,255,0.12)"/>
+    </svg>
+
+    {{-- Content (identical to your original) --}}
+    <div class="max-w-7xl mx-auto px-6 relative" style="z-index:2;">
         <div class="text-center mb-16" data-aos="fade-up">
             <h2 class="serif-title text-white text-4xl md:text-6xl font-black uppercase tracking-widest">
                 OUR <span class="text-gray-900">PROJECTS</span>
@@ -497,7 +561,6 @@
         </div>
     </div>
 </section>
-
 {{-- ============================================================
      SECTION 4: OUR SERVICES — bg: #ffffff (white)
      ============================================================ --}}
