@@ -566,48 +566,97 @@
 {{-- ============================================================
      SECTION 4: OUR SERVICES — bg: warm white #f5f1eb
      ============================================================ --}}
-<section class="relative overflow-hidden" style="background:#f5f1eb;">
+<section class="svc-section relative overflow-hidden" style="background:#f5f1eb;">
 
-    {{-- Artistic SVG Background --}}
-    <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;"
-         viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <line x1="0" y1="200" x2="600" y2="900" stroke="#c8b89a" stroke-width="1" opacity="0.22"/>
-        <line x1="100" y1="0" x2="700" y2="900" stroke="#c8b89a" stroke-width="0.8" opacity="0.16"/>
-        <line x1="300" y1="0" x2="900" y2="900" stroke="#c8b89a" stroke-width="0.6" opacity="0.12"/>
-        <line x1="1440" y1="200" x2="840" y2="900" stroke="#c8b89a" stroke-width="1" opacity="0.22"/>
-        <line x1="1340" y1="0" x2="740" y2="900" stroke="#c8b89a" stroke-width="0.8" opacity="0.16"/>
-        <line x1="1140" y1="0" x2="540" y2="900" stroke="#c8b89a" stroke-width="0.6" opacity="0.12"/>
-        <circle cx="720" cy="500" r="500" fill="none" stroke="#c8a96e" stroke-width="1" opacity="0.09"/>
-        <circle cx="720" cy="500" r="360" fill="none" stroke="#c8a96e" stroke-width="0.8" opacity="0.07"/>
-        <circle cx="720" cy="500" r="220" fill="none" stroke="#c8a96e" stroke-width="0.6" opacity="0.05"/>
-        <text x="720" y="820" font-size="680" font-weight="900" fill="rgba(180,150,90,0.045)" font-family="serif" text-anchor="middle">T</text>
-        <line x1="36" y1="36" x2="36" y2="86" stroke="#f4a41c" stroke-width="2" opacity="0.4"/>
-        <line x1="36" y1="36" x2="86" y2="36" stroke="#f4a41c" stroke-width="2" opacity="0.4"/>
-        <line x1="1404" y1="864" x2="1404" y2="814" stroke="#f4a41c" stroke-width="1.5" opacity="0.25"/>
-        <line x1="1404" y1="864" x2="1354" y2="864" stroke="#f4a41c" stroke-width="1.5" opacity="0.25"/>
-        @for($r=0;$r<4;$r++) @for($c=0;$c<4;$c++)
-        <circle cx="{{ 1130+$c*28 }}" cy="{{ 70+$r*28 }}" r="2" fill="#c8a96e" opacity="0.18"/>
-        @endfor @endfor
-        @for($r=0;$r<3;$r++) @for($c=0;$c<3;$c++)
-        <circle cx="{{ 200+$c*28 }}" cy="{{ 760+$r*28 }}" r="2" fill="#c8a96e" opacity="0.13"/>
-        @endfor @endfor
-    </svg>
+    {{-- ===== ANIMATED ARTISTIC BACKGROUND ===== --}}
+    <div class="svc-bg-canvas" aria-hidden="true">
 
-    {{-- Section Header --}}
-    <div class="relative text-center pt-20 pb-12" style="z-index:2;" data-aos="fade-up">
-        <div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:14px;">
-            <div style="width:50px;height:1.5px;background:#f4a41c;opacity:0.7;"></div>
-            <span style="font-size:10px;font-weight:700;letter-spacing:0.5em;text-transform:uppercase;color:#f4a41c;">What We Offer</span>
-            <div style="width:50px;height:1.5px;background:#f4a41c;opacity:0.7;"></div>
-        </div>
-        <h2 style="font-family:'Cinzel',serif;font-size:clamp(2rem,5vw,3.6rem);font-weight:900;
-                   color:#0a1628;text-transform:uppercase;letter-spacing:0.05em;line-height:1.1;">
-            Our <span style="color:#f4a41c;">Services</span>
-        </h2>
-        <div style="width:44px;height:3px;background:#f4a41c;margin:16px auto 0;"></div>
+        {{-- Floating animated orbs --}}
+        <div class="svc-orb svc-orb-1"></div>
+        <div class="svc-orb svc-orb-2"></div>
+        <div class="svc-orb svc-orb-3"></div>
+
+        {{-- Animated diagonal ruled lines --}}
+        <svg class="svc-lines-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <line class="svc-animated-line" x1="0" y1="200" x2="600" y2="900" stroke="#c8a96e" stroke-width="1.5" opacity="0"/>
+            <line class="svc-animated-line" x1="100" y1="0" x2="700" y2="900" stroke="#c8a96e" stroke-width="1" opacity="0"/>
+            <line class="svc-animated-line" x1="300" y1="0" x2="900" y2="900" stroke="#c8a96e" stroke-width="0.8" opacity="0"/>
+            <line class="svc-animated-line" x1="1440" y1="200" x2="840" y2="900" stroke="#c8a96e" stroke-width="1.5" opacity="0"/>
+            <line class="svc-animated-line" x1="1340" y1="0" x2="740" y2="900" stroke="#c8a96e" stroke-width="1" opacity="0"/>
+            <line class="svc-animated-line" x1="1140" y1="0" x2="540" y2="900" stroke="#c8a96e" stroke-width="0.8" opacity="0"/>
+
+            {{-- Concentric circles --}}
+            <circle class="svc-ring svc-ring-1" cx="720" cy="460" r="500" fill="none" stroke="#f4a41c" stroke-width="1.5"/>
+            <circle class="svc-ring svc-ring-2" cx="720" cy="460" r="360" fill="none" stroke="#f4a41c" stroke-width="1"/>
+            <circle class="svc-ring svc-ring-3" cx="720" cy="460" r="220" fill="none" stroke="#f4a41c" stroke-width="1"/>
+
+            {{-- Watermark T --}}
+            <text x="720" y="820" font-size="680" font-weight="900" fill="rgba(180,150,90,0.06)" font-family="serif" text-anchor="middle">T</text>
+
+            {{-- Corner brackets --}}
+            <line x1="36" y1="36" x2="36" y2="86" stroke="#f4a41c" stroke-width="2.5" opacity="0.55"/>
+            <line x1="36" y1="36" x2="86" y2="36" stroke="#f4a41c" stroke-width="2.5" opacity="0.55"/>
+            <line x1="1404" y1="864" x2="1404" y2="814" stroke="#f4a41c" stroke-width="2" opacity="0.35"/>
+            <line x1="1404" y1="864" x2="1354" y2="864" stroke="#f4a41c" stroke-width="2" opacity="0.35"/>
+
+            {{-- Dot grids --}}
+            @for($r=0;$r<4;$r++) @for($c=0;$c<4;$c++)
+            <circle cx="{{ 1130+$c*28 }}" cy="{{ 70+$r*28 }}" r="2.5" fill="#c8a96e" opacity="0.3"/>
+            @endfor @endfor
+            @for($r=0;$r<3;$r++) @for($c=0;$c<3;$c++)
+            <circle cx="{{ 200+$c*28 }}" cy="{{ 760+$r*28 }}" r="2.5" fill="#c8a96e" opacity="0.2"/>
+            @endfor @endfor
+        </svg>
     </div>
 
-    {{-- ===== SERVICE CARDS ===== --}}
+    {{-- ===== SECTION HEADER ===== --}}
+    <div class="svc-header-wrap relative text-center pt-20 pb-14" style="z-index:2;" data-aos="fade-up">
+
+        {{-- Animated eyebrow --}}
+        <div class="svc-eyebrow-row">
+            <div class="svc-eyebrow-line svc-eyebrow-line-left"></div>
+            <span class="svc-eyebrow-text">What We Offer</span>
+            <div class="svc-eyebrow-line svc-eyebrow-line-right"></div>
+        </div>
+
+        {{-- Main heading with animated underline --}}
+        <h2 class="svc-main-heading">
+            Our <span class="svc-heading-gold">Services</span>
+        </h2>
+
+        {{-- Animated triple-bar underline --}}
+        <div class="svc-underline-group">
+            <div class="svc-uline svc-uline-1"></div>
+            <div class="svc-uline svc-uline-2"></div>
+            <div class="svc-uline svc-uline-3"></div>
+        </div>
+
+        {{-- Subtext --}}
+        <p class="svc-subtext" data-aos="fade-up" data-aos-delay="100">
+            Where excellence is redefined through top-tier property solutions.
+        </p>
+
+        {{-- Floating stat badges --}}
+        <div class="svc-stat-row" data-aos="fade-up" data-aos-delay="150">
+            <div class="svc-stat-badge">
+                <span class="svc-stat-num">10+</span>
+                <span class="svc-stat-label">Years Experience</span>
+            </div>
+            <div class="svc-stat-divider"></div>
+            <div class="svc-stat-badge">
+                <span class="svc-stat-num">20+</span>
+                <span class="svc-stat-label">Projects Delivered</span>
+            </div>
+            <div class="svc-stat-divider"></div>
+            <div class="svc-stat-badge">
+                <span class="svc-stat-num">100%</span>
+                <span class="svc-stat-label">Client Satisfaction</span>
+            </div>
+        </div>
+
+    </div>
+
+    {{-- ===== SERVICE CARDS — UNCHANGED ===== --}}
     @php $services = \App\Models\Service::all(); $svcTotal = $services->count(); @endphp
 
     <div style="position:relative;z-index:10;display:flex;flex-wrap:nowrap;align-items:stretch;gap:0;">
@@ -615,7 +664,7 @@
         @php
             $servImg = $service->hero_image;
             $servUrl = asset(ltrim(Str::replaceFirst('storage/', '', $servImg), '/'));
-            $isOdd   = $index % 2 === 0; // 0,2,4 = top border
+            $isOdd   = $index % 2 === 0;
             $isLast  = $index === $svcTotal - 1;
 
             if ($isLast) {
@@ -633,9 +682,9 @@
             }
 
             $borderStyle =
-                'border-top:'    . ($borderTop    ? '6px solid #f4a41c'         : 'none') . ';' .
-                'border-bottom:' . ($borderBottom ? '6px solid #f4a41c'         : 'none') . ';' .
-                'border-right:'  . ($borderRight  ? '4px solid #f4a41c'         : 'none') . ';' .
+                'border-top:'    . ($borderTop    ? '6px solid #f4a41c' : 'none') . ';' .
+                'border-bottom:' . ($borderBottom ? '6px solid #f4a41c' : 'none') . ';' .
+                'border-right:'  . ($borderRight  ? '4px solid #f4a41c' : 'none') . ';' .
                 'border-left:none;';
         @endphp
 
@@ -646,20 +695,17 @@
                   {{ $borderStyle }}
                   box-sizing:border-box;">
 
-            {{-- Background Image --}}
             <img src="{{ $servUrl }}" alt="{{ $service->name }}"
                  style="position:absolute;inset:0;width:100%;height:100%;
                         object-fit:cover;display:block;transition:transform 1.6s ease;"
                  class="svc-img"
                  onerror="this.onerror=null;this.src='https://placehold.co/600x800/1a2235/f4a41c?text=Service';">
 
-            {{-- Gradient overlay --}}
             <div class="svc-overlay"
                  style="position:absolute;inset:0;z-index:2;
                         background:linear-gradient(to top,rgba(5,12,25,0.88) 0%,rgba(5,12,25,0.38) 55%,rgba(5,12,25,0.12) 100%);
                         transition:background 0.5s ease;"></div>
 
-            {{-- Service number --}}
             <div style="position:absolute;top:20px;left:20px;z-index:8;">
                 <span style="font-family:'Cinzel',serif;font-size:11px;font-weight:900;
                              color:rgba(244,164,28,0.65);letter-spacing:0.28em;">
@@ -667,7 +713,6 @@
                 </span>
             </div>
 
-            {{-- Text bottom --}}
             <div style="position:absolute;bottom:0;left:0;right:0;
                         padding:0 22px 30px;z-index:8;text-align:center;">
                 <h3 class="svc-title"
@@ -684,37 +729,306 @@
                             margin:0 auto;transition:width 0.4s ease;"></div>
             </div>
 
-            {{-- Bottom sweep bar --}}
             <div class="svc-bar"
                  style="position:absolute;bottom:0;left:0;right:0;height:3px;
                         background:#f4a41c;transform:scaleX(0);transform-origin:left;
                         transition:transform 0.4s ease;z-index:12;"></div>
-
         </a>
         @endforeach
     </div>
 
-    {{-- Explore Button --}}
-    <div class="text-center relative" style="z-index:10;padding:56px 0 80px;" data-aos="fade-up">
-        <a href="{{ url('/services') }}"
-           style="display:inline-flex;align-items:center;gap:12px;
-                  padding:15px 46px;border:1.5px solid #0a1628;
-                  color:#0a1628;font-size:10px;font-weight:800;
-                  letter-spacing:0.45em;text-transform:uppercase;
-                  transition:all 0.3s ease;text-decoration:none;background:transparent;"
-           onmouseover="this.style.background='#f4a41c';this.style.borderColor='#f4a41c';this.style.color='#0a1628';"
-           onmouseout="this.style.background='transparent';this.style.borderColor='#0a1628';this.style.color='#0a1628';">
-            Explore All Services
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
+    {{-- ===== ANIMATED EXPLORE BUTTON ===== --}}
+    <div class="text-center relative svc-btn-wrap" style="z-index:10;padding:60px 0 80px;" data-aos="fade-up">
+
+        {{-- Decorative side lines --}}
+        <div class="svc-btn-deco-left" aria-hidden="true">
+            <div class="svc-deco-line"></div>
+            <div class="svc-deco-dot"></div>
+        </div>
+        <div class="svc-btn-deco-right" aria-hidden="true">
+            <div class="svc-deco-dot"></div>
+            <div class="svc-deco-line"></div>
+        </div>
+
+        <a href="{{ url('/services') }}" class="svc-explore-btn">
+            <span class="svc-btn-bg-sweep"></span>
+            <span class="svc-btn-inner">
+                <span class="svc-btn-text">Explore All Services</span>
+                <span class="svc-btn-arrow">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </span>
+            </span>
         </a>
     </div>
 
 </section>
 
 <style>
+/* ===== BACKGROUND ===== */
+.svc-bg-canvas {
+    position: absolute; inset: 0;
+    pointer-events: none; z-index: 0; overflow: hidden;
+}
+.svc-lines-svg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+}
+
+/* Animated diagonal lines fade in on load */
+.svc-animated-line {
+    animation: svcLineFadeIn 2s ease forwards;
+}
+.svc-animated-line:nth-child(1) { animation-delay: 0.1s; }
+.svc-animated-line:nth-child(2) { animation-delay: 0.3s; }
+.svc-animated-line:nth-child(3) { animation-delay: 0.5s; }
+.svc-animated-line:nth-child(4) { animation-delay: 0.2s; }
+.svc-animated-line:nth-child(5) { animation-delay: 0.4s; }
+.svc-animated-line:nth-child(6) { animation-delay: 0.6s; }
+@keyframes svcLineFadeIn {
+    to { opacity: var(--final-op, 0.28); }
+}
+.svc-animated-line:nth-child(1) { --final-op: 0.32; }
+.svc-animated-line:nth-child(2) { --final-op: 0.22; }
+.svc-animated-line:nth-child(3) { --final-op: 0.16; }
+.svc-animated-line:nth-child(4) { --final-op: 0.32; }
+.svc-animated-line:nth-child(5) { --final-op: 0.22; }
+.svc-animated-line:nth-child(6) { --final-op: 0.16; }
+
+/* Pulsing concentric rings */
+.svc-ring {
+    transform-origin: 720px 460px;
+    animation: svcRingPulse 6s ease-in-out infinite;
+}
+.svc-ring-1 { animation-delay: 0s;   opacity: 0.1; }
+.svc-ring-2 { animation-delay: 1s;   opacity: 0.08; }
+.svc-ring-3 { animation-delay: 2s;   opacity: 0.07; }
+@keyframes svcRingPulse {
+    0%, 100% { transform: scale(1);    opacity: var(--ro, 0.1); }
+    50%       { transform: scale(1.04); opacity: calc(var(--ro, 0.1) * 1.8); }
+}
+.svc-ring-1 { --ro: 0.1; }
+.svc-ring-2 { --ro: 0.08; }
+.svc-ring-3 { --ro: 0.07; }
+
+/* Floating orbs */
+.svc-orb {
+    position: absolute; border-radius: 50%;
+    pointer-events: none;
+}
+.svc-orb-1 {
+    width: 420px; height: 420px;
+    top: -120px; left: -80px;
+    background: radial-gradient(circle, rgba(244,164,28,0.09) 0%, transparent 70%);
+    animation: svcOrbFloat 9s ease-in-out infinite;
+}
+.svc-orb-2 {
+    width: 340px; height: 340px;
+    bottom: 80px; right: -60px;
+    background: radial-gradient(circle, rgba(200,169,110,0.1) 0%, transparent 70%);
+    animation: svcOrbFloat 12s ease-in-out infinite reverse;
+}
+.svc-orb-3 {
+    width: 260px; height: 260px;
+    top: 40%; left: 50%;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(244,164,28,0.07) 0%, transparent 70%);
+    animation: svcOrbFloat 7s ease-in-out infinite 2s;
+}
+@keyframes svcOrbFloat {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-28px); }
+}
+.svc-orb-3 { animation-name: svcOrb3Float; }
+@keyframes svcOrb3Float {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%       { transform: translateX(-50%) translateY(-20px); }
+}
+
+/* ===== SECTION HEADER ===== */
+.svc-header-wrap { position: relative; z-index: 2; }
+
+/* Eyebrow row */
+.svc-eyebrow-row {
+    display: flex; align-items: center;
+    justify-content: center; gap: 18px;
+    margin-bottom: 18px;
+}
+.svc-eyebrow-line {
+    height: 2px; background: #f4a41c;
+    animation: svcEyebrowGrow 1.2s ease forwards;
+    width: 0;
+}
+.svc-eyebrow-line-left  { animation-delay: 0.2s; }
+.svc-eyebrow-line-right { animation-delay: 0.4s; }
+@keyframes svcEyebrowGrow { to { width: 56px; } }
+.svc-eyebrow-text {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.5em; text-transform: uppercase;
+    color: #f4a41c; white-space: nowrap;
+}
+
+/* Main heading */
+.svc-main-heading {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    font-weight: 900; color: #0a1628;
+    text-transform: uppercase;
+    letter-spacing: 0.05em; line-height: 1.1;
+    margin: 0 0 20px;
+    animation: svcHeadingReveal 0.9s cubic-bezier(0.22,1,0.36,1) forwards;
+    opacity: 0; transform: translateY(24px);
+    animation-delay: 0.15s;
+}
+@keyframes svcHeadingReveal {
+    to { opacity: 1; transform: translateY(0); }
+}
+.svc-heading-gold { color: #f4a41c; }
+
+/* Animated triple-bar underline */
+.svc-underline-group {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 5px;
+    margin: 0 auto 20px;
+}
+.svc-uline {
+    height: 3px; background: #f4a41c;
+    animation: svcUlineGrow 0.8s ease forwards;
+    width: 0;
+}
+.svc-uline-1 { animation-delay: 0.5s; }
+.svc-uline-2 { animation-delay: 0.65s; background: rgba(244,164,28,0.5); }
+.svc-uline-3 { animation-delay: 0.8s;  background: rgba(244,164,28,0.2); }
+@keyframes svcUlineGrow {
+    to { width: 54px; }
+}
+.svc-uline-2 { animation-name: svcUlineGrow2; }
+.svc-uline-3 { animation-name: svcUlineGrow3; }
+@keyframes svcUlineGrow2 { to { width: 36px; } }
+@keyframes svcUlineGrow3 { to { width: 20px; } }
+
+/* Subtext */
+.svc-subtext {
+    color: #6b7a8d; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    max-width: 480px; margin: 0 auto 36px;
+    line-height: 1.8;
+}
+
+/* Stat badges row */
+.svc-stat-row {
+    display: inline-flex; align-items: center;
+    gap: 0;
+    border: 1.5px solid rgba(244,164,28,0.35);
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(4px);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+}
+.svc-stat-row::before {
+    content: '';
+    position: absolute; top: 0; left: -100%;
+    width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(244,164,28,0.08), transparent);
+    animation: svcStatShimmer 4s ease-in-out infinite 1.5s;
+}
+@keyframes svcStatShimmer {
+    0%   { left: -100%; }
+    100% { left: 200%; }
+}
+.svc-stat-badge {
+    display: flex; flex-direction: column;
+    align-items: center; padding: 18px 36px;
+    position: relative; z-index: 1;
+    transition: background 0.3s ease;
+    cursor: default;
+}
+.svc-stat-badge:hover { background: rgba(244,164,28,0.08); }
+.svc-stat-num {
+    font-family: 'Cinzel', serif;
+    font-size: 26px; font-weight: 900;
+    color: #0a1628; line-height: 1;
+    display: block;
+    animation: svcNumCount 0.6s ease forwards;
+}
+.svc-stat-label {
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: #f4a41c; margin-top: 5px; display: block;
+    white-space: nowrap;
+}
+.svc-stat-divider {
+    width: 1.5px; height: 52px;
+    background: rgba(244,164,28,0.3);
+    flex-shrink: 0;
+}
+
+/* ===== EXPLORE BUTTON ===== */
+.svc-btn-wrap { position: relative; }
+.svc-btn-deco-left,
+.svc-btn-deco-right {
+    position: absolute; top: 50%;
+    transform: translateY(-50%);
+    display: flex; align-items: center; gap: 10px;
+}
+.svc-btn-deco-left  { right: calc(50% + 200px); }
+.svc-btn-deco-right { left:  calc(50% + 200px); }
+.svc-deco-line {
+    width: 60px; height: 1.5px;
+    background: linear-gradient(to right, transparent, rgba(244,164,28,0.5));
+    animation: svcDecoLinePulse 3s ease-in-out infinite;
+}
+.svc-btn-deco-right .svc-deco-line {
+    background: linear-gradient(to left, transparent, rgba(244,164,28,0.5));
+}
+.svc-deco-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #f4a41c; opacity: 0.5;
+    animation: svcDecoLinePulse 3s ease-in-out infinite 0.5s;
+}
+@keyframes svcDecoLinePulse {
+    0%, 100% { opacity: 0.4; }
+    50%       { opacity: 0.9; }
+}
+
+.svc-explore-btn {
+    position: relative; display: inline-flex;
+    align-items: center; overflow: hidden;
+    text-decoration: none;
+    border: 2px solid #0a1628;
+    transition: border-color 0.35s ease, color 0.35s ease;
+}
+.svc-btn-bg-sweep {
+    position: absolute; inset: 0;
+    background: #f4a41c;
+    transform: translateX(-101%);
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+    z-index: 0;
+}
+.svc-explore-btn:hover .svc-btn-bg-sweep { transform: translateX(0); }
+.svc-explore-btn:hover { border-color: #f4a41c; }
+.svc-btn-inner {
+    position: relative; z-index: 1;
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 48px;
+}
+.svc-btn-text {
+    font-size: 10px; font-weight: 800;
+    letter-spacing: 0.45em; text-transform: uppercase;
+    color: #0a1628;
+    transition: color 0.35s ease;
+}
+.svc-explore-btn:hover .svc-btn-text { color: #0a1628; }
+.svc-btn-arrow {
+    display: flex; color: #0a1628;
+    transition: transform 0.35s ease, color 0.35s ease;
+}
+.svc-explore-btn:hover .svc-btn-arrow { transform: translateX(5px); }
+
+/* ===== SERVICE CARD HOVERS — UNCHANGED ===== */
 .svc-card:hover .svc-img     { transform: scale(1.08); }
 .svc-card:hover .svc-overlay { background: linear-gradient(to top,rgba(5,12,25,0.92) 0%,rgba(5,12,25,0.55) 55%,rgba(5,12,25,0.22) 100%) !important; }
 .svc-card:hover .svc-title   { color: #f4a41c !important; }
@@ -731,6 +1045,8 @@
         border-right: 4px solid #f4a41c !important;
         border-left: none !important;
     }
+    .svc-btn-deco-left, .svc-btn-deco-right { display: none; }
+    .svc-stat-badge { padding: 14px 22px; }
 }
 @media (max-width: 640px) {
     .svc-card {
@@ -742,6 +1058,8 @@
         border-right: none !important;
         border-left: none !important;
     }
+    .svc-stat-row { flex-direction: column; }
+    .svc-stat-divider { width: 52px; height: 1.5px; }
 }
 </style>
 
