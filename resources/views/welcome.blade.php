@@ -901,7 +901,8 @@
             }
             $imagePath = $t->image;
             if ($imagePath) {
-                $imageUrl = asset('storage/' . ltrim($imagePath, '/'));
+                // Files are uploaded directly to public_html, not storage
+                $imageUrl = asset(ltrim($imagePath, '/'));
             } else {
                 $imageUrl = 'https://placehold.co/800x520/111/333?text=Review';
             }
