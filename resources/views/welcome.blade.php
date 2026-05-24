@@ -255,120 +255,159 @@
     }
 
     /* ===== SCHEDULE A MEETING SECTION ===== */
-    .sam-section {
-        position: relative;
-        background: #f5f1eb;
-        overflow: hidden;
-        padding: 0;
-    }
-    .sam-bg-svg {
-        position: absolute; inset: 0;
-        width: 100%; height: 100%;
-        pointer-events: none; z-index: 0;
-    }
-    .sam-inner {
-        position: relative; z-index: 2;
-        display: grid; grid-template-columns: 1fr 1fr;
-        min-height: 680px; max-width: 1400px; margin: 0 auto;
-    }
-    .sam-image-col { position: relative; overflow: hidden; }
-    .sam-image-wrap {
-        position: relative; width: 100%; height: 100%; min-height: 600px;
-    }
-    .sam-image-wrap img {
-        width: 100%; height: 100%; object-fit: cover;
-        display: block; transition: transform 1.4s ease;
-    }
-    .sam-image-col:hover .sam-image-wrap img { transform: scale(1.05); }
-    .sam-image-wrap::after {
-        content: ''; position: absolute; inset: 0;
-        background: linear-gradient(to right, rgba(10,22,40,0.18) 0%, transparent 60%),
-                    linear-gradient(to top, rgba(10,22,40,0.45) 0%, transparent 50%);
-        pointer-events: none;
-    }
-    .sam-image-tag {
-        position: absolute; bottom: 32px; left: 32px;
-        display: flex; align-items: center; gap: 10px;
-        background: #f4a41c; padding: 10px 20px; z-index: 5;
-    }
-    .sam-image-tag svg { width: 18px; height: 18px; flex-shrink: 0; }
-    .sam-image-tag span {
-        font-size: 9px; font-weight: 800;
-        letter-spacing: 0.35em; text-transform: uppercase; color: #0a1628;
-    }
-    .sam-form-col {
-        padding: 72px 64px;
-        display: flex; flex-direction: column; justify-content: center;
-        background: rgba(255,255,255,0.72);
-        backdrop-filter: blur(4px);
-        border-left: 1px solid rgba(244,164,28,0.15);
-    }
-    .sam-eyebrow { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-    .sam-eyebrow-line { width: 38px; height: 2px; background: #f4a41c; flex-shrink: 0; }
-    .sam-eyebrow span {
-        font-size: 10px; font-weight: 700;
-        letter-spacing: 0.5em; text-transform: uppercase; color: #f4a41c;
-    }
-    .sam-heading {
-        font-family: 'Cinzel', serif;
-        font-size: clamp(1.8rem, 3vw, 2.8rem);
-        font-weight: 900; color: #0a1628;
-        text-transform: uppercase; line-height: 1.1; margin-bottom: 14px;
-    }
-    .sam-heading em { color: #f4a41c; font-style: normal; }
-    .sam-subtext {
-        font-size: 13px; color: #6b7a8d;
-        line-height: 1.7; margin-bottom: 36px; max-width: 400px;
-    }
-    .sam-form { display: flex; flex-direction: column; gap: 18px; }
-    .sam-field { position: relative; }
-    .sam-input {
-        width: 100%; background: #ffffff;
-        border: 1.5px solid #e2dbd0; color: #0a1628;
-        font-family: inherit; font-size: 13px; font-weight: 500;
-        padding: 14px 18px; outline: none;
-        transition: border-color 0.25s ease, box-shadow 0.25s ease;
-        border-radius: 0; appearance: none;
-    }
-    .sam-input::placeholder {
-        color: #9ca3a8; font-size: 12px;
-        font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
-    }
-    .sam-input:focus {
-        border-color: #f4a41c;
-        box-shadow: 0 0 0 3px rgba(244,164,28,0.1);
-    }
-    .sam-select-wrap { position: relative; }
-    .sam-select { cursor: pointer; padding-right: 44px; color: #9ca3a8; }
-    .sam-select:focus, .sam-select:valid { color: #0a1628; }
-    .sam-select-chevron {
-        position: absolute; right: 16px; top: 50%;
-        transform: translateY(-50%); pointer-events: none; color: #f4a41c;
-    }
-    .sam-select-chevron svg { width: 16px; height: 16px; }
-    .sam-btn {
-        display: flex; align-items: center; justify-content: center;
-        gap: 10px; padding: 16px 36px;
-        background: #0a1628; color: #ffffff;
-        border: 2px solid #0a1628;
-        font-family: inherit; font-size: 10px; font-weight: 800;
-        letter-spacing: 0.4em; text-transform: uppercase;
-        cursor: pointer; transition: all 0.3s ease;
-        margin-top: 8px; width: 100%;
-    }
-    .sam-btn svg { width: 16px; height: 16px; transition: transform 0.3s ease; }
-    .sam-btn:hover { background: #f4a41c; border-color: #f4a41c; color: #0a1628; }
-    .sam-btn:hover svg { transform: translateX(4px); }
+.sam-section {
+    position: relative;
+    background: #f5f1eb;
+    overflow: hidden;
+    padding: 80px 0;           /* padding top/bottom so section has breathing room */
+}
+.sam-bg-svg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+}
+.sam-inner {
+    position: relative; z-index: 2;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;       /* vertically center both columns */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
 
-    @media (max-width: 1024px) {
-        .sam-inner { grid-template-columns: 1fr; }
-        .sam-image-col { display: none; }
-        .sam-form-col { padding: 60px 40px; }
+/* ── IMAGE COLUMN ── */
+.sam-image-col {
+    position: relative;
+}
+.sam-image-frame {
+    position: relative;
+    width: 100%;
+    height: 520px;             /* FIXED HEIGHT — matches reference */
+    border-radius: 2px;
+    overflow: hidden;
+    /* shadow like the reference screenshot */
+    box-shadow:
+        0 20px 60px rgba(10, 22, 40, 0.22),
+        0 8px 24px  rgba(10, 22, 40, 0.14),
+        6px 6px 0   rgba(244, 164, 28, 0.35);  /* gold offset shadow */
+}
+.sam-image-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 1.4s ease;
+}
+.sam-image-col:hover .sam-image-frame img {
+    transform: scale(1.04);
+}
+
+/* subtle dark gradient at bottom of image */
+.sam-image-frame::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent 55%,
+        rgba(10, 22, 40, 0.35) 100%
+    );
+    pointer-events: none;
+}
+
+.sam-image-tag {
+    position: absolute; bottom: 24px; left: 24px;
+    display: flex; align-items: center; gap: 10px;
+    background: #f4a41c; padding: 10px 20px; z-index: 5;
+}
+.sam-image-tag svg { width: 18px; height: 18px; flex-shrink: 0; }
+.sam-image-tag span {
+    font-size: 9px; font-weight: 800;
+    letter-spacing: 0.35em; text-transform: uppercase; color: #0a1628;
+}
+
+/* ── FORM COLUMN ── */
+.sam-form-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.sam-eyebrow { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.sam-eyebrow-line { width: 38px; height: 2px; background: #f4a41c; flex-shrink: 0; }
+.sam-eyebrow span {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.5em; text-transform: uppercase; color: #f4a41c;
+}
+.sam-heading {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 900; color: #0a1628;
+    text-transform: uppercase; line-height: 1.1; margin-bottom: 14px;
+}
+.sam-heading em { color: #f4a41c; font-style: normal; }
+.sam-subtext {
+    font-size: 13px; color: #6b7a8d;
+    line-height: 1.7; margin-bottom: 32px; max-width: 400px;
+}
+.sam-form { display: flex; flex-direction: column; gap: 16px; }
+.sam-field { position: relative; }
+.sam-input {
+    width: 100%; background: #ffffff;
+    border: 1.5px solid #e2dbd0; color: #0a1628;
+    font-family: inherit; font-size: 13px; font-weight: 500;
+    padding: 14px 18px; outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    border-radius: 0; appearance: none;
+}
+.sam-input::placeholder {
+    color: #9ca3a8; font-size: 12px;
+    font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+}
+.sam-input:focus {
+    border-color: #f4a41c;
+    box-shadow: 0 0 0 3px rgba(244,164,28,0.1);
+}
+.sam-select-wrap { position: relative; }
+.sam-select { cursor: pointer; padding-right: 44px; color: #9ca3a8; }
+.sam-select:focus, .sam-select:valid { color: #0a1628; }
+.sam-select-chevron {
+    position: absolute; right: 16px; top: 50%;
+    transform: translateY(-50%); pointer-events: none; color: #f4a41c;
+}
+.sam-select-chevron svg { width: 16px; height: 16px; }
+.sam-btn {
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; padding: 16px 36px;
+    background: #0a1628; color: #ffffff;
+    border: 2px solid #0a1628;
+    font-family: inherit; font-size: 10px; font-weight: 800;
+    letter-spacing: 0.4em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.3s ease;
+    margin-top: 8px; width: 100%;
+}
+.sam-btn svg { width: 16px; height: 16px; transition: transform 0.3s ease; }
+.sam-btn:hover { background: #f4a41c; border-color: #f4a41c; color: #0a1628; }
+.sam-btn:hover svg { transform: translateX(4px); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+    .sam-inner {
+        grid-template-columns: 1fr;
+        gap: 48px;
+        padding: 0 32px;
     }
-    @media (max-width: 640px) {
-        .sam-form-col { padding: 48px 24px; }
-        .sam-heading { font-size: 1.8rem; }
-    }
+    .sam-image-frame { height: 400px; }
+}
+@media (max-width: 768px) {
+    .sam-section { padding: 60px 0; }
+    .sam-inner { padding: 0 20px; gap: 36px; }
+    .sam-image-frame { height: 300px; }
+    .sam-heading { font-size: 1.8rem; }
+}
+@media (max-width: 480px) {
+    .sam-image-frame { height: 240px; }
+}
 </style>
 @endsection
 
@@ -1751,34 +1790,34 @@
     </svg>
 
     <div class="sam-inner">
-        {{-- LEFT: meeting section image from admin --}}
+        {{-- LEFT: meeting section image --}}
         <div class="sam-image-col" data-aos="fade-right">
             @php
-    $settings = $settings ?? \App\Models\Setting::first();
-    $samImg = null;
+                $settings = $settings ?? \App\Models\Setting::first();
+                $samImg = null;
 
-    if (!empty($settings->meeting_section_image)) {
-        $rawPath = ltrim($settings->meeting_section_image, '/');
+                if (!empty($settings->meeting_section_image)) {
+                    $rawPath = ltrim($settings->meeting_section_image, '/');
+                    if (str_starts_with($rawPath, 'http')) {
+                        $samImg = $rawPath;
+                    } else {
+                        $samImg = asset($rawPath);
+                    }
+                }
 
-        if (str_starts_with($rawPath, 'http')) {
-            $samImg = $rawPath;
-        } else {
-            $samImg = asset($rawPath);
-        }
-    }
+                if (!$samImg) {
+                    $featuredProject = $projects->first() ?? null;
+                    $samImg = $featuredProject
+                        ? asset(ltrim(Str::replaceFirst('storage/', '', $featuredProject->featured_image), '/'))
+                        : 'https://placehold.co/800x900/1a1a2e/f4a41c?text=Trikon+Holdings';
+                }
+            @endphp
 
-    if (!$samImg) {
-        $featuredProject = $projects->first() ?? null;
-        $samImg = $featuredProject
-            ? asset(ltrim(Str::replaceFirst('storage/', '', $featuredProject->featured_image), '/'))
-            : 'https://placehold.co/800x900/1a1a2e/f4a41c?text=Trikon+Holdings';
-    }
-@endphp
-            <div class="sam-image-wrap">
+            <div class="sam-image-frame">
                 <img src="{{ $samImg }}" alt="Schedule a Meeting"
-                     onerror="this.src='https://placehold.co/800x900/1a1a2e/f4a41c?text=Trikon+Holdings';">
+                     onerror="this.src='https://placehold.co/600x520/1a1a2e/f4a41c?text=Trikon+Holdings';">
                 <div class="sam-image-tag">
-                    <svg viewBox="0 0 24 24" fill="#f4a41c"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+                    <svg viewBox="0 0 24 24" fill="#0a1628"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
                     <span>Book an Appointment</span>
                 </div>
             </div>
