@@ -890,170 +890,206 @@
     </div>
 </section>
 
-<!-- SECTION 5: STUNNING CUSTOMER REVIEWS -->
+<!-- SECTION 5: CUSTOMER REVIEWS -->
 @php 
     $testimonialsData = \App\Models\Testimonial::where('is_active', true)
         ->get()
         ->map(function($t) {
-
             $vId = '';
-
-            if ($t->video_url && preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $t->video_url, $m)) { 
-                $vId = $m[1]; 
+            if ($t->video_url && preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $t->video_url, $m)) {
+                $vId = $m[1];
             }
-
-            // FIX IMAGE URL
             $imagePath = $t->image;
-
             if ($imagePath) {
-
-                // If image already contains storage/
-            if (str_contains($imagePath, 'storage/')) {
-
-                $imageUrl = asset($imagePath);
-
+                $imageUrl = asset('storage/' . ltrim($imagePath, '/'));
             } else {
-
-                    $imageUrl = asset('storage/' . ltrim($imagePath, '/'));
-
-               }
-
-            } else {
-
-                   $imageUrl = 'https://placehold.co/400x540/111/333?text=Review';
-
+                $imageUrl = 'https://placehold.co/800x520/111/333?text=Review';
             }
-
             return [
-                'name' => $t->name,
-                'role' => $t->role,
-                'text' => $t->content,
+                'name'     => $t->name,
+                'role'     => $t->role,
+                'text'     => $t->content,
                 'video_id' => $vId ?: null,
-                'image' => $imageUrl,
+                'image'    => $imageUrl,
             ];
         })
         ->values();
 @endphp
 
 @if($testimonialsData->count() > 0)
-<section class="reviews-section" id="customer-reviews-section">
+<section class="py-24 bg-white" id="testimonials-section">
+    <div class="max-w-7xl mx-auto px-6">
 
-    <!-- LEFT PANEL -->
-    <div class="reviews-left-panel" data-aos="fade-right">
-        <div class="reviews-eyebrow">
-            <div class="reviews-eyebrow-line"></div>
-            <span>Client Stories</span>
+        {{-- Section header --}}
+        <div class="mb-14" data-aos="fade-up">
+            <p class="text-xs font-bold uppercase tracking-[0.5em] text-gray-400 mb-3">Testimonial</p>
+            <h2 class="text-gray-900 text-4xl md:text-5xl font-black uppercase leading-tight tracking-tight">
+                What Customers<br>
+                <span class="text-[#0a2240]">Say About Us</span>
+            </h2>
         </div>
 
-        <h2 class="reviews-main-heading">
-            What Our<br>
-            <em>Clients</em>
-            Say
-        </h2>
+        {{-- Testimonial layout --}}
+        <div class="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center" data-aos="fade-up" data-aos-delay="100">
 
-        <p class="reviews-subtext">
-            Real words from real people who trusted Trikon Holdings to deliver their dream homes and investments.
-        </p>
+            {{-- LEFT: Media panel --}}
+            <div class="w-full lg:w-[55%] flex-shrink-0">
+                <div class="relative overflow-hidden bg-gray-900" style="aspect-ratio:16/10;">
 
-        <div class="reviews-stars">
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        </div>
-
-        <div class="reviews-counter">
-            <span class="reviews-counter-num">{{ $testimonialsData->count() }}+</span>
-            <span class="reviews-counter-label">Happy<br>Clients</span>
-        </div>
-
-        <div class="reviews-scroll-hint" style="margin-top: 48px;">
-            <div class="reviews-scroll-hint-arrow"></div>
-            <span>Click to read stories</span>
-        </div>
-
-        <div class="reviews-deco-num">{{ $testimonialsData->count() }}</div>
-    </div>
-
-    <!-- RIGHT PANEL: Draggable Image Grid -->
-    <div class="reviews-right-panel">
-        <div class="reviews-grid-wrapper" id="reviewsGridWrapper">
-            <div class="reviews-grid" id="reviewsGrid">
-                @foreach($testimonialsData as $idx => $t)
-                <div 
-                    class="review-thumb" 
-                    data-index="{{ $idx }}"
-                    onclick="openReviewModal({{ $idx }})"
-                >
-                    <img 
-                        src="{{ $t['image'] }}" 
-                        alt="{{ $t['name'] }}"
-                        onerror="this.onerror=null;this.src='https://placehold.co/400x540/111/333?text=Review';"
-                        loading="lazy"
-                    >
-                    @if($t['video_id'])
-                    <div class="review-thumb-video-badge">
-                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                        Video
+                    {{-- Video or Image --}}
+                    <div id="tsMediaWrap" class="absolute inset-0">
+                        {{-- Filled by JS --}}
                     </div>
-                    @endif
-                    <div class="review-thumb-overlay">
-                        <div class="review-thumb-name">{{ $t['name'] }}</div>
-                        <div class="review-thumb-role">{{ $t['role'] }}</div>
+
+                    {{-- Overlay gradient --}}
+                    <div class="absolute inset-0 pointer-events-none" style="background:linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.05) 55%);"></div>
+
+                    {{-- Play button (hidden when video playing) --}}
+                    <button id="tsPlayBtn"
+                        onclick="tsPlayVideo()"
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white/95 rounded-full flex items-center justify-center z-20 hover:scale-110 transition-transform duration-300 shadow-xl"
+                        aria-label="Play video">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="#0a2240" style="margin-left:4px"><path d="M5 3l14 9-14 9V3z"/></svg>
+                    </button>
+
+                    {{-- Caption bar --}}
+                    <div class="absolute bottom-0 left-0 right-0 p-6 z-10 flex items-end justify-between">
+                        <div>
+                            <p id="tsCaptionText" class="text-white font-bold uppercase text-sm leading-snug tracking-wide max-w-xs"></p>
+                            <p id="tsCaptionRole" class="text-white/60 text-[10px] font-semibold uppercase tracking-[0.25em] mt-1"></p>
+                        </div>
+                        <div class="text-white/50 text-[9px] font-black uppercase tracking-[0.3em] border border-white/20 px-2 py-1">
+                            TRIKON HOLDINGS
+                        </div>
                     </div>
-                    <div class="review-thumb-icon">
-                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    </div>
+
                 </div>
-                @endforeach
             </div>
+
+            {{-- RIGHT: Text panel --}}
+            <div class="flex-1 min-w-0">
+                <h3 id="tsTitle" class="text-[#0a2240] text-xl font-extrabold leading-snug mb-4"></h3>
+                <p id="tsBody" class="text-gray-500 text-sm leading-relaxed mb-6"></p>
+                <p id="tsName" class="text-gray-900 font-bold text-sm"></p>
+                <p id="tsRole" class="text-gray-400 text-xs mt-1"></p>
+
+                {{-- Progress dots --}}
+                <div id="tsDots" class="flex gap-2 mt-6 mb-8"></div>
+
+                {{-- Navigation arrows --}}
+                <div class="flex gap-3 mt-2">
+                    <button onclick="tsNavigate(-1)"
+                        class="w-11 h-11 flex items-center justify-center border border-gray-300 text-gray-700 hover:bg-[#0a2240] hover:text-white hover:border-[#0a2240] transition-all duration-200 text-lg font-bold"
+                        aria-label="Previous">&#8592;</button>
+                    <button onclick="tsNavigate(1)"
+                        class="w-11 h-11 flex items-center justify-center border border-gray-300 text-gray-700 hover:bg-[#0a2240] hover:text-white hover:border-[#0a2240] transition-all duration-200 text-lg font-bold"
+                        aria-label="Next">&#8594;</button>
+                </div>
+            </div>
+
         </div>
+
     </div>
 </section>
 
-<!-- FULLSCREEN REVIEW MODAL -->
-<div class="review-modal-backdrop" id="reviewModal" onclick="handleModalBackdropClick(event)">
-    
-    <!-- LEFT: Full Image or Video -->
-    <div class="review-modal-media" id="reviewModalMedia">
-        <!-- Filled by JS -->
-        <div class="review-modal-media-overlay"></div>
-        <div class="review-modal-counter" id="reviewModalCounter">01 / 01</div>
-    </div>
+<script>
+(function() {
+    const reviews = @json($testimonialsData);
+    let current = 0;
+    let videoActive = false;
 
-    <!-- RIGHT: Review Content -->
-    <div class="review-modal-content">
-        <button class="review-modal-close" onclick="closeReviewModal()" title="Close">✕</button>
+    const mediaWrap  = document.getElementById('tsMediaWrap');
+    const playBtn    = document.getElementById('tsPlayBtn');
+    const captText   = document.getElementById('tsCaptionText');
+    const captRole   = document.getElementById('tsCaptionRole');
+    const titleEl    = document.getElementById('tsTitle');
+    const bodyEl     = document.getElementById('tsBody');
+    const nameEl     = document.getElementById('tsName');
+    const roleEl     = document.getElementById('tsRole');
+    const dotsEl     = document.getElementById('tsDots');
 
-        <div class="review-modal-content-inner" id="reviewModalContentInner">
-            <div class="review-modal-eyebrow">
-                <div class="review-modal-eyebrow-line"></div>
-                <span>Client Testimonial</span>
-            </div>
+    function buildDots() {
+        dotsEl.innerHTML = '';
+        reviews.forEach(function(_, i) {
+            const d = document.createElement('button');
+            d.style.cssText = 'width:8px;height:8px;border-radius:50%;border:none;cursor:pointer;transition:all 0.3s;background:' + (i === current ? '#0a2240' : '#d1d5db');
+            d.onclick = function() { goTo(i); };
+            dotsEl.appendChild(d);
+        });
+    }
 
-            <p class="review-modal-quote" id="reviewModalQuote"></p>
+    function render(idx) {
+        const r = reviews[idx];
+        videoActive = false;
 
-            <div class="review-modal-stars">
-                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            </div>
+        // Image or video thumbnail
+        mediaWrap.innerHTML = '';
+        const img = document.createElement('img');
+        img.src = r.image || 'https://placehold.co/800x520/111/333?text=Review';
+        img.alt = r.name;
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;inset:0;transition:opacity 0.4s;';
+        img.onerror = function() { this.src='https://placehold.co/800x520/111/333?text=Review'; };
+        mediaWrap.appendChild(img);
 
-            <div class="review-modal-author">
-                <div class="review-modal-author-name" id="reviewModalName"></div>
-                <div class="review-modal-author-role" id="reviewModalRole"></div>
-            </div>
+        // Show/hide play button
+        playBtn.style.display = r.video_id ? 'flex' : 'none';
 
-            <div class="review-modal-nav">
-                <button class="review-modal-nav-btn" onclick="navigateModal(-1)" title="Previous">&#8592;</button>
-                <button class="review-modal-nav-btn" onclick="navigateModal(1)" title="Next">&#8594;</button>
-            </div>
-        </div>
-    </div>
-</div>
+        // Caption
+        captText.textContent = r.text ? r.text.substring(0, 80) + (r.text.length > 80 ? '...' : '') : '';
+        captRole.textContent  = r.role || '';
+
+        // Right panel
+        titleEl.textContent = 'Cherished Moments from Our Homeowner';
+        bodyEl.textContent  = r.text || '';
+        nameEl.textContent  = r.name || '';
+        roleEl.textContent  = r.role || '';
+
+        buildDots();
+    }
+
+    window.tsPlayVideo = function() {
+        const r = reviews[current];
+        if (!r.video_id) return;
+        mediaWrap.innerHTML = '';
+        const iframe = document.createElement('iframe');
+        iframe.src = 'https://www.youtube.com/embed/' + r.video_id + '?autoplay=1&rel=0&modestbranding=1';
+        iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        mediaWrap.appendChild(iframe);
+        playBtn.style.display = 'none';
+        videoActive = true;
+    };
+
+    function goTo(idx) {
+        // Stop any playing video
+        if (videoActive) {
+            const r = reviews[current];
+            const img = document.createElement('img');
+            img.src = r.image || 'https://placehold.co/800x520/111/333?text=Review';
+            img.alt = r.name;
+            img.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;inset:0;';
+            mediaWrap.innerHTML = '';
+            mediaWrap.appendChild(img);
+        }
+        current = idx;
+        render(current);
+    }
+
+    window.tsNavigate = function(dir) {
+        goTo((current + dir + reviews.length) % reviews.length);
+    };
+
+    // Keyboard
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft')  window.tsNavigate(-1);
+        if (e.key === 'ArrowRight') window.tsNavigate(1);
+    });
+
+    // Init
+    if (reviews.length > 0) render(0);
+})();
+</script>
 @endif
 
 <!-- SECTION 6: INQUIRY FORM 2 -->
