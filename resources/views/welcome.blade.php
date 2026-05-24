@@ -607,20 +607,17 @@
         <div style="width:44px;height:3px;background:#f4a41c;margin:16px auto 0;"></div>
     </div>
 
-    {{-- ===== SERVICE CARDS WITH ZIGZAG GOLD BORDER ===== --}}
+    {{-- ===== SERVICE CARDS ===== --}}
     @php $services = \App\Models\Service::all(); $svcTotal = $services->count(); @endphp
+
     <div style="position:relative;z-index:10;display:flex;flex-wrap:nowrap;align-items:stretch;gap:0;">
         @foreach($services as $index => $service)
         @php
             $servImg = $service->hero_image;
             $servUrl = asset(ltrim(Str::replaceFirst('storage/', '', $servImg), '/'));
-            $isOdd   = $index % 2 === 0; // 0,2,4 = odd position = top border
+            $isOdd   = $index % 2 === 0; // 0,2,4 = top border
             $isLast  = $index === $svcTotal - 1;
 
-            // Border logic per your spec:
-            // Odd  (0,2,4): border-top + border-right
-            // Even (1,3):   border-bottom + border-right
-            // Last card:    border-top only (no right)
             if ($isLast) {
                 $borderTop    = true;
                 $borderBottom = false;
@@ -635,10 +632,11 @@
                 $borderRight  = true;
             }
 
-            $borderStyle = 'border-top:'.    ($borderTop    ? '3px solid #f4a41c' : 'none').';'.
-                           'border-bottom:'. ($borderBottom ? '3px solid #f4a41c' : 'none').';'.
-                           'border-right:'.  ($borderRight  ? '3px solid #f4a41c' : 'none').';'.
-                           'border-left:none;';
+            $borderStyle =
+                'border-top:'    . ($borderTop    ? '6px solid #f4a41c'         : 'none') . ';' .
+                'border-bottom:' . ($borderBottom ? '6px solid #f4a41c'         : 'none') . ';' .
+                'border-right:'  . ($borderRight  ? '4px solid #f4a41c'         : 'none') . ';' .
+                'border-left:none;';
         @endphp
 
         <a href="{{ route('services.show', $service->slug) }}"
@@ -681,7 +679,6 @@
                            transition:color 0.4s ease;">
                     {{ $service->name }}
                 </h3>
-                {{-- Gold underline that expands on hover --}}
                 <div class="svc-line"
                      style="width:24px;height:2px;background:#f4a41c;
                             margin:0 auto;transition:width 0.4s ease;"></div>
@@ -718,20 +715,21 @@
 </section>
 
 <style>
-.svc-card:hover .svc-img    { transform: scale(1.08); }
+.svc-card:hover .svc-img     { transform: scale(1.08); }
 .svc-card:hover .svc-overlay { background: linear-gradient(to top,rgba(5,12,25,0.92) 0%,rgba(5,12,25,0.55) 55%,rgba(5,12,25,0.22) 100%) !important; }
-.svc-card:hover .svc-title  { color: #f4a41c !important; }
-.svc-card:hover .svc-line   { width: 44px !important; }
-.svc-card:hover .svc-bar    { transform: scaleX(1) !important; }
+.svc-card:hover .svc-title   { color: #f4a41c !important; }
+.svc-card:hover .svc-line    { width: 44px !important; }
+.svc-card:hover .svc-bar     { transform: scaleX(1) !important; }
 
 @media (max-width: 1100px) {
     .svc-card {
         flex: 1 0 calc(33.333% - 2px) !important;
         min-width: calc(33.333% - 2px) !important;
         height: 380px !important;
-        border-top: 3px solid #f4a41c !important;
+        border-top: 6px solid #f4a41c !important;
         border-bottom: none !important;
-        border-right: 1px solid rgba(244,164,28,0.3) !important;
+        border-right: 4px solid #f4a41c !important;
+        border-left: none !important;
     }
 }
 @media (max-width: 640px) {
@@ -739,7 +737,7 @@
         flex: none !important;
         min-width: 100% !important;
         height: 260px !important;
-        border-top: 3px solid #f4a41c !important;
+        border-top: 6px solid #f4a41c !important;
         border-bottom: none !important;
         border-right: none !important;
         border-left: none !important;
