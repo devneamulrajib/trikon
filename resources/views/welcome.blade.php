@@ -1105,6 +1105,7 @@
 
 {{-- ============================================================
      SECTION 4.5: FEATURED SHOWCASE — between Services & Testimonials
+     Auto-playing uploaded video · Glassy arrows · Eye-catching design
      ============================================================ --}}
 @php
     $showcaseSlides = collect($settings->featured_showcase ?? [])
@@ -1115,456 +1116,1024 @@
 @if($showcaseSlides->count() > 0)
 <section class="fsc-section" id="featured-showcase">
 
-    {{-- SLIDES WRAPPER --}}
+    {{-- ── SLIDES WRAPPER ── --}}
     <div class="fsc-slides-wrap" id="fscSlidesWrap">
         @foreach($showcaseSlides as $i => $slide)
         @php
-            $rawBg  = $slide['bg_image'] ?? '';
-            $bgUrl  = $rawBg
+            /* Background image */
+            $rawBg = $slide['bg_image'] ?? '';
+            $bgUrl = $rawBg
                 ? (str_starts_with($rawBg, 'http') ? $rawBg : asset(ltrim($rawBg, '/')))
                 : 'https://placehold.co/1920x1080/0a1628/f4a41c?text=Showcase';
 
-            $vidId  = null;
-            $vu     = $slide['video_url'] ?? '';
-            if ($vu) {
-                if (preg_match('/youtu\.be\/([^\?\/]+)/', $vu, $m))         $vidId = $m[1];
-                elseif (preg_match('/v=([^\&]+)/', $vu, $m))                $vidId = $m[1];
-                elseif (preg_match('/embed\/([^\?\/]+)/', $vu, $m))         $vidId = $m[1];
+            /* Uploaded video — stored as a file path, NOT a YouTube URL */
+            $rawVid   = $slide['video_url'] ?? '';
+            $videoUrl = null;
+            if ($rawVid) {
+                $videoUrl = str_starts_with($rawVid, 'http')
+                    ? $rawVid
+                    : asset('storage/' . ltrim($rawVid, '/'));
             }
-            $thumb  = $vidId
-                ? "https://img.youtube.com/vi/{$vidId}/maxresdefault.jpg"
-                : null;
         @endphp
 
         <div class="fsc-slide {{ $i === 0 ? 'fsc-active' : '' }}"
-             data-index="{{ $i }}"
-             data-vid="{{ $vidId ?? '' }}">
+             data-index="{{ $i }}">
 
-            {{-- BG IMAGE WITH KEN BURNS --}}
+            {{-- Ken Burns background --}}
             <div class="fsc-bg-wrap">
                 <div class="fsc-bg-img" style="background-image:url('{{ $bgUrl }}');"></div>
             </div>
 
-            {{-- DARK OVERLAY --}}
+            {{-- Cinematic multi-layer overlay --}}
             <div class="fsc-overlay"></div>
 
-            {{-- CONTENT --}}
+            {{-- Film-grain texture --}}
+            <div class="fsc-grain" aria-hidden="true"></div>
+
+            {{-- Gold accent line — left edge --}}
+            <div class="fsc-edge-line" aria-hidden="true"></div>
+
+            {{-- ── MAIN CONTENT ── --}}
             <div class="fsc-content-wrap">
                 <div class="fsc-content">
+
+                    {{-- Eyebrow badge --}}
                     @if(!empty($slide['badge']))
-                    <div class="fsc-badge">{{ $slide['badge'] }}</div>
+                    <div class="fsc-badge-row">
+                        <span class="fsc-badge-pulse"></span>
+                        <span class="fsc-badge">{{ $slide['badge'] }}</span>
+                    </div>
                     @endif
 
-                    <h2 class="fsc-title">{{ $slide['title'] ?? '' }}</h2>
+                    {{-- Slide number watermark --}}
+                    <div class="fsc-slide-num-bg" aria-hidden="true">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</div>
 
+                    {{-- Title --}}
+                    <h2 class="fsc-title">
+                        @php
+                            $words = explode(' ', $slide['title'] ?? '');
+                            $half  = ceil(count($words) / 2);
+                            $line1 = implode(' ', array_slice($words, 0, $half));
+                            $line2 = implode(' ', array_slice($words, $half));
+                        @endphp
+                        <span class="fsc-title-line">{{ $line1 }}</span>
+                        @if($line2)<span class="fsc-title-line fsc-title-gold">{{ $line2 }}</span>@endif
+                    </h2>
+
+                    {{-- Divider --}}
+                    <div class="fsc-divider" aria-hidden="true">
+                        <div class="fsc-divider-line"></div>
+                        <div class="fsc-divider-diamond"></div>
+                        <div class="fsc-divider-line fsc-divider-line-short"></div>
+                    </div>
+
+                    {{-- Subtitle --}}
                     @if(!empty($slide['subtitle']))
                     <p class="fsc-subtitle">{{ $slide['subtitle'] }}</p>
                     @endif
 
-                    @if(!empty($slide['location']))
-                    <div class="fsc-location">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                        <span>{{ $slide['location'] }}</span>
-                    </div>
-                    @endif
+                    {{-- Bottom meta row --}}
+                    <div class="fsc-meta">
+                        @if(!empty($slide['location']))
+                        <div class="fsc-location">
+                            <div class="fsc-location-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                            </div>
+                            <span>{{ $slide['location'] }}</span>
+                        </div>
+                        @endif
 
-                    @if(!empty($slide['project_link']))
-                    <a href="{{ $slide['project_link'] }}" class="fsc-cta">
-                        <span>View Project</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    </a>
-                    @endif
+                        @if(!empty($slide['project_link']))
+                        <a href="{{ $slide['project_link'] }}" class="fsc-cta">
+                            <span class="fsc-cta-text">View Project</span>
+                            <span class="fsc-cta-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </span>
+                        </a>
+                        @endif
+                    </div>
+
                 </div>
             </div>
 
-            {{-- CORNER VIDEO BOX --}}
-            @if($vidId)
-            <div class="fsc-video-box" id="fscVideoBox{{ $i }}">
-                <div class="fsc-video-thumb" id="fscThumb{{ $i }}">
-                    <img src="{{ $thumb }}"
-                         alt="Interior Video"
-                         onerror="this.src='https://placehold.co/480x270/0a1628/f4a41c?text=Video';">
-                    <button class="fsc-play-btn" onclick="fscPlayVideo({{ $i }}, '{{ $vidId }}')" aria-label="Play video">
-                        <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
-                    </button>
-                    <div class="fsc-video-label">
-                        <span>Interior Tour</span>
+            {{-- ── CORNER VIDEO BOX — GLASSMORPHISM ── --}}
+            @if($videoUrl)
+            <div class="fsc-vbox" id="fscVbox{{ $i }}">
+                <div class="fsc-vglass">
+
+                    {{-- Header bar --}}
+                    <div class="fsc-vhead">
+                        <span class="fsc-vhead-dot"></span>
+                        <span class="fsc-vhead-label">Interior Preview</span>
+                        <button
+                            class="fsc-vmute"
+                            id="fscMuteBtn{{ $i }}"
+                            onclick="fscToggleMute({{ $i }})"
+                            aria-label="Toggle mute"
+                            title="Toggle sound">
+                            {{-- Muted icon (default — video starts muted) --}}
+                            <svg id="fscMuteIcon{{ $i }}" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                            </svg>
+                        </button>
                     </div>
+
+                    {{-- Video --}}
+                    <div class="fsc-vplayer">
+                        <video
+                            id="fscVideo{{ $i }}"
+                            src="{{ $videoUrl }}"
+                            autoplay
+                            muted
+                            loop
+                            playsinline
+                            preload="metadata"
+                            class="fsc-vel">
+                        </video>
+                        {{-- Gloss sheen --}}
+                        <div class="fsc-vsheen" aria-hidden="true"></div>
+                    </div>
+
+                    {{-- Progress bar --}}
+                    <div class="fsc-vfoot">
+                        <div class="fsc-vprogwrap">
+                            <div class="fsc-vprogbar" id="fscVProg{{ $i }}"></div>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="fsc-video-frame" id="fscFrame{{ $i }}" style="display:none;">
-                    {{-- iframe injected by JS --}}
-                </div>
+                {{-- Glow effect behind glass card --}}
+                <div class="fsc-vglow" aria-hidden="true"></div>
             </div>
             @endif
 
         </div>
         @endforeach
+    </div>{{-- /slides --}}
+
+    {{-- ── SLIDE COUNTER (top-left) ── --}}
+    <div class="fsc-counter" aria-live="polite">
+        <span class="fsc-cur" id="fscCurNum">01</span>
+        <div class="fsc-ctrack">
+            <div class="fsc-cfill" id="fscCFill"></div>
+        </div>
+        <span class="fsc-ctotal">{{ str_pad($showcaseSlides->count(), 2, '0', STR_PAD_LEFT) }}</span>
     </div>
 
-    {{-- SLIDE COUNTER --}}
-    <div class="fsc-counter">
-        <span id="fscCurNum">01</span>
-        <span class="fsc-counter-sep"></span>
-        <span class="fsc-counter-total">{{ str_pad($showcaseSlides->count(), 2, '0', STR_PAD_LEFT) }}</span>
-    </div>
-
-    {{-- NAVIGATION --}}
-    <div class="fsc-nav">
-        <button class="fsc-nav-btn fsc-nav-prev" onclick="fscNav(-1)" aria-label="Previous slide">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    {{-- ── GLASSY NAV ARROWS (bottom-left) ── --}}
+    <div class="fsc-nav" role="group" aria-label="Slide navigation">
+        <button class="fsc-nbtn" id="fscPrev" onclick="fscNav(-1)" aria-label="Previous slide">
+            <div class="fsc-nglass">
+                <div class="fsc-nshine" aria-hidden="true"></div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="15 18 9 12 15 6"/>
+                </svg>
+            </div>
         </button>
-        <button class="fsc-nav-btn fsc-nav-next" onclick="fscNav(1)" aria-label="Next slide">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <button class="fsc-nbtn" id="fscNext" onclick="fscNav(1)" aria-label="Next slide">
+            <div class="fsc-nglass">
+                <div class="fsc-nshine" aria-hidden="true"></div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </div>
         </button>
     </div>
 
-    {{-- PROGRESS BAR --}}
-    <div class="fsc-progress-wrap">
-        <div class="fsc-progress-bar" id="fscProgressBar"></div>
-    </div>
-
-    {{-- DOTS --}}
-    <div class="fsc-dots" id="fscDots">
+    {{-- ── VERTICAL PILL DOTS (right center) ── --}}
+    <div class="fsc-dots" id="fscDots" role="tablist" aria-label="Slides">
         @foreach($showcaseSlides as $i => $slide)
-        <button class="fsc-dot {{ $i === 0 ? 'fsc-dot-active' : '' }}"
-                onclick="fscGoTo({{ $i }})"
-                aria-label="Go to slide {{ $i + 1 }}">
+        <button
+            class="fsc-dot {{ $i === 0 ? 'fsc-dot-on' : '' }}"
+            onclick="fscGoTo({{ $i }})"
+            role="tab"
+            aria-label="Slide {{ $i + 1 }}"
+            aria-selected="{{ $i === 0 ? 'true' : 'false' }}">
+            <span class="fsc-dot-pip"></span>
         </button>
         @endforeach
     </div>
 
+    {{-- ── BOTTOM PROGRESS BAR ── --}}
+    <div class="fsc-pbar-wrap" aria-hidden="true">
+        <div class="fsc-pbar" id="fscPBar"></div>
+    </div>
+
+    {{-- ── SCROLL NUDGE (bottom-center) ── --}}
+    <div class="fsc-scroll" aria-hidden="true">
+        <div class="fsc-scroll-wire"></div>
+        <div class="fsc-scroll-bead"></div>
+        <span class="fsc-scroll-txt">SCROLL</span>
+    </div>
+
 </section>
 
+{{-- ============================================================
+     SECTION 4.5 — STYLES
+     ============================================================ --}}
 <style>
-/* ===== FEATURED SHOWCASE SECTION ===== */
+/* ── ROOT / TOKENS ────────────────────────────────────────────── */
 .fsc-section {
+    --fsc-gold:   #f4a41c;
+    --fsc-dark:   #050c1a;
+    --fsc-navy:   #0a1628;
+    --fsc-white:  #ffffff;
+    --fsc-glass:  rgba(8, 18, 36, 0.52);
+    --fsc-border: rgba(255, 255, 255, 0.13);
+    --fsc-border-top: rgba(255, 255, 255, 0.24);
+
     position: relative;
     width: 100%;
     height: 100vh;
-    min-height: 600px;
-    max-height: 900px;
+    min-height: 660px;
+    max-height: 980px;
     overflow: hidden;
-    background: #0a1628;
+    background: var(--fsc-dark);
+    cursor: default;
 }
 
-/* SLIDES */
+/* ── SLIDES ────────────────────────────────────────────────────── */
 .fsc-slides-wrap { position: absolute; inset: 0; }
+
 .fsc-slide {
     position: absolute; inset: 0;
-    opacity: 0; z-index: 1;
-    transition: opacity 0.9s ease;
+    opacity: 0;
+    z-index: 1;
     pointer-events: none;
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.fsc-slide.fsc-active { opacity: 1; z-index: 2; pointer-events: all; }
-
-/* KEN BURNS BACKGROUND */
-.fsc-bg-wrap {
-    position: absolute; inset: 0; overflow: hidden;
-}
-.fsc-bg-img {
-    position: absolute; inset: -5%;
-    width: 110%; height: 110%;
-    background-size: cover;
-    background-position: center;
-    animation: fscKenBurns 12s ease-in-out infinite alternate;
-}
-.fsc-slide.fsc-active .fsc-bg-img { animation-play-state: running; }
-.fsc-slide:not(.fsc-active) .fsc-bg-img { animation-play-state: paused; }
-
-@keyframes fscKenBurns {
-    0%   { transform: scale(1)    translateX(0)     translateY(0); }
-    33%  { transform: scale(1.06) translateX(-1%)   translateY(-1%); }
-    66%  { transform: scale(1.04) translateX(1%)    translateY(0.5%); }
-    100% { transform: scale(1.08) translateX(-0.5%) translateY(-0.5%); }
-}
-
-/* OVERLAY */
-.fsc-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(
-        105deg,
-        rgba(10,22,40,0.78) 0%,
-        rgba(10,22,40,0.45) 50%,
-        rgba(10,22,40,0.2)  100%
-    );
+.fsc-slide.fsc-active {
+    opacity: 1;
     z-index: 2;
+    pointer-events: all;
 }
 
-/* CONTENT */
-.fsc-content-wrap {
-    position: absolute; inset: 0; z-index: 3;
-    display: flex; align-items: flex-end;
-    padding: 0 80px 100px;
-}
-.fsc-content { max-width: 620px; }
-
-.fsc-badge {
-    display: inline-block;
-    background: #f4a41c; color: #0a1628;
-    font-size: 9px; font-weight: 800;
-    letter-spacing: 0.35em; text-transform: uppercase;
-    padding: 5px 14px; margin-bottom: 20px;
-    opacity: 0; transform: translateY(20px);
-    transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
-}
-.fsc-active .fsc-badge { opacity: 1; transform: translateY(0); }
-
-.fsc-title {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(2rem, 5vw, 4rem);
-    font-weight: 900; color: #ffffff;
-    text-transform: uppercase;
-    line-height: 1.1; margin: 0 0 16px;
-    opacity: 0; transform: translateY(30px);
-    transition: opacity 0.7s ease 0.35s, transform 0.7s ease 0.35s;
-}
-.fsc-active .fsc-title { opacity: 1; transform: translateY(0); }
-
-.fsc-subtitle {
-    font-size: 14px; color: rgba(255,255,255,0.75);
-    font-weight: 400; line-height: 1.7;
-    margin: 0 0 18px; max-width: 480px;
-    opacity: 0; transform: translateY(20px);
-    transition: opacity 0.6s ease 0.5s, transform 0.6s ease 0.5s;
-}
-.fsc-active .fsc-subtitle { opacity: 1; transform: translateY(0); }
-
-.fsc-location {
-    display: flex; align-items: center; gap: 8px;
-    color: #f4a41c; font-size: 11px; font-weight: 700;
-    letter-spacing: 0.2em; text-transform: uppercase;
-    margin-bottom: 28px;
-    opacity: 0; transform: translateY(16px);
-    transition: opacity 0.6s ease 0.6s, transform 0.6s ease 0.6s;
-}
-.fsc-active .fsc-location { opacity: 1; transform: translateY(0); }
-.fsc-location svg { width: 14px; height: 14px; flex-shrink: 0; }
-
-.fsc-cta {
-    display: inline-flex; align-items: center; gap: 10px;
-    padding: 14px 32px;
-    background: transparent; color: #fff;
-    border: 2px solid rgba(255,255,255,0.5);
-    font-size: 10px; font-weight: 800;
-    letter-spacing: 0.4em; text-transform: uppercase;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    opacity: 0; transform: translateY(16px);
-    transition: opacity 0.6s ease 0.75s, transform 0.6s ease 0.75s,
-                background 0.3s ease, border-color 0.3s ease;
-}
-.fsc-active .fsc-cta { opacity: 1; transform: translateY(0); }
-.fsc-cta:hover { background: #f4a41c; border-color: #f4a41c; color: #0a1628; }
-.fsc-cta svg { width: 16px; height: 16px; transition: transform 0.3s ease; }
-.fsc-cta:hover svg { transform: translateX(4px); }
-
-/* CORNER VIDEO BOX */
-.fsc-video-box {
-    position: absolute;
-    bottom: 80px; right: 80px;
-    width: 320px;
-    z-index: 10;
-    box-shadow: 0 24px 64px rgba(0,0,0,0.55);
-    border: 2px solid rgba(244,164,28,0.4);
-    opacity: 0; transform: translateX(30px);
-    transition: opacity 0.7s ease 0.5s, transform 0.7s ease 0.5s;
+/* ── KEN BURNS ─────────────────────────────────────────────────── */
+.fsc-bg-wrap {
+    position: absolute; inset: 0;
     overflow: hidden;
 }
-.fsc-active .fsc-video-box { opacity: 1; transform: translateX(0); }
+.fsc-bg-img {
+    position: absolute;
+    inset: -7%;
+    width: 114%; height: 114%;
+    background-size: cover;
+    background-position: center;
+    will-change: transform;
+    animation: fscKB 16s ease-in-out infinite alternate;
+}
+.fsc-slide:not(.fsc-active) .fsc-bg-img {
+    animation-play-state: paused;
+}
+@keyframes fscKB {
+    0%   { transform: scale(1)    translate(0,      0); }
+    30%  { transform: scale(1.07) translate(-1.5%, -1%); }
+    65%  { transform: scale(1.05) translate(1.2%,   0.8%); }
+    100% { transform: scale(1.09) translate(-0.6%, -0.6%); }
+}
 
-.fsc-video-thumb { position: relative; cursor: pointer; }
-.fsc-video-thumb img {
-    width: 100%; height: 180px;
+/* ── OVERLAYS ──────────────────────────────────────────────────── */
+.fsc-overlay {
+    position: absolute; inset: 0; z-index: 2;
+    background:
+        linear-gradient(100deg, rgba(5,12,26,0.88) 0%, rgba(5,12,26,0.28) 52%, rgba(5,12,26,0.08) 100%),
+        linear-gradient(to top,    rgba(5,12,26,0.80) 0%, transparent 48%),
+        linear-gradient(to bottom, rgba(5,12,26,0.50) 0%, transparent 28%);
+}
+
+/* Film grain */
+.fsc-grain {
+    position: absolute; inset: 0; z-index: 3;
+    opacity: 0.032; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)'/%3E%3C/svg%3E");
+    background-size: 220px 220px;
+}
+
+/* Gold left accent line */
+.fsc-edge-line {
+    position: absolute;
+    top: 15%; bottom: 15%;
+    left: 0; width: 3px;
+    z-index: 4;
+    background: linear-gradient(to bottom, transparent, var(--fsc-gold) 30%, var(--fsc-gold) 70%, transparent);
+    opacity: 0;
+    transition: opacity 1s ease 0.4s;
+}
+.fsc-slide.fsc-active .fsc-edge-line { opacity: 0.7; }
+
+/* ── MAIN CONTENT ──────────────────────────────────────────────── */
+.fsc-content-wrap {
+    position: absolute; inset: 0; z-index: 5;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 92px 108px;
+}
+.fsc-content { max-width: 680px; position: relative; }
+
+/* Badge row */
+.fsc-badge-row {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 24px;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.6s ease 0.1s, transform 0.6s ease 0.1s;
+}
+.fsc-slide.fsc-active .fsc-badge-row { opacity: 1; transform: translateY(0); }
+
+.fsc-badge-pulse {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--fsc-gold);
+    flex-shrink: 0;
+    box-shadow: 0 0 0 0 rgba(244,164,28,0.6);
+    animation: fscPulseRing 2.4s cubic-bezier(0.4,0,0.6,1) infinite;
+}
+@keyframes fscPulseRing {
+    0%  { box-shadow: 0 0 0 0   rgba(244,164,28,0.65); }
+    70% { box-shadow: 0 0 0 10px rgba(244,164,28,0); }
+    100%{ box-shadow: 0 0 0 0   rgba(244,164,28,0); }
+}
+
+.fsc-badge {
+    font-size: 9px; font-weight: 800;
+    letter-spacing: 0.45em; text-transform: uppercase;
+    color: var(--fsc-gold);
+    background: rgba(244,164,28,0.1);
+    border: 1px solid rgba(244,164,28,0.35);
+    backdrop-filter: blur(10px);
+    padding: 5px 14px 5px 12px;
+    border-radius: 2px;
+}
+
+/* Slide number background watermark */
+.fsc-slide-num-bg {
+    position: absolute;
+    right: -20px; bottom: -10px;
+    font-family: 'Cinzel', serif;
+    font-size: 180px; font-weight: 900; line-height: 1;
+    color: rgba(255,255,255,0.032);
+    pointer-events: none; user-select: none;
+    letter-spacing: -0.04em;
+    transition: opacity 0.4s ease;
+}
+
+/* Title */
+.fsc-title {
+    display: flex; flex-direction: column;
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2.4rem, 5.8vw, 4.8rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1.06;
+    letter-spacing: -0.015em;
+    margin: 0 0 20px;
+}
+.fsc-title-line {
+    display: block;
+    color: var(--fsc-white);
+    opacity: 0; transform: translateY(38px);
+    transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1) 0.25s,
+                transform 0.8s cubic-bezier(0.22,1,0.36,1) 0.25s;
+    text-shadow: 0 4px 48px rgba(0,0,0,0.55);
+}
+.fsc-title-line.fsc-title-gold {
+    color: var(--fsc-gold);
+    transition-delay: 0.4s;
+}
+.fsc-slide.fsc-active .fsc-title-line { opacity: 1; transform: translateY(0); }
+
+/* Decorative divider */
+.fsc-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 18px;
+    opacity: 0; transform: scaleX(0.6);
+    transform-origin: left;
+    transition: opacity 0.6s ease 0.6s, transform 0.6s ease 0.6s;
+}
+.fsc-slide.fsc-active .fsc-divider { opacity: 1; transform: scaleX(1); }
+.fsc-divider-line {
+    width: 60px; height: 1.5px;
+    background: linear-gradient(to right, var(--fsc-gold), rgba(244,164,28,0.2));
+}
+.fsc-divider-line-short { width: 28px; }
+.fsc-divider-diamond {
+    width: 7px; height: 7px;
+    background: var(--fsc-gold);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+}
+
+/* Subtitle */
+.fsc-subtitle {
+    font-size: 14px; line-height: 1.78;
+    color: rgba(255,255,255,0.62);
+    font-weight: 400;
+    margin: 0 0 28px;
+    max-width: 510px;
+    opacity: 0; transform: translateY(18px);
+    transition: opacity 0.65s ease 0.55s, transform 0.65s ease 0.55s;
+}
+.fsc-slide.fsc-active .fsc-subtitle { opacity: 1; transform: translateY(0); }
+
+/* Meta row */
+.fsc-meta {
+    display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity 0.6s ease 0.72s, transform 0.6s ease 0.72s;
+}
+.fsc-slide.fsc-active .fsc-meta { opacity: 1; transform: translateY(0); }
+
+/* Location chip */
+.fsc-location {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(8px);
+    padding: 8px 14px;
+    border-radius: 2px;
+}
+.fsc-location-icon {
+    width: 20px; height: 20px;
+    background: rgba(244,164,28,0.15);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.fsc-location-icon svg { width: 11px; height: 11px; fill: var(--fsc-gold); }
+.fsc-location span {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.72);
+}
+
+/* CTA button */
+.fsc-cta {
+    display: inline-flex; align-items: stretch;
+    text-decoration: none; overflow: hidden;
+    border: 1.5px solid rgba(255,255,255,0.22);
+    backdrop-filter: blur(14px);
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    transition: border-color 0.35s ease, background 0.35s ease;
+    position: relative;
+}
+.fsc-cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--fsc-gold);
+    transform: translateX(-101%);
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+    z-index: 0;
+}
+.fsc-cta:hover::before { transform: translateX(0); }
+.fsc-cta:hover { border-color: var(--fsc-gold); }
+
+.fsc-cta-text {
+    font-size: 10px; font-weight: 800;
+    letter-spacing: 0.4em; text-transform: uppercase;
+    color: rgba(255,255,255,0.9);
+    padding: 13px 22px;
+    position: relative; z-index: 1;
+    transition: color 0.35s ease;
+}
+.fsc-cta:hover .fsc-cta-text { color: var(--fsc-dark); }
+
+.fsc-cta-icon {
+    width: 44px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(244,164,28,0.18);
+    border-left: 1px solid rgba(244,164,28,0.22);
+    color: var(--fsc-gold);
+    position: relative; z-index: 1;
+    transition: background 0.35s ease, color 0.35s ease, border-color 0.35s ease;
+    flex-shrink: 0;
+}
+.fsc-cta:hover .fsc-cta-icon { background: rgba(5,12,26,0.25); color: var(--fsc-dark); border-color: transparent; }
+.fsc-cta-icon svg { width: 16px; height: 16px; transition: transform 0.35s ease; }
+.fsc-cta:hover .fsc-cta-icon svg { transform: translateX(3px); }
+
+/* ── GLASSMORPHISM VIDEO BOX ───────────────────────────────────── */
+.fsc-vbox {
+    position: absolute;
+    bottom: 88px; right: 88px;
+    width: 296px;
+    z-index: 10;
+    opacity: 0;
+    transform: translateX(28px) translateY(16px);
+    transition: opacity 0.85s cubic-bezier(0.22,1,0.36,1) 0.5s,
+                transform 0.85s cubic-bezier(0.22,1,0.36,1) 0.5s;
+}
+.fsc-slide.fsc-active .fsc-vbox {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+}
+
+/* Glow behind the card */
+.fsc-vglow {
+    position: absolute;
+    inset: -20px;
+    background: radial-gradient(ellipse at center, rgba(244,164,28,0.14) 0%, transparent 68%);
+    pointer-events: none; z-index: -1;
+    border-radius: 50%;
+    filter: blur(18px);
+    animation: fscGlowPulse 4s ease-in-out infinite;
+}
+@keyframes fscGlowPulse {
+    0%,100% { opacity: 0.7; transform: scale(1);    }
+    50%      { opacity: 1;   transform: scale(1.06); }
+}
+
+/* Glass card */
+.fsc-vglass {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    /* Multi-layer glass effect */
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.10) 0%,
+        rgba(10,22,40,0.55)   50%,
+        rgba(5,12,26,0.65)    100%
+    );
+    backdrop-filter: blur(24px) saturate(190%) brightness(1.05);
+    -webkit-backdrop-filter: blur(24px) saturate(190%) brightness(1.05);
+    border: 1px solid var(--fsc-border);
+    border-top: 1px solid var(--fsc-border-top);
+    border-left: 1px solid rgba(255,255,255,0.16);
+    box-shadow:
+        0 40px 90px rgba(0,0,0,0.6),
+        0 10px 28px rgba(0,0,0,0.4),
+        inset 0 1.5px 0 rgba(255,255,255,0.14),
+        inset 0 -1px 0 rgba(0,0,0,0.15),
+        0 0 0 1px rgba(244,164,28,0.08);
+    transition: box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.22,1,0.36,1);
+}
+.fsc-vglass:hover {
+    box-shadow:
+        0 52px 110px rgba(0,0,0,0.7),
+        0 14px 36px rgba(0,0,0,0.45),
+        inset 0 1.5px 0 rgba(255,255,255,0.18),
+        0 0 0 1px rgba(244,164,28,0.28);
+    transform: translateY(-4px);
+}
+
+/* Header bar */
+.fsc-vhead {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.fsc-vhead-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--fsc-gold); flex-shrink: 0;
+    box-shadow: 0 0 0 0 rgba(244,164,28,0.5);
+    animation: fscPulseRing 2.4s ease infinite;
+}
+.fsc-vhead-label {
+    font-size: 8.5px; font-weight: 700;
+    letter-spacing: 0.32em; text-transform: uppercase;
+    color: rgba(255,255,255,0.72);
+    flex: 1;
+}
+.fsc-vmute {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.55);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0;
+    transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+.fsc-vmute:hover {
+    background: rgba(244,164,28,0.2);
+    color: var(--fsc-gold);
+    border-color: rgba(244,164,28,0.4);
+}
+.fsc-vmute svg { width: 12px; height: 12px; }
+
+/* Video player */
+.fsc-vplayer {
+    position: relative;
+    width: 100%; height: 166px;
+    overflow: hidden; background: #020810;
+}
+.fsc-vel {
+    width: 100%; height: 100%;
     object-fit: cover; display: block;
     transition: transform 0.5s ease;
 }
-.fsc-video-thumb:hover img { transform: scale(1.05); }
+.fsc-vglass:hover .fsc-vel { transform: scale(1.03); }
 
-.fsc-play-btn {
-    position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 52px; height: 52px; border-radius: 50%;
-    background: rgba(244,164,28,0.85);
-    border: 2px solid rgba(255,255,255,0.6);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: all 0.3s ease;
-}
-.fsc-play-btn:hover { background: #f4a41c; transform: translate(-50%, -50%) scale(1.1); }
-.fsc-play-btn svg { width: 20px; height: 20px; margin-left: 3px; }
-
-.fsc-video-label {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    background: linear-gradient(to top, rgba(10,22,40,0.9) 0%, transparent 100%);
-    padding: 14px 14px 10px;
-}
-.fsc-video-label span {
-    font-size: 9px; font-weight: 800;
-    letter-spacing: 0.35em; text-transform: uppercase; color: #f4a41c;
+/* Glass sheen overlay on video */
+.fsc-vsheen {
+    position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.06) 0%,
+        transparent           45%,
+        rgba(244,164,28,0.03) 55%,
+        transparent           100%
+    );
 }
 
-.fsc-video-frame { width: 100%; }
-.fsc-video-frame iframe { width: 100%; height: 180px; display: block; border: none; }
+/* Footer / progress */
+.fsc-vfoot {
+    padding: 9px 12px 11px;
+    background: rgba(0,0,0,0.18);
+}
+.fsc-vprogwrap {
+    height: 2.5px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px; overflow: hidden;
+}
+.fsc-vprogbar {
+    height: 100%; width: 0%;
+    background: linear-gradient(to right, var(--fsc-gold), rgba(244,164,28,0.6));
+    border-radius: 2px;
+    transition: width 0.3s linear;
+    box-shadow: 0 0 6px rgba(244,164,28,0.5);
+}
 
-/* COUNTER */
+/* ── SLIDE COUNTER ─────────────────────────────────────────────── */
 .fsc-counter {
-    position: absolute; top: 40px; right: 80px;
-    z-index: 10; display: flex; align-items: center; gap: 12px;
+    position: absolute;
+    top: 46px; left: 92px;
+    z-index: 10;
+    display: flex; align-items: center; gap: 14px;
 }
-#fscCurNum {
+.fsc-cur {
     font-family: 'Cinzel', serif;
-    font-size: 52px; font-weight: 900; color: #fff; line-height: 1;
+    font-size: 60px; font-weight: 900;
+    color: var(--fsc-white); line-height: 1;
+    text-shadow: 0 6px 30px rgba(0,0,0,0.5);
+    transition: opacity 0.3s ease;
+    display: block;
 }
-.fsc-counter-sep {
-    width: 40px; height: 2px; background: #f4a41c;
+.fsc-ctrack {
+    width: 48px; height: 2px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 2px; overflow: hidden;
 }
-.fsc-counter-total {
+.fsc-cfill {
+    height: 100%; width: 0%;
+    background: var(--fsc-gold);
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 0 0 8px rgba(244,164,28,0.5);
+}
+.fsc-ctotal {
     font-family: 'Cinzel', serif;
-    font-size: 18px; font-weight: 700;
-    color: rgba(255,255,255,0.35);
+    font-size: 17px; font-weight: 700;
+    color: rgba(255,255,255,0.28);
 }
 
-/* NAVIGATION */
+/* ── GLASSY NAV ARROWS ─────────────────────────────────────────── */
 .fsc-nav {
-    position: absolute; bottom: 40px; left: 80px;
-    z-index: 10; display: flex; gap: 10px;
+    position: absolute;
+    bottom: 52px; left: 92px;
+    z-index: 10;
+    display: flex; gap: 12px;
 }
-.fsc-nav-btn {
-    width: 50px; height: 50px;
-    border: 1.5px solid rgba(255,255,255,0.2);
-    background: transparent; color: #fff; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.3s ease;
+.fsc-nbtn {
+    background: none; border: none;
+    padding: 0; cursor: pointer; outline: none;
 }
-.fsc-nav-btn svg { width: 20px; height: 20px; }
-.fsc-nav-btn:hover { background: #f4a41c; border-color: #f4a41c; color: #0a1628; }
 
-/* PROGRESS BAR */
-.fsc-progress-wrap {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    height: 3px; background: rgba(255,255,255,0.1); z-index: 20;
+.fsc-nglass {
+    position: relative;
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    /* Core glass */
+    background: linear-gradient(
+        145deg,
+        rgba(255,255,255,0.14) 0%,
+        rgba(255,255,255,0.04) 50%,
+        rgba(0,0,0,0.12)       100%
+    );
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid var(--fsc-border);
+    border-top: 1px solid rgba(255,255,255,0.32);
+    border-left: 1px solid rgba(255,255,255,0.22);
+    box-shadow:
+        0 10px 36px rgba(0,0,0,0.35),
+        0  3px 10px rgba(0,0,0,0.25),
+        inset 0  2px 0 rgba(255,255,255,0.18),
+        inset 0 -1px 0 rgba(0,0,0,0.12);
+    color: rgba(255,255,255,0.85);
+    transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
 }
-.fsc-progress-bar {
-    height: 100%; width: 0%; background: #f4a41c;
+
+/* Specular highlight */
+.fsc-nshine {
+    position: absolute;
+    top: 4px; left: 8px;
+    width: 40px; height: 20px;
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.22) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.fsc-nglass svg {
+    position: relative; z-index: 1;
+    width: 20px; height: 20px;
+    transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+
+/* Hover states */
+.fsc-nbtn:hover .fsc-nglass {
+    background: linear-gradient(
+        145deg,
+        rgba(244,164,28,0.32) 0%,
+        rgba(244,164,28,0.14) 50%,
+        rgba(0,0,0,0.1)       100%
+    );
+    border-color: rgba(244,164,28,0.5);
+    border-top-color: rgba(244,164,28,0.65);
+    color: var(--fsc-gold);
+    box-shadow:
+        0 14px 48px rgba(0,0,0,0.45),
+        0  4px 14px rgba(0,0,0,0.3),
+        inset 0 2px 0 rgba(244,164,28,0.22),
+        0 0 22px rgba(244,164,28,0.18);
+    transform: scale(1.08);
+}
+.fsc-nbtn:hover .fsc-nshine { opacity: 0.5; }
+#fscPrev:hover .fsc-nglass svg { transform: translateX(-2px); }
+#fscNext:hover .fsc-nglass svg { transform: translateX(2px); }
+.fsc-nbtn:active .fsc-nglass { transform: scale(0.94); }
+
+/* ── VERTICAL PILL DOTS ────────────────────────────────────────── */
+.fsc-dots {
+    position: absolute;
+    right: 36px; top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    display: flex; flex-direction: column;
+    gap: 12px; align-items: center;
+}
+.fsc-dot {
+    background: none; border: none;
+    padding: 5px; cursor: pointer; outline: none;
+    display: flex; align-items: center; justify-content: center;
+}
+.fsc-dot-pip {
+    display: block;
+    width: 5px; height: 5px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.22);
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
+}
+.fsc-dot-on .fsc-dot-pip {
+    background: var(--fsc-gold);
+    height: 28px;
+    border-color: var(--fsc-gold);
+    box-shadow: 0 0 10px rgba(244,164,28,0.55), 0 0 22px rgba(244,164,28,0.2);
+}
+.fsc-dot:hover .fsc-dot-pip {
+    background: rgba(255,255,255,0.55);
+}
+
+/* ── BOTTOM PROGRESS BAR ───────────────────────────────────────── */
+.fsc-pbar-wrap {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: rgba(255,255,255,0.07);
+    z-index: 20;
+}
+.fsc-pbar {
+    height: 100%; width: 0%;
+    background: var(--fsc-gold);
+    box-shadow: 0 0 14px rgba(244,164,28,0.65);
     transition: none;
 }
 
-/* DOTS */
-.fsc-dots {
-    position: absolute; bottom: 48px; left: 50%;
+/* ── SCROLL NUDGE ──────────────────────────────────────────────── */
+.fsc-scroll {
+    position: absolute;
+    bottom: 44px; left: 50%;
     transform: translateX(-50%);
-    z-index: 10; display: flex; gap: 8px; align-items: center;
+    z-index: 10;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 7px;
 }
-.fsc-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: rgba(255,255,255,0.25); border: none; cursor: pointer;
-    transition: all 0.3s ease; padding: 0;
+.fsc-scroll-wire {
+    width: 1.5px; height: 32px;
+    background: linear-gradient(to bottom, rgba(244,164,28,0.65), transparent);
+    border-radius: 1px;
 }
-.fsc-dot-active { background: #f4a41c !important; width: 22px !important; border-radius: 4px !important; }
+.fsc-scroll-bead {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--fsc-gold);
+    box-shadow: 0 0 8px rgba(244,164,28,0.6);
+    animation: fscBeadDrop 2.2s ease-in-out infinite;
+}
+@keyframes fscBeadDrop {
+    0%,100% { transform: translateY(0);   opacity: 1;   }
+    60%      { transform: translateY(10px); opacity: 0.3; }
+}
+.fsc-scroll-txt {
+    font-size: 7.5px; font-weight: 700;
+    letter-spacing: 0.48em;
+    color: rgba(255,255,255,0.28);
+    text-transform: uppercase;
+}
 
-/* RESPONSIVE */
+/* ── RESPONSIVE ────────────────────────────────────────────────── */
+@media (max-width: 1200px) {
+    .fsc-content-wrap  { padding: 0 64px 108px; }
+    .fsc-vbox          { right: 64px; bottom: 108px; }
+    .fsc-counter       { left: 64px; }
+    .fsc-nav           { left: 64px; }
+}
 @media (max-width: 1024px) {
-    .fsc-content-wrap { padding: 0 48px 120px; }
-    .fsc-video-box { width: 260px; right: 48px; bottom: 120px; }
-    .fsc-counter { right: 48px; top: 32px; }
-    .fsc-nav { left: 48px; bottom: 48px; }
+    .fsc-content-wrap  { padding: 0 48px 120px; }
+    .fsc-vbox          { width: 256px; right: 48px; bottom: 120px; }
+    .fsc-vplayer       { height: 144px; }
+    .fsc-counter       { left: 48px; }
+    .fsc-nav           { left: 48px; }
 }
 @media (max-width: 768px) {
-    .fsc-section { max-height: 100vh; min-height: 560px; }
-    .fsc-content-wrap { padding: 0 24px 130px; }
-    .fsc-title { font-size: clamp(1.6rem, 6vw, 2.4rem); }
-    .fsc-video-box {
-        width: 180px; right: 20px; bottom: 120px;
-    }
-    .fsc-video-thumb img, .fsc-video-frame iframe { height: 110px; }
-    .fsc-counter { right: 24px; top: 24px; }
-    #fscCurNum { font-size: 36px; }
-    .fsc-counter-sep { width: 24px; }
-    .fsc-nav { left: 24px; bottom: 44px; }
-    .fsc-nav-btn { width: 42px; height: 42px; }
+    .fsc-section       { min-height: 580px; max-height: 100vh; }
+    .fsc-content-wrap  { padding: 0 24px 140px; }
+    .fsc-title         { font-size: clamp(1.8rem, 7vw, 2.8rem); }
+    .fsc-vbox          { width: 200px; right: 18px; bottom: 136px; }
+    .fsc-vplayer       { height: 112px; }
+    .fsc-counter       { left: 24px; top: 28px; }
+    .fsc-cur           { font-size: 42px; }
+    .fsc-ctrack        { width: 30px; }
+    .fsc-nav           { left: 24px; bottom: 46px; }
+    .fsc-nglass        { width: 48px; height: 48px; }
+    .fsc-dots          { right: 14px; }
+    .fsc-scroll        { display: none; }
+    .fsc-slide-num-bg  { font-size: 120px; }
 }
 @media (max-width: 480px) {
-    .fsc-video-box { display: none; }
+    .fsc-vbox          { display: none; }
+    .fsc-content-wrap  { padding: 0 20px 120px; }
 }
 </style>
 
+{{-- ============================================================
+     SECTION 4.5 — JAVASCRIPT
+     ============================================================ --}}
 <script>
 (function () {
-    var total    = {{ $showcaseSlides->count() }};
-    var cur      = 0;
-    var autoMs   = 7000;
-    var timer    = null;
-    var progTimer = null;
-    var progStart = null;
+    'use strict';
 
-    var slides   = document.querySelectorAll('.fsc-slide');
-    var dotsEl   = document.querySelectorAll('.fsc-dot');
-    var curNumEl = document.getElementById('fscCurNum');
-    var progBar  = document.getElementById('fscProgressBar');
+    var TOTAL   = {{ $showcaseSlides->count() }};
+    var AUTO_MS = 7000;
+    var cur     = 0;
+    var timer   = null;
+    var vidTimers = {};
 
-    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+    /* DOM refs */
+    var slides  = document.querySelectorAll('#featured-showcase .fsc-slide');
+    var dots    = document.querySelectorAll('#featured-showcase .fsc-dot');
+    var curEl   = document.getElementById('fscCurNum');
+    var cfill   = document.getElementById('fscCFill');
+    var pbar    = document.getElementById('fscPBar');
+    var fscEl   = document.getElementById('featured-showcase');
 
+    /* ── HELPERS ── */
+    function pad(n) { return n < 10 ? '0' + n : String(n); }
+
+    function getVideo(idx) { return document.getElementById('fscVideo' + idx); }
+    function getVProg(idx) { return document.getElementById('fscVProg' + idx); }
+
+    /* ── VIDEO PROGRESS TRACKER ── */
+    function startVidTrack(idx) {
+        stopVidTrack(idx);
+        var vid = getVideo(idx);
+        var bar = getVProg(idx);
+        if (!vid || !bar) return;
+        vidTimers[idx] = setInterval(function () {
+            if (vid.duration > 0) {
+                bar.style.width = ((vid.currentTime / vid.duration) * 100).toFixed(1) + '%';
+            }
+        }, 250);
+    }
+    function stopVidTrack(idx) {
+        if (vidTimers[idx]) { clearInterval(vidTimers[idx]); delete vidTimers[idx]; }
+    }
+
+    /* ── MUTE TOGGLE (global) ── */
+    window.fscToggleMute = function (idx) {
+        var vid  = getVideo(idx);
+        var icon = document.getElementById('fscMuteIcon' + idx);
+        if (!vid || !icon) return;
+        vid.muted = !vid.muted;
+        /* Swap SVG path: muted = volume-off, unmuted = volume-on */
+        icon.innerHTML = vid.muted
+            ? '<path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>'
+            : '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+    };
+
+    /* ── ACTIVATE SLIDE ── */
+    function activate(idx, prev) {
+        /* Outgoing slide */
+        if (prev !== undefined && prev !== idx) {
+            slides[prev].classList.remove('fsc-active');
+            dots[prev].classList.remove('fsc-dot-on');
+            dots[prev].setAttribute('aria-selected', 'false');
+            /* Pause outgoing video */
+            var oldVid = getVideo(prev);
+            if (oldVid) { oldVid.pause(); }
+            stopVidTrack(prev);
+        }
+
+        /* Incoming slide */
+        slides[idx].classList.add('fsc-active');
+        dots[idx].classList.add('fsc-dot-on');
+        dots[idx].setAttribute('aria-selected', 'true');
+
+        /* Animate counter */
+        curEl.style.opacity = '0';
+        setTimeout(function () {
+            curEl.textContent  = pad(idx + 1);
+            curEl.style.opacity = '1';
+            cfill.style.width  = (((idx + 1) / TOTAL) * 100).toFixed(0) + '%';
+        }, 180);
+
+        /* Start incoming video after slide fade begins */
+        setTimeout(function () {
+            var newVid = getVideo(idx);
+            if (newVid) {
+                newVid.currentTime = 0;
+                newVid.muted = true; /* always start muted for autoplay policy */
+                var playP = newVid.play();
+                if (playP) playP.catch(function () {});
+                startVidTrack(idx);
+            }
+        }, 320);
+    }
+
+    /* ── GO TO ── */
     function goTo(idx) {
         if (idx === cur) return;
-        // Stop any playing video on current slide before switching
-        var oldFrame = document.getElementById('fscFrame' + cur);
-        var oldThumb = document.getElementById('fscThumb' + cur);
-        if (oldFrame) { oldFrame.innerHTML = ''; oldFrame.style.display = 'none'; }
-        if (oldThumb) oldThumb.style.display = '';
-
-        slides[cur].classList.remove('fsc-active');
-        dotsEl[cur].classList.remove('fsc-dot-active');
+        var prev = cur;
         cur = idx;
-        slides[cur].classList.add('fsc-active');
-        dotsEl[cur].classList.add('fsc-dot-active');
-        curNumEl.textContent = pad(cur + 1);
+        activate(idx, prev);
         resetProgress();
         resetAuto();
     }
 
+    /* ── NAV ── */
     window.fscGoTo = goTo;
-
-    window.fscNav = function (dir) {
-        goTo((cur + dir + total) % total);
+    window.fscNav  = function (dir) {
+        goTo((cur + dir + TOTAL) % TOTAL);
     };
 
-    window.fscPlayVideo = function (idx, vidId) {
-        var thumb = document.getElementById('fscThumb' + idx);
-        var frame = document.getElementById('fscFrame' + idx);
-        if (!frame) return;
-        frame.innerHTML = '<iframe src="https://www.youtube.com/embed/' + vidId + '?autoplay=1&rel=0&modestbranding=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-        frame.style.display = '';
-        if (thumb) thumb.style.display = 'none';
-    };
-
-    /* PROGRESS BAR */
+    /* ── PROGRESS BAR ── */
     function resetProgress() {
-        progBar.style.transition = 'none';
-        progBar.style.width = '0%';
-        if (progTimer) cancelAnimationFrame(progTimer);
-        setTimeout(function () {
-            progBar.style.transition = 'width ' + autoMs + 'ms linear';
-            progBar.style.width = '100%';
-        }, 30);
+        pbar.style.transition = 'none';
+        pbar.style.width = '0%';
+        requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+                pbar.style.transition = 'width ' + AUTO_MS + 'ms linear';
+                pbar.style.width = '100%';
+            });
+        });
     }
 
-    /* AUTO ADVANCE */
+    /* ── AUTO ADVANCE ── */
     function resetAuto() {
         clearInterval(timer);
-        timer = setInterval(function () {
-            window.fscNav(1);
-        }, autoMs);
+        timer = setInterval(function () { window.fscNav(1); }, AUTO_MS);
     }
 
-    if (total > 0) {
-        resetProgress();
-        resetAuto();
-    }
-
-    /* KEYBOARD */
+    /* ── KEYBOARD ── */
     document.addEventListener('keydown', function (e) {
+        if (!fscEl) return;
         if (e.key === 'ArrowLeft')  window.fscNav(-1);
         if (e.key === 'ArrowRight') window.fscNav(1);
     });
+
+    /* ── TOUCH SWIPE ── */
+    if (fscEl) {
+        var tx = 0;
+        fscEl.addEventListener('touchstart', function (e) {
+            tx = e.changedTouches[0].screenX;
+        }, { passive: true });
+        fscEl.addEventListener('touchend', function (e) {
+            var dx = e.changedTouches[0].screenX - tx;
+            if (Math.abs(dx) > 48) window.fscNav(dx < 0 ? 1 : -1);
+        }, { passive: true });
+    }
+
+    /* ── INIT ── */
+    if (TOTAL > 0) {
+        activate(0);
+        cfill.style.width = ((1 / TOTAL) * 100).toFixed(0) + '%';
+        resetProgress();
+        resetAuto();
+    }
+
 })();
 </script>
 @endif

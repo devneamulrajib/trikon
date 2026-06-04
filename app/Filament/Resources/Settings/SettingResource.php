@@ -53,9 +53,8 @@ class SettingResource extends Resource
                         ->helperText('Left side image in the Schedule a Meeting section.'),
                 ]),
 
-            // ── NEW SECTION ──────────────────────────────────────
             Section::make('Featured Showcase Section')
-                ->description('Appears between Services and Testimonials. Each slide = background image + corner video.')
+                ->description('Appears between Services and Testimonials. Each slide = background image + auto-playing corner video.')
                 ->schema([
                     Repeater::make('featured_showcase')
                         ->label('Showcase Slides')
@@ -84,10 +83,14 @@ class SettingResource extends Resource
                                 ->visibility('public')
                                 ->helperText('Main full-width background image for this slide.'),
 
-                            TextInput::make('video_url')
-                                ->label('Corner Video (YouTube URL)')
-                                ->placeholder('https://www.youtube.com/watch?v=...')
-                                ->helperText('Plays in the small corner video box.'),
+                            // ── CHANGED: was TextInput YouTube URL, now FileUpload for MP4 ──
+                            FileUpload::make('video_url')
+                                ->label('Corner Video (MP4 / WebM)')
+                                ->directory('showcase-videos')
+                                ->visibility('public')
+                                ->acceptedFileTypes(['video/mp4', 'video/webm', 'video/ogg'])
+                                ->maxSize(102400) // 100 MB
+                                ->helperText('Upload an MP4/WebM video. It will auto-play muted in the bottom-right corner of this slide.'),
 
                             TextInput::make('project_link')
                                 ->label('Project Page Link')
@@ -99,7 +102,6 @@ class SettingResource extends Resource
                         ->reorderable()
                         ->columnSpanFull(),
                 ]),
-            // ── END NEW SECTION ──────────────────────────────────
 
             Section::make('Contact Details')
                 ->schema([
