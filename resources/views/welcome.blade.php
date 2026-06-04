@@ -1105,7 +1105,7 @@
 
 {{-- ============================================================
      SECTION 4.5: FEATURED SHOWCASE — between Services & Testimonials
-     Auto-playing uploaded video · Glassy arrows · Eye-catching design
+     Clean video box (no header/progress bar) · Glassy arrows
      ============================================================ --}}
 @php
     $showcaseSlides = collect($settings->featured_showcase ?? [])
@@ -1126,7 +1126,7 @@
                 ? (str_starts_with($rawBg, 'http') ? $rawBg : asset(ltrim($rawBg, '/')))
                 : 'https://placehold.co/1920x1080/0a1628/f4a41c?text=Showcase';
 
-            /* Uploaded video — stored as a file path, NOT a YouTube URL */
+            /* Uploaded video — stored as a file path */
             $rawVid   = $slide['video_url'] ?? '';
             $videoUrl = null;
             if ($rawVid) {
@@ -1216,54 +1216,19 @@
                 </div>
             </div>
 
-            {{-- ── CORNER VIDEO BOX — GLASSMORPHISM ── --}}
+            {{-- ── CORNER VIDEO BOX — CLEAN (no header/progress) ── --}}
             @if($videoUrl)
             <div class="fsc-vbox" id="fscVbox{{ $i }}">
-                <div class="fsc-vglass">
-
-                    {{-- Header bar --}}
-                    <div class="fsc-vhead">
-                        <span class="fsc-vhead-dot"></span>
-                        <span class="fsc-vhead-label">Interior Preview</span>
-                        <button
-                            class="fsc-vmute"
-                            id="fscMuteBtn{{ $i }}"
-                            onclick="fscToggleMute({{ $i }})"
-                            aria-label="Toggle mute"
-                            title="Toggle sound">
-                            {{-- Muted icon (default — video starts muted) --}}
-                            <svg id="fscMuteIcon{{ $i }}" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    {{-- Video --}}
-                    <div class="fsc-vplayer">
-                        <video
-                            id="fscVideo{{ $i }}"
-                            src="{{ $videoUrl }}"
-                            autoplay
-                            muted
-                            loop
-                            playsinline
-                            preload="metadata"
-                            class="fsc-vel">
-                        </video>
-                        {{-- Gloss sheen --}}
-                        <div class="fsc-vsheen" aria-hidden="true"></div>
-                    </div>
-
-                    {{-- Progress bar --}}
-                    <div class="fsc-vfoot">
-                        <div class="fsc-vprogwrap">
-                            <div class="fsc-vprogbar" id="fscVProg{{ $i }}"></div>
-                        </div>
-                    </div>
-
-                </div>
-                {{-- Glow effect behind glass card --}}
-                <div class="fsc-vglow" aria-hidden="true"></div>
+                <video
+                    id="fscVideo{{ $i }}"
+                    src="{{ $videoUrl }}"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    class="fsc-vel">
+                </video>
             </div>
             @endif
 
@@ -1340,7 +1305,6 @@
     --fsc-dark:   #050c1a;
     --fsc-navy:   #0a1628;
     --fsc-white:  #ffffff;
-    --fsc-glass:  rgba(8, 18, 36, 0.52);
     --fsc-border: rgba(255, 255, 255, 0.13);
     --fsc-border-top: rgba(255, 255, 255, 0.24);
 
@@ -1612,147 +1576,32 @@
 .fsc-cta-icon svg { width: 16px; height: 16px; transition: transform 0.35s ease; }
 .fsc-cta:hover .fsc-cta-icon svg { transform: translateX(3px); }
 
-/* ── GLASSMORPHISM VIDEO BOX ───────────────────────────────────── */
+/* ── CORNER VIDEO BOX — CLEAN ──────────────────────────────────── */
 .fsc-vbox {
     position: absolute;
     bottom: 88px; right: 88px;
     width: 296px;
     z-index: 10;
+    border-radius: 10px;
+    overflow: hidden;
     opacity: 0;
     transform: translateX(28px) translateY(16px);
     transition: opacity 0.85s cubic-bezier(0.22,1,0.36,1) 0.5s,
                 transform 0.85s cubic-bezier(0.22,1,0.36,1) 0.5s;
+    box-shadow:
+        0 24px 60px rgba(0,0,0,0.55),
+        0 0 0 1px rgba(244,164,28,0.18);
 }
 .fsc-slide.fsc-active .fsc-vbox {
     opacity: 1;
     transform: translateX(0) translateY(0);
 }
-
-/* Glow behind the card */
-.fsc-vglow {
-    position: absolute;
-    inset: -20px;
-    background: radial-gradient(ellipse at center, rgba(244,164,28,0.14) 0%, transparent 68%);
-    pointer-events: none; z-index: -1;
-    border-radius: 50%;
-    filter: blur(18px);
-    animation: fscGlowPulse 4s ease-in-out infinite;
-}
-@keyframes fscGlowPulse {
-    0%,100% { opacity: 0.7; transform: scale(1);    }
-    50%      { opacity: 1;   transform: scale(1.06); }
-}
-
-/* Glass card */
-.fsc-vglass {
-    position: relative;
-    border-radius: 14px;
-    overflow: hidden;
-    /* Multi-layer glass effect */
-    background: linear-gradient(
-        135deg,
-        rgba(255,255,255,0.10) 0%,
-        rgba(10,22,40,0.55)   50%,
-        rgba(5,12,26,0.65)    100%
-    );
-    backdrop-filter: blur(24px) saturate(190%) brightness(1.05);
-    -webkit-backdrop-filter: blur(24px) saturate(190%) brightness(1.05);
-    border: 1px solid var(--fsc-border);
-    border-top: 1px solid var(--fsc-border-top);
-    border-left: 1px solid rgba(255,255,255,0.16);
-    box-shadow:
-        0 40px 90px rgba(0,0,0,0.6),
-        0 10px 28px rgba(0,0,0,0.4),
-        inset 0 1.5px 0 rgba(255,255,255,0.14),
-        inset 0 -1px 0 rgba(0,0,0,0.15),
-        0 0 0 1px rgba(244,164,28,0.08);
-    transition: box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.22,1,0.36,1);
-}
-.fsc-vglass:hover {
-    box-shadow:
-        0 52px 110px rgba(0,0,0,0.7),
-        0 14px 36px rgba(0,0,0,0.45),
-        inset 0 1.5px 0 rgba(255,255,255,0.18),
-        0 0 0 1px rgba(244,164,28,0.28);
-    transform: translateY(-4px);
-}
-
-/* Header bar */
-.fsc-vhead {
-    display: flex; align-items: center; gap: 8px;
-    padding: 10px 14px;
-    background: rgba(255,255,255,0.04);
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-}
-.fsc-vhead-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--fsc-gold); flex-shrink: 0;
-    box-shadow: 0 0 0 0 rgba(244,164,28,0.5);
-    animation: fscPulseRing 2.4s ease infinite;
-}
-.fsc-vhead-label {
-    font-size: 8.5px; font-weight: 700;
-    letter-spacing: 0.32em; text-transform: uppercase;
-    color: rgba(255,255,255,0.72);
-    flex: 1;
-}
-.fsc-vmute {
-    width: 26px; height: 26px; border-radius: 50%;
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.12);
-    color: rgba(255,255,255,0.55);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; flex-shrink: 0;
-    transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
-}
-.fsc-vmute:hover {
-    background: rgba(244,164,28,0.2);
-    color: var(--fsc-gold);
-    border-color: rgba(244,164,28,0.4);
-}
-.fsc-vmute svg { width: 12px; height: 12px; }
-
-/* Video player */
-.fsc-vplayer {
-    position: relative;
-    width: 100%; height: 166px;
-    overflow: hidden; background: #020810;
-}
 .fsc-vel {
-    width: 100%; height: 100%;
-    object-fit: cover; display: block;
-    transition: transform 0.5s ease;
-}
-.fsc-vglass:hover .fsc-vel { transform: scale(1.03); }
-
-/* Glass sheen overlay on video */
-.fsc-vsheen {
-    position: absolute; inset: 0; pointer-events: none;
-    background: linear-gradient(
-        135deg,
-        rgba(255,255,255,0.06) 0%,
-        transparent           45%,
-        rgba(244,164,28,0.03) 55%,
-        transparent           100%
-    );
-}
-
-/* Footer / progress */
-.fsc-vfoot {
-    padding: 9px 12px 11px;
-    background: rgba(0,0,0,0.18);
-}
-.fsc-vprogwrap {
-    height: 2.5px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 2px; overflow: hidden;
-}
-.fsc-vprogbar {
-    height: 100%; width: 0%;
-    background: linear-gradient(to right, var(--fsc-gold), rgba(244,164,28,0.6));
-    border-radius: 2px;
-    transition: width 0.3s linear;
-    box-shadow: 0 0 6px rgba(244,164,28,0.5);
+    width: 100%;
+    display: block;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 10px;
 }
 
 /* ── SLIDE COUNTER ─────────────────────────────────────────────── */
@@ -1799,14 +1648,12 @@
     background: none; border: none;
     padding: 0; cursor: pointer; outline: none;
 }
-
 .fsc-nglass {
     position: relative;
     width: 56px; height: 56px;
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     overflow: hidden;
-    /* Core glass */
     background: linear-gradient(
         145deg,
         rgba(255,255,255,0.14) 0%,
@@ -1826,8 +1673,6 @@
     color: rgba(255,255,255,0.85);
     transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
 }
-
-/* Specular highlight */
 .fsc-nshine {
     position: absolute;
     top: 4px; left: 8px;
@@ -1837,14 +1682,11 @@
     pointer-events: none;
     transition: opacity 0.3s ease;
 }
-
 .fsc-nglass svg {
     position: relative; z-index: 1;
     width: 20px; height: 20px;
     transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
 }
-
-/* Hover states */
 .fsc-nbtn:hover .fsc-nglass {
     background: linear-gradient(
         145deg,
@@ -1895,9 +1737,7 @@
     border-color: var(--fsc-gold);
     box-shadow: 0 0 10px rgba(244,164,28,0.55), 0 0 22px rgba(244,164,28,0.2);
 }
-.fsc-dot:hover .fsc-dot-pip {
-    background: rgba(255,255,255,0.55);
-}
+.fsc-dot:hover .fsc-dot-pip { background: rgba(255,255,255,0.55); }
 
 /* ── BOTTOM PROGRESS BAR ───────────────────────────────────────── */
 .fsc-pbar-wrap {
@@ -1934,7 +1774,7 @@
     animation: fscBeadDrop 2.2s ease-in-out infinite;
 }
 @keyframes fscBeadDrop {
-    0%,100% { transform: translateY(0);   opacity: 1;   }
+    0%,100% { transform: translateY(0);    opacity: 1;   }
     60%      { transform: translateY(10px); opacity: 0.3; }
 }
 .fsc-scroll-txt {
@@ -1946,36 +1786,34 @@
 
 /* ── RESPONSIVE ────────────────────────────────────────────────── */
 @media (max-width: 1200px) {
-    .fsc-content-wrap  { padding: 0 64px 108px; }
-    .fsc-vbox          { right: 64px; bottom: 108px; }
-    .fsc-counter       { left: 64px; }
-    .fsc-nav           { left: 64px; }
+    .fsc-content-wrap { padding: 0 64px 108px; }
+    .fsc-vbox         { right: 64px; bottom: 108px; }
+    .fsc-counter      { left: 64px; }
+    .fsc-nav          { left: 64px; }
 }
 @media (max-width: 1024px) {
-    .fsc-content-wrap  { padding: 0 48px 120px; }
-    .fsc-vbox          { width: 256px; right: 48px; bottom: 120px; }
-    .fsc-vplayer       { height: 144px; }
-    .fsc-counter       { left: 48px; }
-    .fsc-nav           { left: 48px; }
+    .fsc-content-wrap { padding: 0 48px 120px; }
+    .fsc-vbox         { width: 240px; right: 48px; bottom: 120px; }
+    .fsc-counter      { left: 48px; }
+    .fsc-nav          { left: 48px; }
 }
 @media (max-width: 768px) {
-    .fsc-section       { min-height: 580px; max-height: 100vh; }
-    .fsc-content-wrap  { padding: 0 24px 140px; }
-    .fsc-title         { font-size: clamp(1.8rem, 7vw, 2.8rem); }
-    .fsc-vbox          { width: 200px; right: 18px; bottom: 136px; }
-    .fsc-vplayer       { height: 112px; }
-    .fsc-counter       { left: 24px; top: 28px; }
-    .fsc-cur           { font-size: 42px; }
-    .fsc-ctrack        { width: 30px; }
-    .fsc-nav           { left: 24px; bottom: 46px; }
-    .fsc-nglass        { width: 48px; height: 48px; }
-    .fsc-dots          { right: 14px; }
-    .fsc-scroll        { display: none; }
-    .fsc-slide-num-bg  { font-size: 120px; }
+    .fsc-section      { min-height: 580px; max-height: 100vh; }
+    .fsc-content-wrap { padding: 0 24px 140px; }
+    .fsc-title        { font-size: clamp(1.8rem, 7vw, 2.8rem); }
+    .fsc-vbox         { width: 180px; right: 18px; bottom: 136px; }
+    .fsc-counter      { left: 24px; top: 28px; }
+    .fsc-cur          { font-size: 42px; }
+    .fsc-ctrack       { width: 30px; }
+    .fsc-nav          { left: 24px; bottom: 46px; }
+    .fsc-nglass       { width: 48px; height: 48px; }
+    .fsc-dots         { right: 14px; }
+    .fsc-scroll       { display: none; }
+    .fsc-slide-num-bg { font-size: 120px; }
 }
 @media (max-width: 480px) {
-    .fsc-vbox          { display: none; }
-    .fsc-content-wrap  { padding: 0 20px 120px; }
+    .fsc-vbox         { display: none; }
+    .fsc-content-wrap { padding: 0 20px 120px; }
 }
 </style>
 
@@ -1990,64 +1828,31 @@
     var AUTO_MS = 7000;
     var cur     = 0;
     var timer   = null;
-    var vidTimers = {};
 
     /* DOM refs */
-    var slides  = document.querySelectorAll('#featured-showcase .fsc-slide');
-    var dots    = document.querySelectorAll('#featured-showcase .fsc-dot');
-    var curEl   = document.getElementById('fscCurNum');
-    var cfill   = document.getElementById('fscCFill');
-    var pbar    = document.getElementById('fscPBar');
-    var fscEl   = document.getElementById('featured-showcase');
+    var slides = document.querySelectorAll('#featured-showcase .fsc-slide');
+    var dots   = document.querySelectorAll('#featured-showcase .fsc-dot');
+    var curEl  = document.getElementById('fscCurNum');
+    var cfill  = document.getElementById('fscCFill');
+    var pbar   = document.getElementById('fscPBar');
+    var fscEl  = document.getElementById('featured-showcase');
 
     /* ── HELPERS ── */
     function pad(n) { return n < 10 ? '0' + n : String(n); }
-
     function getVideo(idx) { return document.getElementById('fscVideo' + idx); }
-    function getVProg(idx) { return document.getElementById('fscVProg' + idx); }
-
-    /* ── VIDEO PROGRESS TRACKER ── */
-    function startVidTrack(idx) {
-        stopVidTrack(idx);
-        var vid = getVideo(idx);
-        var bar = getVProg(idx);
-        if (!vid || !bar) return;
-        vidTimers[idx] = setInterval(function () {
-            if (vid.duration > 0) {
-                bar.style.width = ((vid.currentTime / vid.duration) * 100).toFixed(1) + '%';
-            }
-        }, 250);
-    }
-    function stopVidTrack(idx) {
-        if (vidTimers[idx]) { clearInterval(vidTimers[idx]); delete vidTimers[idx]; }
-    }
-
-    /* ── MUTE TOGGLE (global) ── */
-    window.fscToggleMute = function (idx) {
-        var vid  = getVideo(idx);
-        var icon = document.getElementById('fscMuteIcon' + idx);
-        if (!vid || !icon) return;
-        vid.muted = !vid.muted;
-        /* Swap SVG path: muted = volume-off, unmuted = volume-on */
-        icon.innerHTML = vid.muted
-            ? '<path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>'
-            : '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
-    };
 
     /* ── ACTIVATE SLIDE ── */
     function activate(idx, prev) {
-        /* Outgoing slide */
+        /* Outgoing */
         if (prev !== undefined && prev !== idx) {
             slides[prev].classList.remove('fsc-active');
             dots[prev].classList.remove('fsc-dot-on');
             dots[prev].setAttribute('aria-selected', 'false');
-            /* Pause outgoing video */
             var oldVid = getVideo(prev);
             if (oldVid) { oldVid.pause(); }
-            stopVidTrack(prev);
         }
 
-        /* Incoming slide */
+        /* Incoming */
         slides[idx].classList.add('fsc-active');
         dots[idx].classList.add('fsc-dot-on');
         dots[idx].setAttribute('aria-selected', 'true');
@@ -2060,15 +1865,14 @@
             cfill.style.width  = (((idx + 1) / TOTAL) * 100).toFixed(0) + '%';
         }, 180);
 
-        /* Start incoming video after slide fade begins */
+        /* Start incoming video */
         setTimeout(function () {
             var newVid = getVideo(idx);
             if (newVid) {
                 newVid.currentTime = 0;
-                newVid.muted = true; /* always start muted for autoplay policy */
+                newVid.muted = true;
                 var playP = newVid.play();
                 if (playP) playP.catch(function () {});
-                startVidTrack(idx);
             }
         }, 320);
     }
@@ -2083,7 +1887,6 @@
         resetAuto();
     }
 
-    /* ── NAV ── */
     window.fscGoTo = goTo;
     window.fscNav  = function (dir) {
         goTo((cur + dir + TOTAL) % TOTAL);

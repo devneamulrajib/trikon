@@ -93,7 +93,6 @@ class SettingResource extends Resource
                                 ->visibility('public')
                                 ->acceptedFileTypes(['video/mp4', 'video/webm', 'video/ogg'])
                                 ->maxSize(102400)
-                                ->storeFileNamesIn('video_original_name')
                                 ->helperText('Upload an MP4/WebM video. It will auto-play muted in the bottom-right corner of this slide.'),
 
                             TextInput::make('project_link')
