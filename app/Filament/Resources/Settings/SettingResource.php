@@ -36,6 +36,7 @@ class SettingResource extends Resource
                     FileUpload::make('logo')
                         ->label('Site Logo')
                         ->image()
+                        ->disk('public')
                         ->directory('site-settings')
                         ->visibility('public')
                         ->helperText('Upload a high-quality transparent PNG logo.'),
@@ -48,6 +49,7 @@ class SettingResource extends Resource
                     FileUpload::make('meeting_section_image')
                         ->label('Schedule a Meeting — Section Image')
                         ->image()
+                        ->disk('public')
                         ->directory('site-settings')
                         ->visibility('public')
                         ->helperText('Left side image in the Schedule a Meeting section.'),
@@ -79,17 +81,19 @@ class SettingResource extends Resource
                             FileUpload::make('bg_image')
                                 ->label('Background Image')
                                 ->image()
+                                ->disk('public')
                                 ->directory('showcase')
                                 ->visibility('public')
                                 ->helperText('Main full-width background image for this slide.'),
 
-                            // ── CHANGED: was TextInput YouTube URL, now FileUpload for MP4 ──
                             FileUpload::make('video_url')
                                 ->label('Corner Video (MP4 / WebM)')
+                                ->disk('public')
                                 ->directory('showcase-videos')
                                 ->visibility('public')
                                 ->acceptedFileTypes(['video/mp4', 'video/webm', 'video/ogg'])
-                                ->maxSize(102400) // 100 MB
+                                ->maxSize(102400)
+                                ->storeFileNamesIn('video_original_name')
                                 ->helperText('Upload an MP4/WebM video. It will auto-play muted in the bottom-right corner of this slide.'),
 
                             TextInput::make('project_link')
