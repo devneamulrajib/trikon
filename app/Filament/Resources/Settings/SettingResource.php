@@ -86,14 +86,22 @@ class SettingResource extends Resource
                                 ->visibility('public')
                                 ->helperText('Main full-width background image for this slide.'),
 
+                            // ─── VIDEO UPLOAD ───────────────────────────────────────
+                            // In Filament v5, FileUpload inside a Repeater fails when
+                            // acceptedFileTypes / storeFileNamesIn are used together
+                            // because Livewire assigns a UUID key to the temp file and
+                            // the MIME validator runs against that key string, not the
+                            // actual file. Solution: remove acceptedFileTypes and
+                            // storeFileNamesIn, set maxSize only, add nullable rule.
+                            // ────────────────────────────────────────────────────────
                             FileUpload::make('video_url')
                                 ->label('Corner Video (MP4 / WebM)')
                                 ->disk('public')
                                 ->directory('showcase-videos')
                                 ->visibility('public')
-                                ->acceptedFileTypes(['video/mp4', 'video/webm', 'video/ogg'])
-                                ->maxSize(102400)
-                                ->helperText('Upload an MP4/WebM video. It will auto-play muted in the bottom-right corner of this slide.'),
+                                ->maxSize(102400)      // 100 MB
+                                ->rules(['nullable'])
+                                ->helperText('Upload an MP4/WebM video (max 100 MB). It will auto-play muted in the bottom-right corner of this slide.'),
 
                             TextInput::make('project_link')
                                 ->label('Project Page Link')
