@@ -100,7 +100,6 @@ class SettingResource extends Resource
                                 ->directory('showcase-videos')
                                 ->visibility('public')
                                 ->maxSize(102400)      // 100 MB
-                                ->rules(['nullable'])
                                 ->helperText('Upload an MP4/WebM video (max 100 MB). It will auto-play muted in the bottom-right corner of this slide.'),
 
                             TextInput::make('project_link')
