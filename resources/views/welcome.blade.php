@@ -1023,7 +1023,7 @@
 .fsc-vbox {
     position: absolute;
     bottom: 130px; right: 80px;
-    width: 380px;              /* larger — matches reference */
+    width: 580px;              /* larger — matches reference */
     z-index: 10;
     overflow: hidden;
     border-radius: 4px;
