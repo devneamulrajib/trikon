@@ -1132,7 +1132,7 @@
             if ($rawVid) {
                 $videoUrl = str_starts_with($rawVid, 'http')
                     ? $rawVid
-                    : asset('storage/' . ltrim($rawVid, '/'));
+                    : asset(ltrim($rawVid, '/'));
             }
         @endphp
 
