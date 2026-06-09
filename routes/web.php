@@ -33,21 +33,19 @@ Route::get('/', function () {
  * 2. ABOUT US SECTION
  */
 
-// Management Team
+// Management Team (now includes Board of Directors data)
 Route::get('/about-us/management-team', function () {
     return view('pages.management-team', [
         'settings' => Setting::first(),
+        'directors' => Director::orderBy('sort_order', 'asc')->get(),
         'members' => TeamMember::orderBy('sort_order', 'asc')->get(),
         'gallery' => TeamGallery::orderBy('sort_order', 'asc')->get()
     ]);
 });
 
-// Board of Directors
+// Board of Directors — redirects to management team page
 Route::get('/about-us/board-of-directors', function () {
-    return view('pages.board-of-directors', [
-        'settings' => Setting::first(),
-        'directors' => Director::orderBy('sort_order', 'asc')->get()
-    ]);
+    return redirect('/about-us/management-team');
 });
 
 // Sister Concerns
@@ -168,7 +166,6 @@ Route::post('/contact', function (Request $request) {
 
 /**
  * 7. NEW SERVICES PAGES (CUSTOM LAYOUTS)
- * These are placed before the wildcard to ensure they load specific blade files
  */
 Route::get('/services/property-management', function () {
     return view('pages.property-management', ['settings' => Setting::first()]);
@@ -189,7 +186,6 @@ Route::get('/services/builders-construction', function () {
 Route::get('/services/investment', function () {
     return view('pages.investment', ['settings' => Setting::first()]);
 })->name('services.investment');
-
 
 /**
  * 8. DYNAMIC SERVICES & BLOGS

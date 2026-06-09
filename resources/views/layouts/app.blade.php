@@ -157,7 +157,6 @@
                     <div class="absolute left-0 mt-0 w-72 bg-[#f4a41c] hidden group-hover:block shadow-2xl z-50">
                         <a href="/about-us/stories" class="block dropdown-link px-6 py-4 hover:bg-[#e09418] border-b border-white/10 transition-colors uppercase">Our stories</a>
                         <a href="/about-us/why-us" class="block dropdown-link px-6 py-4 hover:bg-[#e09418] border-b border-white/10 transition-colors uppercase">Why Us</a>
-                        <a href="/about-us/board-of-directors" class="block dropdown-link px-6 py-4 hover:bg-[#e09418] border-b border-white/10 transition-colors uppercase">Board of Directors</a>
                         <a href="/about-us/management-team" class="block dropdown-link px-6 py-4 hover:bg-[#e09418] border-b border-white/10 transition-colors uppercase">Management Team</a>
                         <a href="/about-us/sister-concerns" class="block dropdown-link px-6 py-4 hover:bg-[#e09418] border-b border-white/10 transition-colors uppercase">Sister Concerns</a>
                         <a href="/about-us/csr" class="block dropdown-link px-6 py-4 hover:bg-[#e09418] transition-colors uppercase">CSR</a>
