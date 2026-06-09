@@ -1,7 +1,17 @@
+--- START OF FILE Paste June 09, 2026 - 4:03PM ---
+
 @extends('layouts.app')
 
 @section('styles')
+<!-- Import Host Grotesk and Cinzel -->
+<link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
+
 <style>
+    /* Global Font Override */
+    body {
+        font-family: 'Host Grotesk', sans-serif;
+    }
+
     /* 1. Project Cards */
     .home-project-card { aspect-ratio: 3 / 4.2; }
     .serif-title { font-family: 'Cinzel', serif; }
@@ -731,8 +741,6 @@
 
 {{-- ============================================================
      SECTION 4.5: FEATURED SHOWCASE
-     Redesigned to match reference: large corner video, square
-     arrow buttons, horizontal dots bottom-left, clean layout
      ============================================================ --}}
 @php
     $showcaseSlides = collect($settings->featured_showcase ?? [])
