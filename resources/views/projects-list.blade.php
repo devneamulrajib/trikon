@@ -47,51 +47,81 @@
 
     .project-aspect { aspect-ratio: 3 / 4.2; }
 
-    /* ── Hover overlay fix ── */
+    /* ── Project Card ── */
+    .project-card {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        background: #f3f4f6;
+        aspect-ratio: 3 / 4.2;
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        text-decoration: none;
+    }
+
+    .project-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 1s ease;
+        display: block;
+    }
+
+    .project-card:hover img {
+        transform: scale(1.1);
+    }
+
+    /* Overlay — hidden by default */
     .project-card-overlay {
         position: absolute;
         inset: 0;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: flex-end;   /* pin content to bottom */
-        padding: 2rem;
+        justify-content: flex-end;
+        padding: 2rem 1.5rem;
         opacity: 0;
         transition: opacity 0.5s ease;
-        background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.25) 60%, transparent 100%);
-        backdrop-filter: blur(1px);
-        -webkit-backdrop-filter: blur(1px);
+        background: linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.80) 0%,
+            rgba(0, 0, 0, 0.30) 50%,
+            transparent 100%
+        );
         text-align: center;
     }
-    .group:hover .project-card-overlay {
+
+    /* Show overlay on card hover */
+    .project-card:hover .project-card-overlay {
         opacity: 1;
     }
 
     .project-card-title {
-        color: #fff;
+        color: #ffffff;
         font-weight: 900;
-        font-size: 1.25rem;          /* 20px */
+        font-size: 1.1rem;
         text-transform: uppercase;
-        letter-spacing: -0.02em;
+        letter-spacing: 0.05em;
         line-height: 1.2;
-        margin-bottom: 0.5rem;
-        text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+        margin: 0 0 0.5rem 0;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.8);
     }
 
     .project-card-divider {
-        width: 2.5rem;               /* 40px */
-        height: 1px;
+        width: 2.5rem;
+        height: 2px;
         background: #f4a41c;
         margin: 0 auto 0.75rem;
+        flex-shrink: 0;
     }
 
     .project-card-location {
-        color: rgba(255,255,255,0.85);
-        font-size: 0.625rem;         /* 10px */
+        color: rgba(255, 255, 255, 0.90);
+        font-size: 0.6rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.3em;
         line-height: 1.4;
+        margin: 0;
     }
 </style>
 @endsection
@@ -106,7 +136,6 @@
                 <source src="{{ asset('project.mp4') }}" type="video/mp4">
             </video>
         </div>
-
         <div class="relative z-10 text-center px-6" data-aos="zoom-in">
             <div class="relative">
                 <h1 class="hero-title text-white text-5xl md:text-8xl font-black uppercase relative z-10">
@@ -136,22 +165,19 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @forelse($projects as $project)
                 @php
-                    $gridImg = $project->featured_image;
-                    $gridUrl = asset(ltrim(Str::replaceFirst('storage/', '', $gridImg), '/'));
-                    $location = $project->location ?? 'Bashundhara R/A';
+                    $gridImg  = $project->featured_image;
+                    $gridUrl  = asset(ltrim(Str::replaceFirst('storage/', '', $gridImg), '/'));
+                    $location = !empty($project->location) ? $project->location : 'Bashundhara R/A';
                 @endphp
 
                 <a href="/project/{{ $project->slug }}"
-                   class="group relative block overflow-hidden bg-gray-100 project-aspect shadow-2xl"
+                   class="project-card"
                    data-aos="fade-up">
 
-                    {{-- Project image --}}
                     <img src="{{ $gridUrl }}"
                          alt="{{ $project->title }}"
-                         class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                          onerror="this.onerror=null;this.src='https://placehold.co/600x800?text=Project+Image';">
 
-                    {{-- Hover overlay — always shows BOTH title AND location --}}
                     <div class="project-card-overlay">
                         <h3 class="project-card-title">{{ $project->title }}</h3>
                         <div class="project-card-divider"></div>
