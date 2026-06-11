@@ -46,6 +46,53 @@
     }
 
     .project-aspect { aspect-ratio: 3 / 4.2; }
+
+    /* ── Hover overlay fix ── */
+    .project-card-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;   /* pin content to bottom */
+        padding: 2rem;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.25) 60%, transparent 100%);
+        backdrop-filter: blur(1px);
+        -webkit-backdrop-filter: blur(1px);
+        text-align: center;
+    }
+    .group:hover .project-card-overlay {
+        opacity: 1;
+    }
+
+    .project-card-title {
+        color: #fff;
+        font-weight: 900;
+        font-size: 1.25rem;          /* 20px */
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+
+    .project-card-divider {
+        width: 2.5rem;               /* 40px */
+        height: 1px;
+        background: #f4a41c;
+        margin: 0 auto 0.75rem;
+    }
+
+    .project-card-location {
+        color: rgba(255,255,255,0.85);
+        font-size: 0.625rem;         /* 10px */
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        line-height: 1.4;
+    }
 </style>
 @endsection
 
@@ -76,9 +123,9 @@
     <div class="bg-white border-b border-gray-100 py-16">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex flex-wrap justify-center gap-6 md:gap-12">
-                <a href="/projects/residential/all" class="filter-tab {{ $currentStatus == 'all' ? 'active-tab' : '' }}">All</a>
-                <a href="/projects/residential/ongoing" class="filter-tab {{ $currentStatus == 'ongoing' ? 'active-tab' : '' }}">Ongoing</a>
-                <a href="/projects/residential/upcoming" class="filter-tab {{ $currentStatus == 'upcoming' ? 'active-tab' : '' }}">Upcoming</a>
+                <a href="/projects/residential/all"       class="filter-tab {{ $currentStatus == 'all'       ? 'active-tab' : '' }}">All</a>
+                <a href="/projects/residential/ongoing"   class="filter-tab {{ $currentStatus == 'ongoing'   ? 'active-tab' : '' }}">Ongoing</a>
+                <a href="/projects/residential/upcoming"  class="filter-tab {{ $currentStatus == 'upcoming'  ? 'active-tab' : '' }}">Upcoming</a>
                 <a href="/projects/residential/completed" class="filter-tab {{ $currentStatus == 'completed' ? 'active-tab' : '' }}">Completed</a>
             </div>
         </div>
@@ -88,23 +135,29 @@
     <div class="max-w-[1600px] mx-auto px-6 md:px-12 py-24">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @forelse($projects as $project)
-                <a href="/project/{{ $project->slug }}" class="group relative block overflow-hidden bg-gray-100 project-aspect shadow-2xl" data-aos="fade-up">
-                    @php
-                        $gridImg = $project->featured_image;
-                        $gridUrl = asset(ltrim(Str::replaceFirst('storage/', '', $gridImg), '/'));
-                    @endphp
-                    <img src="{{ $gridUrl }}" 
-                         alt="{{ $project->title }}" 
+                @php
+                    $gridImg = $project->featured_image;
+                    $gridUrl = asset(ltrim(Str::replaceFirst('storage/', '', $gridImg), '/'));
+                    $location = $project->location ?? 'Bashundhara R/A';
+                @endphp
+
+                <a href="/project/{{ $project->slug }}"
+                   class="group relative block overflow-hidden bg-gray-100 project-aspect shadow-2xl"
+                   data-aos="fade-up">
+
+                    {{-- Project image --}}
+                    <img src="{{ $gridUrl }}"
+                         alt="{{ $project->title }}"
                          class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                          onerror="this.onerror=null;this.src='https://placehold.co/600x800?text=Project+Image';">
-                    
-                    <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-8 opacity-0 group-hover:opacity-100 transition-all duration-500 bg-black/40 backdrop-blur-[2px]">
-                        <h3 class="text-white font-black text-2xl uppercase tracking-tighter mb-2">{{ $project->title }}</h3>
-                        <div class="w-10 h-[1px] bg-[#f4a41c] mb-4"></div>
-                        <p class="text-white/80 text-[10px] font-bold uppercase tracking-[0.3em]">
-                            {{ $project->location ?? 'Bashundhara R/A' }}
-                        </p>
+
+                    {{-- Hover overlay — always shows BOTH title AND location --}}
+                    <div class="project-card-overlay">
+                        <h3 class="project-card-title">{{ $project->title }}</h3>
+                        <div class="project-card-divider"></div>
+                        <p class="project-card-location">{{ $location }}</p>
                     </div>
+
                 </a>
             @empty
                 <div class="col-span-full py-40 text-center border-2 border-dashed border-gray-100 rounded-[50px]">
@@ -116,7 +169,8 @@
         <!-- PAGINATION -->
         <div class="mt-32 text-center">
             @if($projects->hasMorePages())
-                <a href="{{ $projects->nextPageUrl() }}" class="inline-block px-12 py-5 bg-gray-900 text-white hover:bg-[#f4a41c] transition-all text-[11px] font-black uppercase tracking-[0.5em] rounded-sm shadow-xl">
+                <a href="{{ $projects->nextPageUrl() }}"
+                   class="inline-block px-12 py-5 bg-gray-900 text-white hover:bg-[#f4a41c] transition-all text-[11px] font-black uppercase tracking-[0.5em] rounded-sm shadow-xl">
                     Next Projects
                 </a>
             @endif
